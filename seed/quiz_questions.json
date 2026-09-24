@@ -1,0 +1,184 @@
+[
+  {
+    "module_key": "scripts",
+    "question": "You're calling an owner named John and he picks up. What's the first thing you say?",
+    "type": "scenario",
+    "options": [
+      "Hey John, This is (your name) with (company)",
+      "Hey is this John?",
+      "Hey John, how's it going?",
+      "Hey John, can you hear me?"
+    ],
+    "correct_index": 3,
+    "explanation": "Confirm you're talking to the right person without triggering sales resistance. They should be unsure if they know you or not.",
+    "order": 1
+  },
+  {
+    "module_key": "scripts",
+    "question": "What's the order of our opening sequence?",
+    "type": "sequence",
+    "options": [
+      "Confirm the name \u2192 Confirm the Building \u2192 Rapport, Need, Ask for the Inspection",
+      "Identify yourself \u2192 Reason for call \u2192 Ask permission to continue",
+      "Ask permission \u2192 Identify yourself \u2192 Reason for call",
+      "Identify yourself \u2192 Ask permission \u2192 Reason for call"
+    ],
+    "correct_index": 0,
+    "explanation": "Find out if you have the right person (Part 1). Figure out if it's their building (Part 2). Build need and ask if they've had an inspection done (Part 3).",
+    "order": 2
+  },
+  {
+    "module_key": "scripts",
+    "question": "How long should it take you to ask if they've gotten their building inspected?",
+    "type": "fill_blank",
+    "options": [
+      "25\u201330 seconds",
+      "10\u201315 seconds",
+      "35\u201345 seconds",
+      "1 minute"
+    ],
+    "correct_index": 0,
+    "explanation": "25\u201330 seconds is the sweet spot. Too short and you probably didn't build enough need or get the client to respond to the first two parts of your opener. Too long and they're hanging up on you.",
+    "order": 3
+  },
+  {
+    "module_key": "scripts",
+    "question": "A prospect says 'I'm not interested' or hangs up on you during Part 1 & 2. What does this tell you?",
+    "type": "scenario",
+    "options": [
+      "They truly don't want a new roof \u2014 move on",
+      "Your Part 1 & 2 came across salesy and you didn't follow the script",
+      "This is a 'super no' and you should mark them as dead",
+      "You should immediately launch into Part 3"
+    ],
+    "correct_index": 1,
+    "explanation": "'Not interested' or a hang-up during Part 1 & 2 means you've triggered sales resistance. Something before Part 3 triggered 'cold call' in their brain.",
+    "order": 4
+  },
+  {
+    "module_key": "scripts",
+    "question": "Which wording should you AVOID in the opening because it signals a sales call?",
+    "type": "fill_blank",
+    "options": [
+      "Is this ____?",
+      "This is (your name) with RestoreMasters",
+      "Hey, am I speaking with ____?",
+      "All of the above"
+    ],
+    "correct_index": 3,
+    "explanation": "This immediately tells the person you're calling that this is a cold call.",
+    "order": 5
+  },
+  {
+    "module_key": "objections",
+    "question": "A prospect says 'I'm not interested.' RIGHT after your Part 3 (reason for calling). What's the best move?",
+    "type": "scenario",
+    "options": [
+      "Say 'Okay, have a great day' and hang up",
+      "Acknowledge their response, then ask a clarifying question.",
+      "Immediately offer a free gift to get their attention",
+      "Ask 'Why not?' in a challenging tone"
+    ],
+    "correct_index": 1,
+    "explanation": "An early 'not interested' means they haven't heard the full story. Acknowledge it softly, then bridge to the specific storm event.",
+    "order": 6
+  },
+  {
+    "module_key": "objections",
+    "question": "If someone gives you an objection, what's the first thing you do?",
+    "type": "best_response",
+    "options": [
+      "Close",
+      "Build Need",
+      "Agree",
+      "Clarify"
+    ],
+    "correct_index": 2,
+    "explanation": "You're not arguing \u2014 you're offering certainty through a free inspection. The unknown is what you're resolving.",
+    "order": 7
+  },
+  {
+    "module_key": "objections",
+    "question": "What is the objection cycle?",
+    "type": "sequence",
+    "options": [
+      "Agree \u2192 Give Info/Build Need \u2192 Close",
+      "Delay \u2192 Deny \u2192 Defend",
+      "Pitch \u2192 Close",
+      "Agree \u2192 Clarify or Give Info/Build Need \u2192 Close"
+    ],
+    "correct_index": 3,
+    "explanation": "This is the way.",
+    "order": 8
+  },
+  {
+    "module_key": "closing",
+    "question": "What's your 'Hail Mary' close that you'll use after handling multiple objections and have already tried to close a couple times?",
+    "type": "close_selection",
+    "options": [
+      "The Option Close",
+      "The Assumptive Close",
+      "The Best Case/Worst Case Close",
+      "Ask them to call you back when they're ready"
+    ],
+    "correct_index": 2,
+    "explanation": "You've said just about everything you can say, so the goal of this close is to make them realize there is no risk to this inspection and they can only benefit from it.",
+    "order": 9
+  },
+  {
+    "module_key": "closing",
+    "question": "A rep says: 'Would you like me to send someone out?' What is wrong with this?",
+    "type": "mistake_recognition",
+    "options": [
+      "Nothing \u2014 it's polite and professional",
+      "It gives the prospect an easy 'no' \u2014 it's asking for permission instead of closing",
+      "It's too informal",
+      "It's missing the storm reference"
+    ],
+    "correct_index": 1,
+    "explanation": "Asking 'would you like' hands control to the prospect. A close should assume forward motion, not request permission.",
+    "order": 10
+  },
+  {
+    "module_key": "closing",
+    "question": "The prospect has been positive throughout the call with no objections, and the conversation has been flowing naturally. Which close fits?",
+    "type": "close_selection",
+    "options": [
+      "Best Case/Worst Case Close",
+      "Option Close",
+      "Assumptive Close",
+      "All three work equally well here"
+    ],
+    "correct_index": 2,
+    "explanation": "When a prospect is warm and flowing, the Assumptive Close moves things forward without making them feel pressured with a big question.",
+    "order": 11
+  },
+  {
+    "module_key": "closing",
+    "question": "Which of the following is a common closing mistake?",
+    "type": "mistake_recognition",
+    "options": [
+      "Giving the prospect two days to choose from",
+      "Pushing too hard for a close before you've given them enough information",
+      "Talking more after you've delivered a closing line",
+      "Using the exact script word-for-word"
+    ],
+    "correct_index": 2,
+    "explanation": "It's easier to talk your way out of a sale than to talk your way into one. Once you've delivered a closing line, stop and wait for them to respond.",
+    "order": 12
+  },
+  {
+    "module_key": "closing",
+    "question": "The prospect says 'I guess that would be okay.' You should:",
+    "type": "situational",
+    "options": [
+      "Ask them if they're sure before proceeding",
+      "Treat it as a yes and move to scheduling with an Assumptive Close",
+      "Give them more information because they seem unsure",
+      "Wait for a stronger commitment before closing"
+    ],
+    "correct_index": 1,
+    "explanation": "Soft agreement is enough. Asking 'are you sure?' invites doubt. Assume yes and move to scheduling \u2014 that's the Assumptive Close.",
+    "order": 13
+  }
+]

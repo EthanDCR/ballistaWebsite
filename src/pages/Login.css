@@ -1,0 +1,89 @@
+.login-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.login-card {
+  width: min(380px, 100%);
+  padding: 40px 32px;
+  border-radius: 24px;
+  background: #fff;
+  border: 1px solid rgba(24, 51, 77, 0.1);
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.login-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.login-brand .brand-mark {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: var(--ink);
+  color: #6ce1ce;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 5px 0 #0f2439;
+}
+
+.login-brand strong {
+  display: block;
+  font-size: 1.15rem;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+}
+
+.login-brand small {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.login-card h1 {
+  font-size: 1.3rem;
+  margin-bottom: 6px;
+}
+
+.login-card > p {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-bottom: 22px;
+}
+
+.login-error {
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: var(--red-soft);
+  color: var(--red-dark);
+  font-size: 0.8rem;
+  text-align: left;
+}
+
+.login-form {
+  display: grid;
+  gap: 14px;
+  text-align: left;
+}
+
+.login-form label {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+.login-form button {
+  margin-top: 4px;
+}

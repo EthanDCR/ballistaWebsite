@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Jordan",
+    "address": "1840 Commerce Way",
+    "city": "Denver",
+    "hail_date": "May 30",
+    "active": true,
+    "order": 1
+  },
+  {
+    "name": "Taylor",
+    "address": "7280 Industrial Road",
+    "city": "Aurora",
+    "hail_date": "June 14",
+    "active": true,
+    "order": 2
+  },
+  {
+    "name": "Morgan",
+    "address": "4100 Northview Drive",
+    "city": "Fort Collins",
+    "hail_date": "July 2",
+    "active": true,
+    "order": 3
+  }
+]

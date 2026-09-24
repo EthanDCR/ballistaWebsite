@@ -1,0 +1,54 @@
+[
+  {
+    "title": "No leaks",
+    "level": "easy",
+    "prompt": "We aren't having any problems or leaks.",
+    "rebuttal": "That's great to hear. The damage we're checking for often appears before leaks. A photo report documents the roof now. Would you be opposed to us taking a look while we're nearby?",
+    "keywords": [
+      "before leaks",
+      "photo report",
+      "would you be opposed"
+    ],
+    "active": true,
+    "order": 1
+  },
+  {
+    "title": "Existing roofer",
+    "level": "medium",
+    "prompt": "I already have a roofer.",
+    "rebuttal": "That's good to hear. Is it someone who called you after the storm or someone you've worked with for a long time? Did they provide a photo report and certificate of clearance?",
+    "keywords": [
+      "worked with",
+      "photo report",
+      "certificate of clearance"
+    ],
+    "active": true,
+    "order": 2
+  },
+  {
+    "title": "Call insurance first",
+    "level": "hard",
+    "prompt": "I'll call my insurance company if I need anything.",
+    "rebuttal": "You may not need to involve them yet. We can first document whether there is anything to worry about, then you can decide the next step with real photos in hand.",
+    "keywords": [
+      "document",
+      "photos",
+      "decide"
+    ],
+    "active": true,
+    "order": 3
+  },
+  {
+    "title": "No time",
+    "level": "hard",
+    "prompt": "I don't have time for this.",
+    "rebuttal": "I understand. The first step doesn't require much of your time. Are you normally at the building this week, or would a quick call after the inspection be easier?",
+    "keywords": [
+      "doesn't require much",
+      "quick call",
+      "easier"
+    ],
+    "active": true,
+    "order": 4
+  }
+]

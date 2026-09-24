@@ -1,0 +1,211 @@
+[
+  {
+    "objection_id": "OBJ-001",
+    "title": "Not interested",
+    "level": "easy",
+    "prompts": [
+      "I'm not interested.",
+      "No thanks, we're good."
+    ],
+    "rebuttal": "I wouldn't expect you to be interested before knowing whether there is anything to worry about. The damage we're seeing usually isn't causing immediate leaks, but it can create problems later. Since we're already nearby, would you be opposed to us documenting the roof for you?",
+    "required_keywords": [
+      "would you be opposed",
+      "document"
+    ],
+    "optional_keywords": [
+      "nearby",
+      "future problems",
+      "no immediate leaks"
+    ],
+    "forbidden_keywords": [
+      "guarantee",
+      "free roof"
+    ],
+    "hints": [
+      "Agree before adding information",
+      "Build need without claiming damage",
+      "End with a question"
+    ],
+    "active": true,
+    "order": 1
+  },
+  {
+    "objection_id": "OBJ-002",
+    "title": "We aren't having any problems",
+    "level": "easy",
+    "prompts": [
+      "We don't have any leaks.",
+      "The roof is fine."
+    ],
+    "rebuttal": "That's great to hear. The damage we're checking for often shows up before leaks do. A photo report gives you a record of the building's condition and can help prevent future claim confusion. Would it make sense to document it while we're nearby?",
+    "required_keywords": [
+      "before leaks",
+      "photo report"
+    ],
+    "optional_keywords": [
+      "document",
+      "nearby",
+      "condition"
+    ],
+    "forbidden_keywords": [
+      "definitely damaged",
+      "guaranteed claim"
+    ],
+    "hints": [
+      "Celebrate the lack of leaks",
+      "Explain latent damage",
+      "Ask for the inspection"
+    ],
+    "active": true,
+    "order": 2
+  },
+  {
+    "objection_id": "OBJ-003",
+    "title": "It's already been inspected",
+    "level": "medium",
+    "prompts": [
+      "Someone already looked at it.",
+      "Our roofer inspected it."
+    ],
+    "rebuttal": "I'm glad you had someone look. Did they provide a photo report and a certificate of clearance showing the roof was free of storm damage?",
+    "required_keywords": [
+      "photo report",
+      "certificate of clearance"
+    ],
+    "optional_keywords": [
+      "storm damage",
+      "documented"
+    ],
+    "forbidden_keywords": [
+      "they missed it",
+      "your roofer is wrong"
+    ],
+    "hints": [
+      "Do not insult the existing contractor",
+      "Qualify the documentation",
+      "Pause after the question"
+    ],
+    "active": true,
+    "order": 3
+  },
+  {
+    "objection_id": "OBJ-004",
+    "title": "We have a maintenance person",
+    "level": "medium",
+    "prompts": [
+      "My maintenance guy handles that.",
+      "We already have someone for the roof."
+    ],
+    "rebuttal": "Most of our clients have a maintenance person and they're great at what they do. We're looking for a different set of storm indicators: whether the roof's lifespan was affected and whether the damage is worth documenting. Is your person a roofer, or do they handle general maintenance?",
+    "required_keywords": [
+      "storm indicators",
+      "roofer"
+    ],
+    "optional_keywords": [
+      "lifespan",
+      "documenting",
+      "maintenance"
+    ],
+    "forbidden_keywords": [
+      "not qualified",
+      "doesn't know roofing"
+    ],
+    "hints": [
+      "Validate the relationship",
+      "Differentiate the inspection",
+      "Ask who the person is"
+    ],
+    "active": true,
+    "order": 4
+  },
+  {
+    "objection_id": "OBJ-005",
+    "title": "I'll call my insurance",
+    "level": "hard",
+    "prompts": [
+      "I'll just call my insurance company.",
+      "My carrier can look at it."
+    ],
+    "rebuttal": "You may not need to involve them yet. First, we can document whether there is anything to worry about. If there is no damage, the inspection may save everyone time; if there is, you'll have photos before deciding what to do next.",
+    "required_keywords": [
+      "document",
+      "photos"
+    ],
+    "optional_keywords": [
+      "may not need to",
+      "save time",
+      "decide"
+    ],
+    "forbidden_keywords": [
+      "don't call insurance",
+      "insurance will deny you"
+    ],
+    "hints": [
+      "Slow the decision down",
+      "Inspection before claim",
+      "Avoid legal or coverage promises"
+    ],
+    "active": true,
+    "order": 5
+  },
+  {
+    "objection_id": "OBJ-006",
+    "title": "I don't want my premiums to go up",
+    "level": "expert",
+    "prompts": [
+      "I don't want my premiums to go up.",
+      "I can't risk being dropped."
+    ],
+    "rebuttal": "I understand the concern. Before discussing a claim, our job is simply to document the building and help you understand whether damage exists. Coverage and premium questions should be confirmed with your licensed insurance professional. Would you be open to the inspection first?",
+    "required_keywords": [
+      "document",
+      "licensed insurance professional"
+    ],
+    "optional_keywords": [
+      "understand the concern",
+      "inspection first"
+    ],
+    "forbidden_keywords": [
+      "can't raise",
+      "act of god",
+      "will not be dropped"
+    ],
+    "hints": [
+      "Acknowledge the concern",
+      "Do not promise insurance outcomes",
+      "Return to the inspection"
+    ],
+    "active": true,
+    "order": 6
+  },
+  {
+    "objection_id": "OBJ-007",
+    "title": "I don't have time",
+    "level": "hard",
+    "prompts": [
+      "I don't have time for this.",
+      "I'm too busy."
+    ],
+    "rebuttal": "I understand\u2014that's exactly why we handle the inspection and photo documentation. The first step doesn't require much of your time. Are you normally at the building this week, or would a quick call after the inspection be easier?",
+    "required_keywords": [
+      "doesn't require much of your time",
+      "easier"
+    ],
+    "optional_keywords": [
+      "inspection",
+      "photo documentation",
+      "quick call"
+    ],
+    "forbidden_keywords": [
+      "only 20 minutes",
+      "you have to"
+    ],
+    "hints": [
+      "Reduce the time commitment",
+      "Offer two practical paths",
+      "Keep the tone light"
+    ],
+    "active": true,
+    "order": 7
+  }
+]

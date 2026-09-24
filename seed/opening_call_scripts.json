@@ -1,0 +1,67 @@
+[
+  {
+    "part": 1,
+    "part_title": "Confirm the name",
+    "purpose": "Earn the first small yes and make sure the right person is on the line.",
+    "exact_script": "Hey {name}, can you hear me?",
+    "success_indicators": [
+      "The prospect confirms their identity",
+      "The prospect stays on the line"
+    ],
+    "common_mistakes": [
+      "Rushing into the pitch",
+      "Sounding apologetic",
+      "Skipping the name confirmation"
+    ],
+    "active": true,
+    "order": 1
+  },
+  {
+    "part": 2,
+    "part_title": "Confirm the building",
+    "purpose": "Verify ownership before spending time on the pitch.",
+    "exact_script": "This is {name}. I'm working near your building on {address} in {city}. Do you still own that building?",
+    "success_indicators": [
+      "Ownership is confirmed",
+      "A better contact is identified"
+    ],
+    "common_mistakes": [
+      "Pitching before confirming ownership",
+      "Using a vague location"
+    ],
+    "active": true,
+    "order": 2
+  },
+  {
+    "part": 3,
+    "part_title": "Give the reason for the call",
+    "purpose": "Use local relevance and the storm date to create a credible reason to continue.",
+    "exact_script": "We got called out to inspect a few properties up the street from you and have been finding some pretty bad hail damage. Did you have someone inspect your building after the storm on {hail_date}?",
+    "success_indicators": [
+      "The prospect answers the inspection question",
+      "The conversation moves to condition or documentation"
+    ],
+    "common_mistakes": [
+      "Overexplaining before asking",
+      "Claiming damage without an inspection",
+      "Failing to pause for the answer"
+    ],
+    "active": true,
+    "order": 3
+  },
+  {
+    "part": 3,
+    "part_title": "No lead-off",
+    "purpose": "Stay credible when the named contact is unavailable or uncertain.",
+    "exact_script": "I'm working near the property on {address} in {city}. Do you still own that building?",
+    "success_indicators": [
+      "The building owner or decision-maker is identified"
+    ],
+    "common_mistakes": [
+      "Pretending to know the contact",
+      "Continuing without verifying the property"
+    ],
+    "active": true,
+    "order": 4
+  }
+]

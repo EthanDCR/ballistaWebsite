@@ -1,0 +1,53 @@
+[
+  {
+    "close_type": "option",
+    "title": "Option Close",
+    "when_to_use": "Use when the prospect is open but needs an easy scheduling choice.",
+    "exact_script": "What works better for you\u2014earlier in the week or later in the week?",
+    "success_indicators": [
+      "The prospect chooses between two real options",
+      "A specific next step is set"
+    ],
+    "common_mistakes": [
+      "Offering too many choices",
+      "Asking a yes-or-no scheduling question",
+      "Skipping confirmation"
+    ],
+    "active": true,
+    "order": 1
+  },
+  {
+    "close_type": "assumptive",
+    "title": "Assumptive Close",
+    "when_to_use": "Use after the prospect agrees the inspection or documentation is useful.",
+    "exact_script": "Perfect. We'll be nearby {city} this week. Are you going to be on-site, or should we call you when we're finished?",
+    "success_indicators": [
+      "The prospect confirms access or check-in",
+      "Contact details are collected"
+    ],
+    "common_mistakes": [
+      "Using it before building value",
+      "Sounding pushy",
+      "Forgetting the call-back plan"
+    ],
+    "active": true,
+    "order": 2
+  },
+  {
+    "close_type": "best_case_worst_case",
+    "title": "Best-Case / Worst-Case Close",
+    "when_to_use": "Use with a warm prospect who needs the outcome framed clearly.",
+    "exact_script": "Best case, the roof is clear and you have documentation. If we do find storm damage, you'll have photos and options before deciding what to do. Would you be opposed to us taking a look while we're nearby?",
+    "success_indicators": [
+      "The prospect sees value in either outcome",
+      "The conversation returns to the inspection"
+    ],
+    "common_mistakes": [
+      "Promising insurance approval",
+      "Using fear",
+      "Skipping the final question"
+    ],
+    "active": true,
+    "order": 3
+  }
+]

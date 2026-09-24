@@ -1,0 +1,34 @@
+[
+  {
+    "category": "software",
+    "title": "HailRecon walkthrough",
+    "description": "How to pull storm and property data before you dial.",
+    "video_url": "",
+    "order": 1,
+    "active": true
+  },
+  {
+    "category": "software",
+    "title": "CRM lead handoff",
+    "description": "How to log a lead so the next teammate knows exactly what happened.",
+    "video_url": "",
+    "order": 2,
+    "active": true
+  },
+  {
+    "category": "software",
+    "title": "JustCall call logging",
+    "description": "How to disposition and log every call cleanly.",
+    "video_url": "",
+    "order": 3,
+    "active": true
+  },
+  {
+    "category": "prospecting",
+    "title": "Prospecting walkthrough",
+    "description": "Add a prospecting training video here.",
+    "video_url": "",
+    "order": 4,
+    "active": true
+  }
+]

@@ -1,0 +1,441 @@
+.cct-page {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 8% 10%, rgba(75, 123, 236, 0.08), transparent 26rem),
+    radial-gradient(circle at 92% 24%, rgba(32, 189, 162, 0.09), transparent 28rem), #f4f9fc;
+  font-family: "Avenir Next", "Nunito Sans", "Segoe UI", sans-serif;
+}
+
+.cct-viewport {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+}
+
+.cct-viewport:active {
+  cursor: grabbing;
+}
+
+.cct-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+}
+
+.cct-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  pointer-events: none;
+  border-radius: 18px;
+  box-shadow: 0 18px 50px rgba(31, 67, 95, 0.14);
+}
+
+.cct-image-mask {
+  position: absolute;
+  background: #f2f4f5;
+  pointer-events: none;
+}
+
+.cct-highlight {
+  position: absolute;
+  border-radius: 18px;
+  border: 3px solid transparent;
+  box-shadow: none;
+  pointer-events: none;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.cct-highlight-active {
+  border-color: #20bda2;
+  box-shadow: 0 0 0 4000px rgba(24, 51, 77, 0.28);
+}
+
+.cct-node-hotspot {
+  position: absolute;
+  appearance: none;
+  border: 2px solid transparent;
+  border-radius: 14px;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.cct-node-hotspot:hover {
+  border-color: rgba(32, 189, 162, 0.55);
+  background: rgba(32, 189, 162, 0.08);
+}
+
+.cct-node-hotspot-active {
+  border-color: #20bda2;
+  background: rgba(32, 189, 162, 0.1);
+}
+
+.cct-brand {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
+}
+
+.cct-brand-link {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 16px 10px 10px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(18px);
+  border: 1px solid #d8e6ee;
+  box-shadow: 0 18px 50px rgba(31, 67, 95, 0.14);
+  text-decoration: none;
+  color: #18334d;
+  font-weight: 600;
+}
+
+.cct-brand-link > span:last-child {
+  display: grid;
+}
+
+.cct-brand-link strong {
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+
+.cct-brand-link small {
+  margin-top: 1px;
+  color: #66788a;
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.cct-brand-mark {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: #18334d;
+  color: #6ce1ce;
+  box-shadow: 0 4px 0 #0f2439;
+}
+
+.cct-nav {
+  position: fixed;
+  left: 20px;
+  right: 20px;
+  bottom: 18px;
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  height: 78px;
+  padding: 0 24px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(18px);
+  border: 1px solid #d8e6ee;
+  box-shadow: 0 18px 50px rgba(31, 67, 95, 0.14);
+  color: #18334d;
+  font-weight: 600;
+}
+
+.cct-nav-items {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  height: 52px;
+  min-width: 0;
+  border: 1px solid #d8e6ee;
+  border-radius: 15px;
+  background: #edf5f8;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.cct-nav-items::-webkit-scrollbar {
+  display: none;
+}
+
+.cct-nav-item {
+  appearance: none;
+  border: none;
+  background: transparent;
+  white-space: nowrap;
+  padding: 0 14px;
+  height: 44px;
+  border-radius: 11px;
+  font-size: 0.82rem;
+  font-family: inherit;
+  font-weight: 800;
+  color: #66788a;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.cct-nav-item:hover {
+  color: #18334d;
+}
+
+.cct-nav-item-active {
+  background: #fff;
+  color: #118d7d;
+  box-shadow: 0 3px 8px rgba(24, 51, 77, 0.1);
+}
+
+.cct-nav-link {
+  flex-shrink: 0;
+  margin-left: auto;
+  padding: 0 16px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  border-radius: 11px;
+  background: #18334d;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #6ce1ce;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.cct-nav-link:hover {
+  opacity: 0.88;
+}
+
+.cct-zoom-controls {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+  display: flex;
+  gap: 6px;
+}
+
+.cct-zoom-controls button {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid #d8e6ee;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(18px);
+  color: #18334d;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 8px 22px rgba(31, 67, 95, 0.1);
+}
+
+.cct-zoom-controls button:hover {
+  background: #dff8f2;
+  color: #118d7d;
+}
+
+.cct-card-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  background: rgba(16, 30, 44, 0.45);
+  backdrop-filter: blur(3px);
+}
+
+.cct-card {
+  width: min(680px, 100%);
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 22px 26px;
+  border-radius: 22px;
+  overflow-y: auto;
+  box-shadow: 0 30px 70px rgba(16, 30, 44, 0.35);
+  font-family: "Avenir Next", "Nunito Sans", "Segoe UI", sans-serif;
+}
+
+.cct-card-dialogue {
+  background: #e4e1fb;
+  border: 1px solid #c9c4f5;
+  color: #2a2550;
+}
+
+.cct-card-legend {
+  background: #4cc26a;
+  border: 1px solid #38a656;
+  color: #0c2e15;
+}
+
+.cct-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cct-card-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.65;
+}
+
+.cct-card-close {
+  appearance: none;
+  border: none;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.08);
+  color: inherit;
+  cursor: pointer;
+}
+
+.cct-card-close:hover {
+  background: rgba(0, 0, 0, 0.16);
+}
+
+.cct-card-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.42;
+}
+
+.cct-card-text p {
+  margin: 0 0 9px;
+}
+
+.cct-card-text p:last-child {
+  margin-bottom: 0;
+}
+
+.cct-card-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.cct-card-options-label {
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.65;
+  margin-bottom: 2px;
+}
+
+.cct-card-option {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  text-align: left;
+  padding: 11px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  background: rgba(255, 255, 255, 0.55);
+  color: inherit;
+  font-family: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.cct-card-option:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(0, 0, 0, 0.28);
+}
+
+.cct-card-option-disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.cct-card-option-disabled small {
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.cct-card-arrows {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+.cct-card-arrows button {
+  appearance: none;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  background: rgba(255, 255, 255, 0.55);
+  color: inherit;
+  cursor: pointer;
+}
+
+.cct-card-arrows button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.cct-card-arrows button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+@media (max-width: 760px) {
+  .cct-brand-link small {
+    display: none;
+  }
+  .cct-nav {
+    height: auto;
+    flex-wrap: wrap;
+    padding: 12px;
+    border-radius: 18px;
+  }
+  .cct-nav-items {
+    order: 1;
+    width: 100%;
+  }
+  .cct-nav-link {
+    order: 2;
+    margin-left: 0;
+  }
+}

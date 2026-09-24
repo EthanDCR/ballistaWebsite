@@ -1,0 +1,56 @@
+[
+  {
+    "module_key": "intro",
+    "video_url": "https://www.loom.com/share/98bafeb604d04fc4a189af31bd2466d0",
+    "overview_title": "Welcome to Call-Stars",
+    "overview_description": "Start here to understand how the course works and what the path is designed to help you practice.",
+    "overview_topics": [
+      "How the six-module onboarding path works",
+      "How XP, hearts, streaks, and checkpoints track progress",
+      "How to use the training labs for continued practice"
+    ]
+  },
+  {
+    "module_key": "scripts",
+    "video_url": "",
+    "overview_title": "",
+    "overview_description": "",
+    "overview_topics": []
+  },
+  {
+    "module_key": "objections",
+    "video_url": "",
+    "overview_title": "",
+    "overview_description": "",
+    "overview_topics": []
+  },
+  {
+    "module_key": "closing",
+    "video_url": "",
+    "overview_title": "",
+    "overview_description": "",
+    "overview_topics": []
+  },
+  {
+    "module_key": "mindset",
+    "video_url": "",
+    "overview_title": "How to improve & Mindset",
+    "overview_description": "Build a repeatable improvement loop and the mindset to stay consistent through difficult calls.",
+    "overview_topics": [
+      "Review calls with curiosity instead of judgment",
+      "Focus on one skill at a time",
+      "Use repetition and feedback to build confidence"
+    ]
+  },
+  {
+    "module_key": "operations",
+    "video_url": "",
+    "overview_title": "Operational Excellence",
+    "overview_description": "Turn good conversations into reliable execution through accurate notes, clean handoffs, and consistent follow-through.",
+    "overview_topics": [
+      "Document every outcome and next step",
+      "Keep customer and property information accurate",
+      "Follow the same high-quality process on every call"
+    ]
+  }
+]
