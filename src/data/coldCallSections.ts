@@ -12,8 +12,7 @@ export interface TreeSection {
   height: number;
 }
 
-// Boxes were hand-mapped from the source flowchart PDF (excludes the
-// "Basic Script" strip at the top, which lives on its own page).
+// Boxes were hand-mapped from the source flowchart PDF.
 export const treeSections: TreeSection[] = [
   {
     id: "start",

@@ -7,9 +7,9 @@ import {
   type PointerEvent as ReactPointerEvent,
   type WheelEvent,
 } from "react";
-import { Link } from "react-router-dom";
 import { AnimatePresence, animate, motion, useMotionValue } from "motion/react";
-import { ArrowLeft, ArrowRight, PhoneCall, X } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ArrowLeft, ArrowRight, Home, X } from "lucide-react";
 import { TREE_IMAGE_HEIGHT, TREE_IMAGE_WIDTH, treeSections } from "../data/coldCallSections";
 import { cardPixelBox, treeCards, type TreeCard } from "../data/coldCallTreeCards";
 import "./ColdCallTree.css";
@@ -583,29 +583,16 @@ export default function ColdCallTree() {
         )}
       </AnimatePresence>
 
-      <motion.div
-        className="cct-brand"
-        initial={{ opacity: 0, y: -12 }}
-        animate={{ opacity: ready ? 1 : 0, y: ready ? 0 : -12 }}
-        transition={{ duration: 0.4 }}
-      >
-        <Link to="/" className="cct-brand-link">
-          <span className="cct-brand-mark">
-            <PhoneCall size={18} strokeWidth={2.6} />
-          </span>
-          <span>
-            <strong>Ballista</strong>
-            <small>Cold Call Decision Tree</small>
-          </span>
-        </Link>
-      </motion.div>
-
       <motion.nav
         className="cct-nav"
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: ready ? 1 : 0, y: ready ? 0 : 16 }}
         transition={{ duration: 0.4 }}
       >
+        <Link to="/" className="cct-nav-home" aria-label="Back to training portal" title="Home">
+          <Home size={19} />
+        </Link>
+
         <div className="cct-nav-items">
           <button
             className={
@@ -628,10 +615,6 @@ export default function ColdCallTree() {
             );
           })}
         </div>
-
-        <Link to="/cold-call-tree/script" className="cct-nav-link">
-          The Basic Script →
-        </Link>
       </motion.nav>
 
       <div className="cct-zoom-controls">

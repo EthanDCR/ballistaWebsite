@@ -87,3 +87,29 @@
 .login-form button {
   margin-top: 4px;
 }
+
+.login-form label.login-terms {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-bottom: 4px;
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.login-form label.login-terms input {
+  width: 17px;
+  height: 17px;
+  margin-top: 1px;
+  flex-shrink: 0;
+  accent-color: var(--teal-dark);
+  cursor: pointer;
+}
+
+.login-form label.login-terms a {
+  color: var(--blue-dark);
+  font-weight: 900;
+  text-decoration: underline;
+}

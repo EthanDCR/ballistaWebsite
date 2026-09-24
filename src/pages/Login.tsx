@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { Navigate, useLocation, useNavigate, type Location } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate, type Location } from "react-router-dom";
 import { PhoneCall } from "lucide-react";
 import { pb } from "../lib/pb";
 import { useAuth } from "../lib/RequireAuth";
@@ -12,6 +12,7 @@ export default function Login() {
   const location = useLocation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -22,6 +23,10 @@ export default function Login() {
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
+    if (!acceptedTerms) {
+      setError("Please accept the Terms of Service to continue.");
+      return;
+    }
     setBusy(true);
     setError("");
     try {
@@ -72,7 +77,20 @@ export default function Login() {
               placeholder="••••••••"
             />
           </label>
-          <button className="primary-button full" type="submit" disabled={busy}>
+          <label className="login-terms">
+            <input
+              type="checkbox"
+              checked={acceptedTerms}
+              onChange={(event) => setAcceptedTerms(event.target.checked)}
+            />
+            <span>
+              I agree to the{" "}
+              <Link to="/terms" target="_blank" rel="noreferrer">
+                Terms of Service
+              </Link>
+            </span>
+          </label>
+          <button className="primary-button full" type="submit" disabled={busy || !acceptedTerms}>
             {busy ? "Signing in…" : "Sign in"}
           </button>
         </form>

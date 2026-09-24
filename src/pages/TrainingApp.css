@@ -62,6 +62,16 @@
 .app-shell p {
   margin-top: 0;
 }
+/* The shell is always light, but the global --text-h flips to near-white
+   under prefers-color-scheme: dark, which left headings invisible on the
+   white cards. Inheriting keeps them readable both ways: ink on the light
+   cards, and white inside the dark hero panels that set their own colour. */
+.app-shell h1,
+.app-shell h2,
+.app-shell h3,
+.app-shell h4 {
+  color: inherit;
+}
 .app-shell a {
   color: inherit;
 }
@@ -76,7 +86,7 @@
   backdrop-filter: blur(18px);
 }
 .topbar-inner {
-  width: min(1180px, calc(100% - 40px));
+  width: min(1680px, calc(100% - 56px));
   height: 100%;
   margin: 0 auto;
   display: flex;
@@ -167,18 +177,18 @@
 .portal-page,
 .detail-page,
 .admin-page {
-  width: min(1140px, calc(100% - 40px));
+  width: min(1680px, calc(100% - 56px));
   margin: 0 auto;
-  padding: 36px 0 72px;
+  padding: 28px 0 56px;
 }
 .hero-card {
-  min-height: 230px;
+  min-height: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 40px;
-  padding: 40px 46px;
-  border-radius: 30px;
+  padding: 26px 34px;
+  border-radius: 24px;
   color: #fff;
   background:
     radial-gradient(circle at 88% 20%, rgba(255, 255, 255, 0.18) 0 4.5rem, transparent 4.6rem),
@@ -201,7 +211,7 @@
 .hero-card h1 {
   max-width: 650px;
   margin-bottom: 12px;
-  font-size: clamp(2rem, 4vw, 3.25rem);
+  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
   line-height: 1.02;
   letter-spacing: -0.045em;
 }
@@ -274,10 +284,16 @@
   background: #fff;
   box-shadow: var(--shadow);
 }
+.portal-columns {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 400px);
+  align-items: start;
+  gap: 20px;
+}
 .path-panel {
-  min-height: 900px;
-  margin-top: 28px;
-  padding: 30px 30px 22px;
+  margin-top: 0;
+  padding: 24px 28px 18px;
   border-radius: 28px;
 }
 .section-heading {
@@ -301,6 +317,14 @@
   font-size: 0.9rem;
   text-align: right;
 }
+.labs-section .section-heading {
+  display: block;
+}
+.labs-section .section-heading > p {
+  max-width: none;
+  margin-top: 6px;
+  text-align: left;
+}
 .section-count {
   padding: 7px 11px;
   border-radius: 99px;
@@ -311,10 +335,9 @@
 }
 .module-path {
   position: relative;
-  max-width: 620px;
-  min-height: 810px;
-  margin: 22px auto 0;
-  padding: 16px 0;
+  max-width: 760px;
+  margin: 16px auto 0;
+  padding: 10px 0;
 }
 .path-spine {
   position: absolute;
@@ -335,7 +358,7 @@
 .module-step {
   position: relative;
   z-index: 1;
-  min-height: 128px;
+  min-height: 104px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 100px minmax(0, 1fr);
   align-items: center;
@@ -491,18 +514,20 @@
   box-shadow: 0 4px 0 var(--red-dark);
 }
 .labs-section {
-  margin-top: 28px;
-  padding: 31px;
+  position: sticky;
+  top: 92px;
+  margin-top: 0;
+  padding: 24px;
   border-radius: 28px;
 }
 .labs-grid {
-  margin-top: 24px;
+  margin-top: 18px;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 14px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
 }
 .lab-card {
-  min-height: 144px;
+  min-height: 0;
   display: grid;
   grid-template-columns: 48px 1fr auto;
   align-items: start;

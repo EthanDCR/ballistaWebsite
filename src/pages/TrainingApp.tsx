@@ -407,7 +407,7 @@ function RepHome({
       <section className="hero-card">
         <div>
           <span className="eyebrow">ONBOARDING COURSE</span>
-          <h1>Build the call, one win at a time.</h1>
+          <h1>Build the base, then win one call at a time.</h1>
           <p>
             Seven focused modules that will show you the tools, and set up the framework for how
             you&apos;ll call. This won&apos;t make you an expert, but it will get you on the path to
@@ -425,6 +425,7 @@ function RepHome({
           </div>
         </div>
       </section>
+      <div className="portal-columns">
       <section className="path-panel">
         <div className="section-heading">
           <div>
@@ -507,6 +508,7 @@ function RepHome({
           ))}
         </div>
       </section>
+      </div>
     </div>
   );
 }
