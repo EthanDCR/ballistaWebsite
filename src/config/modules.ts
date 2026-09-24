@@ -3,7 +3,7 @@ export const modules = [
   { id: "scripts", number: 2, title: "Opening the Call", component: "opening_call" },
   { id: "objections", number: 3, title: "Handling Objections", component: "objections" },
   { id: "closing", number: 4, title: "Closing", component: "closing" },
-  { id: "mindset", number: 5, title: "How to improve & Mindset", component: "mindset" },
+  { id: "mindset", number: 5, title: "The Inner Game of Cold Calling", component: "mindset" },
   { id: "operations", number: 6, title: "Operational Excellence", component: "operations" },
   { id: "signoff", number: 7, title: "Standard of Performance", component: "signoff" },
 ] as const;

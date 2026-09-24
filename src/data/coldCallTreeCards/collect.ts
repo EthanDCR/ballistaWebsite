@@ -12,9 +12,15 @@ export const collectCards: Record<string, TreeCard> = {
     kind: "dialogue",
     eyebrow: "Collect",
     text: "What's a good email for you?",
-    box: box(0.735, 0.4258, 0.06, 0.045),
+    box: box(0.6976, 0.4219, 0.0292, 0.0177),
     next: "collect-confirm-email",
-    options: [{ label: '"My email is…"', target: "collect-confirm-email" }],
+    options: [
+      {
+        label: '"My email is…"',
+        target: "collect-confirm-email",
+        labelPos: { x: 0.72, y: 0.4217 },
+      },
+    ],
   },
 
   "collect-confirm-email": {
@@ -22,10 +28,18 @@ export const collectCards: Record<string, TreeCard> = {
     section: "collect",
     kind: "dialogue",
     text: "*Read back their email and make sure you spelled it right.*",
-    box: box(0.796, 0.4258, 0.055, 0.045),
+    box: box(0.7489, 0.4225, 0.0312, 0.0177),
     options: [
-      { label: "Pro / warm client", target: "collect-who-insurance" },
-      { label: "Normal / short cold client", target: "collect-send-email-goodbye" },
+      {
+        label: "Pro / warm client",
+        target: "collect-who-insurance",
+        labelPos: { x: 0.7853, y: 0.4171 },
+      },
+      {
+        label: "Normal / short cold client",
+        target: "collect-send-email-goodbye",
+        labelPos: { x: 0.7858, y: 0.436 },
+      },
     ],
   },
 
@@ -34,9 +48,15 @@ export const collectCards: Record<string, TreeCard> = {
     section: "collect",
     kind: "dialogue",
     text: "Who do you go through for insurance?",
-    box: box(0.8833, 0.4243, 0.05, 0.04),
+    box: box(0.8125, 0.4070, 0.0310, 0.0177),
     next: "collect-policy-favor",
-    options: [{ label: "I use these guys", target: "collect-policy-favor" }],
+    options: [
+      {
+        label: "I use these guys",
+        target: "collect-policy-favor",
+        labelPos: { x: 0.8345, y: 0.4079 },
+      },
+    ],
   },
 
   "collect-policy-favor": {
@@ -44,9 +64,11 @@ export const collectCards: Record<string, TreeCard> = {
     section: "collect",
     kind: "dialogue",
     text: "We do a lot of work with them — if you could do me a favor and send me over a copy of your policy, I'll be able to tell you if you're covered for the kind of damage we find.",
-    box: box(0.9425, 0.4256, 0.06, 0.05),
+    box: box(0.8593, 0.4070, 0.0310, 0.0244),
     next: "collect-send-email-goodbye",
-    options: [{ label: "Ok", target: "collect-send-email-goodbye" }],
+    options: [
+      { label: "Ok", target: "collect-send-email-goodbye", labelPos: { x: 0.8885, y: 0.412 } },
+    ],
   },
 
   "collect-send-email-goodbye": {
@@ -54,7 +76,7 @@ export const collectCards: Record<string, TreeCard> = {
     section: "collect",
     kind: "dialogue",
     text: "I'll send over that email shortly. It was great to meet you, have a great rest of your day.",
-    box: box(0.945, 0.4675, 0.06, 0.045),
+    box: box(0.9277, 0.4268, 0.0310, 0.0177),
     next: "collect-lead-set",
     options: [{ label: "Continue", target: "collect-lead-set" }],
   },
@@ -65,7 +87,7 @@ export const collectCards: Record<string, TreeCard> = {
     kind: "dialogue",
     eyebrow: "Outcome",
     text: "**LEAD SET!**",
-    box: box(0.976, 0.4649, 0.025, 0.055),
+    box: box(0.9617, 0.4268, 0.0395, 0.0408),
     options: [
       {
         label: "Send them the intro email with our insurance",
@@ -82,7 +104,7 @@ export const collectCards: Record<string, TreeCard> = {
     kind: "dialogue",
     eyebrow: "Next step",
     text: "Send them the intro email with our insurance.",
-    box: box(0.9975, 0.4155, 0.023, 0.032),
+    box: box(0.9903, 0.3939, 0.0157, 0.0286),
     options: [],
   },
 
@@ -92,7 +114,7 @@ export const collectCards: Record<string, TreeCard> = {
     kind: "dialogue",
     eyebrow: "Next step",
     text: "Upload to CRM.",
-    box: box(0.9975, 0.4623, 0.023, 0.032),
+    box: box(0.9903, 0.4256, 0.0157, 0.0286),
     options: [],
   },
 
@@ -102,7 +124,7 @@ export const collectCards: Record<string, TreeCard> = {
     kind: "dialogue",
     eyebrow: "Next step",
     text: "Brag in chat that you set a lead.",
-    box: box(0.9975, 0.5075, 0.023, 0.032),
+    box: box(0.9910, 0.4554, 0.0170, 0.0298),
     options: [],
   },
 };

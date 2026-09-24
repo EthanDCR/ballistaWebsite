@@ -29,10 +29,10 @@ export const firstAskCards: Record<string, TreeCard> = {
     kind: "dialogue",
     eyebrow: "Step 1",
     text: "Hey (name), can you hear me?",
-    box: box(0.173, 0.428),
+    box: box(0.1734, 0.4295, 0.0218, 0.0225),
     options: [
-      { label: "Lead off", target: "opener-lead-off" },
-      { label: "No lead off", target: "opener-no-lead-off" },
+      { label: "Lead off", target: "opener-lead-off", labelPos: { x: 0.2113, y: 0.414 } },
+      { label: "No lead off", target: "opener-no-lead-off", labelPos: { x: 0.2112, y: 0.442 } },
     ],
   },
 
@@ -41,9 +41,15 @@ export const firstAskCards: Record<string, TreeCard> = {
     section: "first-ask",
     kind: "dialogue",
     text: "This is (name). I work for (lead off) — he owns the (lead off) nearby your building on (street name) here in (city).",
-    box: box(0.117, 0.415),
+    box: box(0.2509, 0.3991, 0.0248, 0.0268),
     next: "first-ask-core",
-    options: [{ label: "Ok, what about it", target: "first-ask-core" }],
+    options: [
+      {
+        label: "Ok, what about it",
+        target: "first-ask-core",
+        labelPos: { x: 0.27, y: 0.3991 },
+      },
+    ],
   },
 
   "opener-no-lead-off": {
@@ -51,9 +57,15 @@ export const firstAskCards: Record<string, TreeCard> = {
     section: "first-ask",
     kind: "dialogue",
     text: "This is (name). I'm working near your building on (street) here in (city). Do you still own that building?",
-    box: box(0.118, 0.495),
+    box: box(0.2512, 0.4595, 0.0260, 0.0265),
     next: "first-ask-core",
-    options: [{ label: "Yes, what about it", target: "first-ask-core" }],
+    options: [
+      {
+        label: "Yes, what about it",
+        target: "first-ask-core",
+        labelPos: { x: 0.2712, y: 0.4606 },
+      },
+    ],
   },
 
   "first-ask-core": {
@@ -64,12 +76,36 @@ export const firstAskCards: Record<string, TreeCard> = {
     text: "We got called out to do a few inspections up the street from you and have been finding some **pretty bad** hail damage. *Did you have someone inspect your building after that storm in (date)?*",
     box: box(0.318, 0.428, 0.06, 0.045),
     options: [
-      { label: "Yes, it's been inspected", target: "happy-to-hear-damage" },
-      { label: "I don't have insurance / not filing a claim", target: "gov-programs" },
-      { label: "I'll get someone else to look", target: "maintenance-or-roofer" },
-      { label: "No one has inspected the building yet", target: "of-course-not-note" },
-      { label: "We aren't having any problems", target: "not-causing-leaks-yet" },
-      { label: '"Not interested"', target: "obj-proceed-new-roof" },
+      {
+        label: "Yes, it's been inspected",
+        target: "happy-to-hear-damage",
+        labelPos: { x: 0.3017, y: 0.457 },
+      },
+      {
+        label: "I don't have insurance / not filing a claim",
+        target: "gov-programs",
+        labelPos: { x: 0.295, y: 0.3967 },
+      },
+      {
+        label: "I'll get someone else to look",
+        target: "maintenance-or-roofer",
+        labelPos: { x: 0.3283, y: 0.3949 },
+      },
+      {
+        label: "No one has inspected the building yet",
+        target: "of-course-not-note",
+        labelPos: { x: 0.3833, y: 0.4268 },
+      },
+      {
+        label: "We aren't having any problems",
+        target: "not-causing-leaks-yet",
+        labelPos: { x: 0.3543, y: 0.4411 },
+      },
+      {
+        label: '"Not interested"',
+        target: "obj-proceed-new-roof",
+        labelPos: { x: 0.337, y: 0.4201 },
+      },
     ],
   },
 
@@ -78,10 +114,10 @@ export const firstAskCards: Record<string, TreeCard> = {
     section: "first-ask",
     kind: "dialogue",
     text: "I'm happy to hear that. Did you guys end up having damage?",
-    box: box(0.267, 0.518),
+    box: box(0.2901, 0.4933, 0.0315, 0.0174),
     options: [
-      { label: "Damage", target: "storm-bad-damage" },
-      { label: "No damage", target: "storm-missed" },
+      { label: "Damage", target: "storm-bad-damage", labelPos: { x: 0.267, y: 0.5151 } },
+      { label: "No damage", target: "storm-missed", labelPos: { x: 0.2995, y: 0.5127 } },
     ],
   },
 
@@ -90,11 +126,19 @@ export const firstAskCards: Record<string, TreeCard> = {
     section: "first-ask",
     kind: "dialogue",
     text: "I figured that storm was really bad. Do you guys plan on getting the roof repaired or replaced through insurance?",
-    box: box(0.317, 0.542),
+    box: box(0.2422, 0.5406, 0.0317, 0.0225),
     options: [
-      { label: "We filed a claim", target: "helping-process" },
-      { label: "They denied the claim", target: "sorry-hear-damage" },
-      { label: "No", target: "obj-aw-man-why" },
+      {
+        label: "We filed a claim",
+        target: "helping-process",
+        labelPos: { x: 0.2133, y: 0.558 },
+      },
+      {
+        label: "They denied the claim",
+        target: "sorry-hear-damage",
+        labelPos: { x: 0.2028, y: 0.5495 },
+      },
+      { label: "No", target: "obj-aw-man-why", labelPos: { x: 0.2512, y: 0.5657 } },
     ],
   },
 
@@ -103,7 +147,7 @@ export const firstAskCards: Record<string, TreeCard> = {
     section: "first-ask",
     kind: "dialogue",
     text: "Wow, that's awesome — I'm glad that storm missed you guys. The damage I've seen has been pretty bad. Well, just so nobody else calls you again…",
-    box: box(0.292, 0.548),
+    box: box(0.3097, 0.5362, 0.0317, 0.0283),
     next: "obj-insurance-cant-raise",
     options: [{ label: "Continue", target: "obj-insurance-cant-raise" }],
   },
@@ -113,8 +157,14 @@ export const firstAskCards: Record<string, TreeCard> = {
     section: "first-ask",
     kind: "dialogue",
     text: "Sorry to hear that. Unfortunately this isn't uncommon. Would you be opposed to us stopping by and inspecting the property when we're nearby later this week? I'll let you know if they should've covered the damages. Getting denials overturned is very common and something our company is known for.",
-    box: box(0.192, 0.548, 0.06, 0.045),
-    options: [{ label: "Still no", target: "obj-already-filed-claim" }],
+    box: box(0.1751, 0.5513, 0.0322, 0.0597),
+    options: [
+      {
+        label: "Still no",
+        target: "obj-already-filed-claim",
+        labelPos: { x: 0.1462, y: 0.5477 },
+      },
+    ],
   },
 
   "helping-process": {
@@ -122,10 +172,10 @@ export const firstAskCards: Record<string, TreeCard> = {
     section: "first-ask",
     kind: "dialogue",
     text: "Do you have someone helping you through that process?",
-    box: box(0.292, 0.624),
+    box: box(0.2217, 0.5874, 0.0320, 0.0174),
     options: [
-      { label: "Yes", target: "obj-thats-why-here" },
-      { label: "No", target: "obj-familiar-insurance" },
+      { label: "Yes", target: "obj-thats-why-here", labelPos: { x: 0.2333, y: 0.6058 } },
+      { label: "No", target: "obj-familiar-insurance", labelPos: { x: 0.2058, y: 0.6043 } },
     ],
   },
 
@@ -134,7 +184,7 @@ export const firstAskCards: Record<string, TreeCard> = {
     section: "first-ask",
     kind: "dialogue",
     text: "I wouldn't expect you to — the damage we're seeing isn't stuff that's causing immediate leaks, but it will cause problems in the future. I can let you know if you're in the same boat and….",
-    box: box(0.392, 0.472, 0.06, 0.04),
+    box: box(0.3867, 0.4505, 0.0310, 0.0323),
     next: "obj-got-it-radar-hail",
     options: [{ label: "Continue", target: "obj-got-it-radar-hail" }],
   },
@@ -144,7 +194,7 @@ export const firstAskCards: Record<string, TreeCard> = {
     section: "first-ask",
     kind: "dialogue",
     text: "Of course not — just so no one from my company calls you again (I'll go ahead and put a note in the file), did you guys already come take a look, or just don't have any leaks after the storm?",
-    box: box(0.367, 0.438, 0.06, 0.045),
+    box: box(0.3913, 0.3970, 0.0310, 0.0377),
     next: "obj-ok-great-missed-you",
     options: [{ label: "Continue", target: "obj-ok-great-missed-you" }],
   },
@@ -156,8 +206,8 @@ export const firstAskCards: Record<string, TreeCard> = {
     text: "That's no problem — there's a few government programs and grants that let you put a new roof on at no cost, even if you don't have insurance. Are you dealing with any issues or leaks currently?",
     box: box(0.28, 0.359, 0.06, 0.045),
     options: [
-      { label: "They have issues", target: "biggest-reason" },
-      { label: "No issues", target: "biggest-reason" },
+      { label: "They have issues", target: "biggest-reason", labelPos: { x: 0.273, y: 0.323 } },
+      { label: "No issues", target: "biggest-reason", labelPos: { x: 0.2838, y: 0.3312 } },
     ],
   },
 
@@ -166,7 +216,7 @@ export const firstAskCards: Record<string, TreeCard> = {
     section: "first-ask",
     kind: "dialogue",
     text: "The biggest reason we'd get a look into this now is #1, to let you know if the damage sustained will cause you any leaks or problems in the future, and #2, to help stop them from happening before they start.",
-    box: box(0.3, 0.298, 0.06, 0.045),
+    box: box(0.2851, 0.3002, 0.0288, 0.0304),
     options: [],
   },
 
@@ -175,10 +225,18 @@ export const firstAskCards: Record<string, TreeCard> = {
     section: "first-ask",
     kind: "dialogue",
     text: "Hey, that's great to hear — I'm sure you have a maintenance guy who works for ya, or is it a roofer?",
-    box: box(0.33, 0.399, 0.06, 0.04),
+    box: box(0.3313, 0.3645, 0.0317, 0.0228),
     options: [
-      { label: "Maintenance guy", target: "maintenance-guy-response" },
-      { label: "I have a roofer", target: "qualify-out-of-blue-or-roofer" },
+      {
+        label: "Maintenance guy",
+        target: "maintenance-guy-response",
+        labelPos: { x: 0.3287, y: 0.3465 },
+      },
+      {
+        label: "I have a roofer",
+        target: "qualify-out-of-blue-or-roofer",
+        labelPos: { x: 0.3487, y: 0.3811 },
+      },
     ],
   },
 
@@ -187,7 +245,7 @@ export const firstAskCards: Record<string, TreeCard> = {
     section: "first-ask",
     kind: "dialogue",
     text: "Pretty much all my clients have a maintenance guy and they're great, but they're not looking for the same kind of stuff we are. We'll be able to tell you if you have legitimate storm damage, if it affected the lifespan of your roof, and if it's worth looking into filing a claim.",
-    box: box(0.335, 0.313, 0.06, 0.045),
+    box: box(0.3169, 0.3090, 0.0325, 0.0493),
     options: [],
   },
 };

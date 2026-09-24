@@ -38,30 +38,65 @@ function findPrevCardId(id: string): string | undefined {
   return Object.values(treeCards).find((card) => card.next === id)?.id;
 }
 
-function renderCardText(text: string) {
-  return text.split("\n\n").map((paragraph, pIndex) => (
-    <p key={pIndex}>
-      {paragraph.split("\n").map((line, lIndex, lines) => (
-        <span key={lIndex}>
-          {renderInline(line)}
-          {lIndex < lines.length - 1 && <br />}
-        </span>
-      ))}
-    </p>
-  ));
+interface OptionMarker {
+  target: string;
+  label: string;
+  isLabelBased: boolean;
+  box: Box;
 }
 
-function renderInline(line: string) {
-  const parts = line.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g).filter(Boolean);
-  return parts.map((part, index) => {
-    if (part.startsWith("**") && part.endsWith("**")) {
-      return <strong key={index}>{part.slice(2, -2)}</strong>;
+// What actually lights up as clickable: the response label as it appears on
+// the connector line in the source image (e.g. "How much does this cost?")
+// — that's what a rep reads to pick a branch, not the destination box. Only
+// falls back to outlining the whole target box when we haven't measured
+// that label's position yet.
+function optionMarkers(card: TreeCard): OptionMarker[] {
+  const markers: OptionMarker[] = [];
+  for (const option of card.options) {
+    if (!option.target) continue;
+    if (option.labelPos) {
+      // Calibrated against measured label text in the source image: the
+      // connector labels run ~3.9px/char wide and ~16px tall at full
+      // resolution, so keep the marker close to that plus a little padding.
+      const width = Math.max(option.label.length * 4.2 + 26, 70);
+      const height = 34;
+      markers.push({
+        target: option.target,
+        label: option.label,
+        isLabelBased: true,
+        box: {
+          left: option.labelPos.x * TREE_IMAGE_WIDTH - width / 2,
+          top: option.labelPos.y * TREE_IMAGE_HEIGHT - height / 2,
+          width,
+          height,
+        },
+      });
+      continue;
     }
-    if (part.startsWith("*") && part.endsWith("*")) {
-      return <em key={index}>{part.slice(1, -1)}</em>;
-    }
-    return <span key={index}>{part}</span>;
-  });
+    const targetCard = treeCards[option.target];
+    if (!targetCard) continue;
+    markers.push({
+      target: option.target,
+      label: option.label,
+      isLabelBased: false,
+      box: cardPixelBox(targetCard),
+    });
+  }
+  return markers;
+}
+
+function unionBox(boxes: Box[]): Box {
+  const left = Math.min(...boxes.map((b) => b.left));
+  const top = Math.min(...boxes.map((b) => b.top));
+  const right = Math.max(...boxes.map((b) => b.left + b.width));
+  const bottom = Math.max(...boxes.map((b) => b.top + b.height));
+  const pad = Math.max(right - left, bottom - top) * 0.2;
+  return {
+    left: left - pad,
+    top: top - pad,
+    width: right - left + pad * 2,
+    height: bottom - top + pad * 2,
+  };
 }
 
 const MIN_SCALE = 0.08;
@@ -117,10 +152,14 @@ export default function ColdCallTree() {
 
   const [activeId, setActiveId] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
-  const [openCardId, setOpenCardId] = useState<string | null>(null);
-  const openCard = useMemo<TreeCard | null>(
-    () => (openCardId ? (treeCards[openCardId] ?? null) : null),
-    [openCardId],
+  const [activeCardId, setActiveCardId] = useState<string | null>(null);
+  const activeCard = useMemo<TreeCard | null>(
+    () => (activeCardId ? (treeCards[activeCardId] ?? null) : null),
+    [activeCardId],
+  );
+  const activeOptionMarkers = useMemo<OptionMarker[]>(
+    () => (activeCard ? optionMarkers(activeCard) : []),
+    [activeCard],
   );
 
   const goToBox = useCallback(
@@ -142,20 +181,24 @@ export default function ColdCallTree() {
     [x, y, scale],
   );
 
-  const openCardById = useCallback(
+  const focusNode = useCallback(
     (id: string) => {
       const card = treeCards[id];
       if (!card) return;
-      setOpenCardId(id);
+      setActiveCardId(id);
       setActiveId(card.section);
-      goToBox(cardPixelBox(card), true);
+      // Frame the current box plus its clickable response labels. Labels are
+      // small and sit right on the connector lines, so this stays tight —
+      // framing whole destination boxes zoomed way out.
+      const boxes = [cardPixelBox(card), ...optionMarkers(card).map((m) => m.box)];
+      goToBox(unionBox(boxes), true);
     },
     [goToBox],
   );
 
   const goToSection = useCallback(
     (id: string | null, animated = true) => {
-      setOpenCardId(null);
+      setActiveCardId(null);
       setActiveId(id);
       const box =
         id === null
@@ -227,7 +270,7 @@ export default function ColdCallTree() {
       if (!e.isPrimary) return;
       if (e.button !== 0 && e.pointerType === "mouse") return;
       setActiveId(null);
-      setOpenCardId(null);
+      setActiveCardId(null);
       panState.current = {
         pointerId: e.pointerId,
         startClientX: e.clientX,
@@ -252,7 +295,7 @@ export default function ColdCallTree() {
     (e: WheelEvent) => {
       e.preventDefault();
       setActiveId(null);
-      setOpenCardId(null);
+      setActiveCardId(null);
       const factor = Math.exp(-e.deltaY * 0.0012);
       zoomAt(e.clientX, e.clientY, factor);
     },
@@ -265,7 +308,7 @@ export default function ColdCallTree() {
       if (!el) return;
       const rect = el.getBoundingClientRect();
       setActiveId(null);
-      setOpenCardId(null);
+      setActiveCardId(null);
       const currentScale = scale.get();
       const newScale = clamp(currentScale * factor, MIN_SCALE, MAX_SCALE);
       const cx = rect.width / 2;
@@ -295,7 +338,7 @@ export default function ColdCallTree() {
     const onTouchStart = (e: TouchEvent) => {
       if (e.touches.length === 2) {
         setActiveId(null);
-        setOpenCardId(null);
+        setActiveCardId(null);
         panState.current = null;
         const mid = touchMid(e.touches);
         pinchState.current = {
@@ -338,7 +381,7 @@ export default function ColdCallTree() {
         onPointerDown={handlePointerDown}
         onDoubleClick={(e) => {
           setActiveId(null);
-          setOpenCardId(null);
+          setActiveCardId(null);
           zoomAt(e.clientX, e.clientY, 1.7);
         }}
       >
@@ -364,59 +407,179 @@ export default function ColdCallTree() {
               }}
             />
           ))}
-          {treeSections.map((section) => (
+          {activeCard && (
             <div
-              key={section.id}
-              className={"cct-highlight" + (activeId === section.id ? " cct-highlight-active" : "")}
-              style={{
-                left: section.x * TREE_IMAGE_WIDTH,
-                top: section.y * TREE_IMAGE_HEIGHT,
-                width: section.width * TREE_IMAGE_WIDTH,
-                height: section.height * TREE_IMAGE_HEIGHT,
-              }}
+              className="cct-spotlight"
+              style={(() => {
+                const boxes = [
+                  cardPixelBox(activeCard),
+                  ...activeOptionMarkers.map((marker) => marker.box),
+                ];
+                const spot = unionBox(boxes);
+                return {
+                  left: spot.left,
+                  top: spot.top,
+                  width: spot.width,
+                  height: spot.height,
+                };
+              })()}
             />
-          ))}
+          )}
           {Object.values(treeCards).map((card) => {
             const pixelBox = cardPixelBox(card);
+            const isCurrent = activeCardId === card.id;
             return (
               <button
                 key={card.id}
                 type="button"
-                className={
-                  "cct-node-hotspot" + (openCardId === card.id ? " cct-node-hotspot-active" : "")
-                }
+                className={"cct-node-hotspot" + (isCurrent ? " cct-node-hotspot-current" : "")}
                 style={{
                   left: pixelBox.left,
                   top: pixelBox.top,
                   width: pixelBox.width,
                   height: pixelBox.height,
                 }}
-                aria-label={`Open card: ${card.eyebrow ?? card.text.slice(0, 40)}`}
+                aria-label={`Focus card: ${card.eyebrow ?? card.text.slice(0, 40)}`}
                 onPointerDown={(e) => e.stopPropagation()}
                 onClick={(e) => {
                   e.stopPropagation();
-                  openCardById(card.id);
+                  focusNode(card.id);
                 }}
               />
             );
           })}
+          {activeOptionMarkers.map((marker) => (
+            <button
+              key={marker.target}
+              type="button"
+              className={
+                "cct-option-marker" + (marker.isLabelBased ? " cct-option-marker-label" : "")
+              }
+              style={{
+                left: marker.box.left,
+                top: marker.box.top,
+                width: marker.box.width,
+                height: marker.box.height,
+              }}
+              aria-label={`Choose: ${marker.label}`}
+              onPointerDown={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                focusNode(marker.target);
+              }}
+            />
+          ))}
         </motion.div>
       </div>
 
       <AnimatePresence>
-        {openCard && (
-          <TreeCardPanel
-            card={openCard}
-            hasNext={Boolean(openCard.next)}
-            hasPrev={Boolean(findPrevCardId(openCard.id))}
-            onNext={() => openCard.next && openCardById(openCard.next)}
-            onPrev={() => {
-              const prev = findPrevCardId(openCard.id);
-              if (prev) openCardById(prev);
+        {activeCard?.kind === "legend" && (
+          <motion.div
+            className="cct-legend-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.22 }}
+            onClick={() => {
+              setActiveCardId(null);
+              setActiveId(null);
             }}
-            onOption={(target) => openCardById(target)}
-            onClose={() => setOpenCardId(null)}
-          />
+          >
+            <motion.div
+              className="cct-legend-card"
+              initial={{ opacity: 0, scale: 0.96, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 10 }}
+              transition={{ duration: 0.22 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="cct-legend-top">
+                <span className="cct-legend-eyebrow">{activeCard.eyebrow}</span>
+                <button
+                  className="cct-legend-close"
+                  aria-label="Close"
+                  onClick={() => {
+                    setActiveCardId(null);
+                    setActiveId(null);
+                  }}
+                >
+                  <X size={18} />
+                </button>
+              </div>
+              <div className="cct-legend-text">
+                {activeCard.text.split("\n\n").map((para, i) => (
+                  <p key={i}>
+                    {para.split("\n").map((line, j, lines) => (
+                      <span key={j}>
+                        {line
+                          .split(/(\*\*[^*]+\*\*)/g)
+                          .filter(Boolean)
+                          .map((part, k) =>
+                            part.startsWith("**") && part.endsWith("**") ? (
+                              <strong key={k}>{part.slice(2, -2)}</strong>
+                            ) : (
+                              <span key={k}>{part}</span>
+                            ),
+                          )}
+                        {j < lines.length - 1 && <br />}
+                      </span>
+                    ))}
+                  </p>
+                ))}
+              </div>
+              {activeCard.next && (
+                <button
+                  className="cct-legend-next"
+                  onClick={() => activeCard.next && focusNode(activeCard.next)}
+                >
+                  Start the call <ArrowRight size={17} />
+                </button>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {activeCard && activeCard.kind !== "legend" && (
+          <motion.div
+            className="cct-focus-bar"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+          >
+            <button
+              aria-label="Previous card"
+              disabled={!findPrevCardId(activeCard.id)}
+              onClick={() => {
+                const prev = findPrevCardId(activeCard.id);
+                if (prev) focusNode(prev);
+              }}
+            >
+              <ArrowLeft size={17} />
+            </button>
+            <span className="cct-focus-bar-label">
+              {activeCard.eyebrow ?? treeSections.find((s) => s.id === activeCard.section)?.label}
+            </span>
+            <button
+              aria-label="Next card"
+              disabled={!activeCard.next}
+              onClick={() => activeCard.next && focusNode(activeCard.next)}
+            >
+              <ArrowRight size={17} />
+            </button>
+            <button
+              className="cct-focus-bar-close"
+              aria-label="Exit focus"
+              onClick={() => {
+                setActiveCardId(null);
+                setActiveId(null);
+              }}
+            >
+              <X size={16} />
+            </button>
+          </motion.div>
         )}
       </AnimatePresence>
 
@@ -446,7 +609,7 @@ export default function ColdCallTree() {
         <div className="cct-nav-items">
           <button
             className={
-              "cct-nav-item" + (activeId === null && !openCardId ? " cct-nav-item-active" : "")
+              "cct-nav-item" + (activeId === null && !activeCardId ? " cct-nav-item-active" : "")
             }
             onClick={() => goToSection(null)}
           >
@@ -458,7 +621,7 @@ export default function ColdCallTree() {
               <button
                 key={section.id}
                 className={"cct-nav-item" + (activeId === section.id ? " cct-nav-item-active" : "")}
-                onClick={() => (entryCard ? openCardById(entryCard) : goToSection(section.id))}
+                onClick={() => (entryCard ? focusNode(entryCard) : goToSection(section.id))}
               >
                 {section.label}
               </button>
@@ -480,81 +643,5 @@ export default function ColdCallTree() {
         </button>
       </div>
     </div>
-  );
-}
-
-function TreeCardPanel({
-  card,
-  hasNext,
-  hasPrev,
-  onNext,
-  onPrev,
-  onOption,
-  onClose,
-}: {
-  card: TreeCard;
-  hasNext: boolean;
-  hasPrev: boolean;
-  onNext: () => void;
-  onPrev: () => void;
-  onOption: (target: string) => void;
-  onClose: () => void;
-}) {
-  const sectionLabel = treeSections.find((s) => s.id === card.section)?.label;
-
-  return (
-    <motion.div
-      className="cct-card-overlay"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.25 }}
-      onClick={onClose}
-    >
-      <motion.div
-        key={card.id}
-        className={`cct-card cct-card-${card.kind}`}
-        initial={{ opacity: 0, scale: 0.96, y: 10 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.96, y: 10 }}
-        transition={{ duration: 0.25 }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="cct-card-top">
-          <span className="cct-card-eyebrow">{card.eyebrow ?? sectionLabel}</span>
-          <button className="cct-card-close" aria-label="Close card" onClick={onClose}>
-            <X size={18} />
-          </button>
-        </div>
-
-        <div className="cct-card-text">{renderCardText(card.text)}</div>
-
-        {card.options.length > 0 && (
-          <div className="cct-card-options">
-            <span className="cct-card-options-label">Their response</span>
-            {card.options.map((option, index) => (
-              <button
-                key={index}
-                className={"cct-card-option" + (!option.target ? " cct-card-option-disabled" : "")}
-                disabled={!option.target}
-                onClick={() => option.target && onOption(option.target)}
-              >
-                {option.label}
-                {!option.target && <small>Not mapped yet</small>}
-              </button>
-            ))}
-          </div>
-        )}
-
-        <div className="cct-card-arrows">
-          <button aria-label="Previous card" disabled={!hasPrev} onClick={onPrev}>
-            <ArrowLeft size={18} />
-          </button>
-          <button aria-label="Next card" disabled={!hasNext} onClick={onNext}>
-            <ArrowRight size={18} />
-          </button>
-        </div>
-      </motion.div>
-    </motion.div>
   );
 }

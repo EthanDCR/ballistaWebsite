@@ -18,10 +18,10 @@
     "question": "What's the order of our opening sequence?",
     "type": "sequence",
     "options": [
-      "Confirm the name \u2192 Confirm the Building \u2192 Rapport, Need, Ask for the Inspection",
-      "Identify yourself \u2192 Reason for call \u2192 Ask permission to continue",
-      "Ask permission \u2192 Identify yourself \u2192 Reason for call",
-      "Identify yourself \u2192 Ask permission \u2192 Reason for call"
+      "Confirm the name → Confirm the Building → Rapport, Need, Ask for the Inspection",
+      "Identify yourself → Reason for call → Ask permission to continue",
+      "Ask permission → Identify yourself → Reason for call",
+      "Identify yourself → Ask permission → Reason for call"
     ],
     "correct_index": 0,
     "explanation": "Find out if you have the right person (Part 1). Figure out if it's their building (Part 2). Build need and ask if they've had an inspection done (Part 3).",
@@ -32,13 +32,13 @@
     "question": "How long should it take you to ask if they've gotten their building inspected?",
     "type": "fill_blank",
     "options": [
-      "25\u201330 seconds",
-      "10\u201315 seconds",
-      "35\u201345 seconds",
+      "25–30 seconds",
+      "10–15 seconds",
+      "35–45 seconds",
       "1 minute"
     ],
     "correct_index": 0,
-    "explanation": "25\u201330 seconds is the sweet spot. Too short and you probably didn't build enough need or get the client to respond to the first two parts of your opener. Too long and they're hanging up on you.",
+    "explanation": "25–30 seconds is the sweet spot. Too short and you probably didn't build enough need or get the client to respond to the first two parts of your opener. Too long and they're hanging up on you.",
     "order": 3
   },
   {
@@ -46,7 +46,7 @@
     "question": "A prospect says 'I'm not interested' or hangs up on you during Part 1 & 2. What does this tell you?",
     "type": "scenario",
     "options": [
-      "They truly don't want a new roof \u2014 move on",
+      "They truly don't want a new roof — move on",
       "Your Part 1 & 2 came across salesy and you didn't follow the script",
       "This is a 'super no' and you should mark them as dead",
       "You should immediately launch into Part 3"
@@ -94,7 +94,7 @@
       "Clarify"
     ],
     "correct_index": 2,
-    "explanation": "You're not arguing \u2014 you're offering certainty through a free inspection. The unknown is what you're resolving.",
+    "explanation": "You're not arguing — you're offering certainty through a free inspection. The unknown is what you're resolving.",
     "order": 7
   },
   {
@@ -102,10 +102,10 @@
     "question": "What is the objection cycle?",
     "type": "sequence",
     "options": [
-      "Agree \u2192 Give Info/Build Need \u2192 Close",
-      "Delay \u2192 Deny \u2192 Defend",
-      "Pitch \u2192 Close",
-      "Agree \u2192 Clarify or Give Info/Build Need \u2192 Close"
+      "Agree → Give Info/Build Need → Close",
+      "Delay → Deny → Defend",
+      "Pitch → Close",
+      "Agree → Clarify or Give Info/Build Need → Close"
     ],
     "correct_index": 3,
     "explanation": "This is the way.",
@@ -130,8 +130,8 @@
     "question": "A rep says: 'Would you like me to send someone out?' What is wrong with this?",
     "type": "mistake_recognition",
     "options": [
-      "Nothing \u2014 it's polite and professional",
-      "It gives the prospect an easy 'no' \u2014 it's asking for permission instead of closing",
+      "Nothing — it's polite and professional",
+      "It gives the prospect an easy 'no' — it's asking for permission instead of closing",
       "It's too informal",
       "It's missing the storm reference"
     ],
@@ -178,7 +178,63 @@
       "Wait for a stronger commitment before closing"
     ],
     "correct_index": 1,
-    "explanation": "Soft agreement is enough. Asking 'are you sure?' invites doubt. Assume yes and move to scheduling \u2014 that's the Assumptive Close.",
+    "explanation": "Soft agreement is enough. Asking 'are you sure?' invites doubt. Assume yes and move to scheduling — that's the Assumptive Close.",
     "order": 13
+  },
+  {
+    "module_key": "mindset",
+    "question": "Why should cold calling be scheduled near the beginning of the workday?",
+    "type": "concept",
+    "options": [
+      "Callers are mentally fresh and have more attention and emotional energy",
+      "Prospects are guaranteed to answer their phones earlier",
+      "Early calls require less preparation",
+      "Callers experience less rejection during the morning"
+    ],
+    "correct_index": 0,
+    "explanation": "Attention and emotional energy are finite — spend them on calls before the day drains them.",
+    "order": 1
+  },
+  {
+    "module_key": "mindset",
+    "question": "Which behavior best represents Self 2 during a cold call?",
+    "type": "concept",
+    "options": [
+      "Judging every sentence immediately after saying it",
+      "Reciting the script without adjusting to the prospect",
+      "Listening carefully and allowing trained ability to respond naturally",
+      "Forcing the conversation toward an appointment regardless of fit"
+    ],
+    "correct_index": 2,
+    "explanation": "Self 2 is your trained, instinctive ability — it performs best when Self 1 stops interfering.",
+    "order": 2
+  },
+  {
+    "module_key": "mindset",
+    "question": "Which response best demonstrates awareness without judgment after a poor call?",
+    "type": "scenario",
+    "options": [
+      "“I am terrible at handling objections today.”",
+      "“I answered before the prospect finished explaining the objection.”",
+      "“That guy was a d*ck.”",
+      "“I need to try harder and make the next appointment happen.”"
+    ],
+    "correct_index": 1,
+    "explanation": "Observe the specific behavior, not your worth. A factual observation is something you can actually adjust.",
+    "order": 3
+  },
+  {
+    "module_key": "mindset",
+    "question": "What should a salesperson carry forward after a bad day when the scoreboard resets?",
+    "type": "concept",
+    "options": [
+      "The pressure to recover every missed opportunity",
+      "The belief that another bad day will probably follow",
+      "The frustration needed to push harder on the next prospect",
+      "The useful lesson or pattern without the judgment attached to it"
+    ],
+    "correct_index": 3,
+    "explanation": "Keep the lesson, drop the judgment — that is what makes the reset actually a reset.",
+    "order": 4
   }
 ]

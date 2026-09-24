@@ -23,9 +23,21 @@ export const objectionsCards: Record<string, TreeCard> = {
     text: "Aw man, can I ask why?",
     box: box(0.258, 0.594),
     options: [
-      { label: '"I don\'t want my premiums to go up"', target: "obj-insurance-cant-raise" },
-      { label: '"I don\'t have time"', target: "obj-thats-why-here" },
-      { label: '"Dropped by insurance"', target: "obj-damned-if-you-do" },
+      {
+        label: '"I don\'t want my premiums to go up"',
+        target: "obj-insurance-cant-raise",
+        labelPos: { x: 0.288, y: 0.5936 },
+      },
+      {
+        label: '"I don\'t have time"',
+        target: "obj-thats-why-here",
+        labelPos: { x: 0.2532, y: 0.6272 },
+      },
+      {
+        label: '"Dropped by insurance"',
+        target: "obj-damned-if-you-do",
+        labelPos: { x: 0.281, y: 0.6327 },
+      },
     ],
   },
 
@@ -46,7 +58,13 @@ export const objectionsCards: Record<string, TreeCard> = {
     text: "Totally understand the concern. Unfortunately this is one of those damned-if-you-do, damned-if-you-don't situations. The damage your carrier will see — your building is a liability, putting you at risk of being dropped anyway.",
     box: box(0.326, 0.652, 0.06, 0.05),
     next: "obj-proceed-new-roof",
-    options: [{ label: "I understand", target: "obj-proceed-new-roof" }],
+    options: [
+      {
+        label: "I understand",
+        target: "obj-proceed-new-roof",
+        labelPos: { x: 0.3535, y: 0.6606 },
+      },
+    ],
   },
 
   "obj-proceed-new-roof": {
@@ -66,8 +84,16 @@ export const objectionsCards: Record<string, TreeCard> = {
     text: "And that's exactly what we're here for. Nobody wants to deal with it, so we handle everything — from here to approved claim and new roof on your building. All it would take is 20 minutes so I can walk you through the process. Are you going to be at your building this week?",
     box: box(0.256, 0.689, 0.06, 0.06),
     options: [
-      { label: "At building", target: "obj-qualify-day-time" },
-      { label: "Not at building", target: "obj-zoom-call-time" },
+      {
+        label: "At building",
+        target: "obj-qualify-day-time",
+        labelPos: { x: 0.2763, y: 0.6996 },
+      },
+      {
+        label: "Not at building",
+        target: "obj-zoom-call-time",
+        labelPos: { x: 0.268, y: 0.7394 },
+      },
     ],
   },
 
@@ -99,8 +125,8 @@ export const objectionsCards: Record<string, TreeCard> = {
     text: "Perfect. What time this week works best to do a quick zoom call and go over everything?",
     box: box(0.291, 0.76, 0.055, 0.045),
     options: [
-      { label: "This time", target: "obj-meeting-scheduled" },
-      { label: "No thanks", target: "obj-no-worries-info" },
+      { label: "This time", target: "obj-meeting-scheduled", labelPos: { x: 0.3208, y: 0.7593 } },
+      { label: "No thanks", target: "obj-no-worries-info", labelPos: { x: 0.3047, y: 0.7339 } },
     ],
   },
 
@@ -118,10 +144,10 @@ export const objectionsCards: Record<string, TreeCard> = {
     section: "objections",
     kind: "dialogue",
     text: "I'm sure you're familiar with the insurance process and have done a roof claim before?",
-    box: box(0.193, 0.589, 0.06, 0.045),
+    box: box(0.1932, 0.6300, 0.0320, 0.0265),
     options: [
-      { label: "Yes", target: "obj-anyone-in-place" },
-      { label: "No", target: "obj-third-party" },
+      { label: "Yes", target: "obj-anyone-in-place", labelPos: { x: 0.167, y: 0.6378 } },
+      { label: "No", target: "obj-third-party", labelPos: { x: 0.1933, y: 0.6493 } },
     ],
   },
 
@@ -140,7 +166,9 @@ export const objectionsCards: Record<string, TreeCard> = {
     kind: "dialogue",
     text: "Do you have anyone in place to do the construction once it gets approved?",
     box: box(0.151, 0.666, 0.05, 0.04),
-    options: [{ label: "No", target: "obj-help-with-that" }],
+    options: [
+      { label: "No", target: "obj-help-with-that", labelPos: { x: 0.149, y: 0.692 } },
+    ],
   },
 
   "obj-help-with-that": {

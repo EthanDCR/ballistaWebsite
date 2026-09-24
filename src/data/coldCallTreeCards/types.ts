@@ -3,6 +3,12 @@ import { TREE_IMAGE_HEIGHT, TREE_IMAGE_WIDTH } from "../coldCallSections";
 export interface TreeCardOption {
   label: string;
   target?: string;
+  // Fractional (0..1) position of this option's actual response label as it
+  // appears on the connector line in the source image (e.g. "How much does
+  // this cost?"). This is what should light up as clickable — the label is
+  // what a rep reads to pick a branch, not the destination box. Falls back
+  // to highlighting the target's own box when not yet measured.
+  labelPos?: { x: number; y: number };
 }
 
 export interface TreeCardBox {

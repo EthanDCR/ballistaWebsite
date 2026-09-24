@@ -14,8 +14,16 @@ export const closeCards: Record<string, TreeCard> = {
     box: box(0.4983, 0.4259, 0.065, 0.05),
     next: "close-qualify-up-at-building",
     options: [
-      { label: "How much does this cost?", target: "close-free-inspection" },
-      { label: '"Let me think about it…."', target: "close-perfect-next-time" },
+      {
+        label: "How much does this cost?",
+        target: "close-free-inspection",
+        labelPos: { x: 0.5075, y: 0.4563 },
+      },
+      {
+        label: '"Let me think about it…."',
+        target: "close-perfect-next-time",
+        labelPos: { x: 0.4742, y: 0.3888 },
+      },
       { label: "Continue", target: "close-qualify-up-at-building" },
     ],
   },
