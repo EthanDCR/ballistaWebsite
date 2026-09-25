@@ -34,6 +34,20 @@ func main() {
 		},
 	})
 
+	// Self-signups always land as unapproved reps. PocketBase already refuses
+	// to let a non-superuser set `verified`, but `role` is our own field and
+	// would otherwise be settable straight from the signup payload — letting
+	// someone grant themselves Admin mode the moment they were approved.
+	app.OnRecordCreateRequest("users").Bind(&hook.Handler[*core.RecordRequestEvent]{
+		Func: func(e *core.RecordRequestEvent) error {
+			if !e.HasSuperuserAuth() {
+				e.Record.Set("role", "rep")
+				e.Record.SetVerified(false)
+			}
+			return e.Next()
+		},
+	})
+
 	// serve the built frontend (npm run build -> pb_public) so prod only
 	// needs this one process; falls back to index.html for client routing.
 	app.OnServe().Bind(&hook.Handler[*core.ServeEvent]{
@@ -66,18 +80,28 @@ const (
 	ruleAdmin  = "@request.auth.role = 'admin'"
 )
 
-// lockDownUsersCollection disables public self-registration on the built-in
-// users collection (accounts are created manually from the PocketBase admin
-// dashboard) and adds the role field used to gate the Admin mode of the app.
+// lockDownUsersCollection opens self-registration on the built-in users
+// collection but gates it behind manual approval: anyone may create an
+// account, yet PocketBase refuses to issue a token until a superuser ticks
+// `verified` from the admin dashboard. Enforcing that through AuthRule (not
+// the frontend) means an unapproved account cannot authenticate even by
+// calling the API directly. It also adds the role field used to gate the
+// Admin mode of the app.
 func lockDownUsersCollection(app core.App) error {
 	collection, err := app.FindCollectionByNameOrId("users")
 	if err != nil {
 		return err
 	}
 
-	collection.CreateRule = nil
+	// anyone can sign up; nobody can list or delete accounts
+	openSignup := ""
+	collection.CreateRule = &openSignup
 	collection.ListRule = nil
 	collection.DeleteRule = nil
+
+	// ...but only approved (verified) accounts may obtain an auth token
+	onlyApproved := "verified = true"
+	collection.AuthRule = &onlyApproved
 
 	if collection.Fields.GetByName("role") == nil {
 		collection.Fields.Add(&core.SelectField{

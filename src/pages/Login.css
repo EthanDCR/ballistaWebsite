@@ -113,3 +113,43 @@
   font-weight: 900;
   text-decoration: underline;
 }
+
+.login-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 14px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #edf5f8;
+}
+
+.login-tabs button {
+  flex: 1;
+  height: 38px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.login-tabs button.active {
+  background: #fff;
+  color: var(--ink);
+  box-shadow: 0 3px 8px rgba(24, 51, 77, 0.1);
+}
+
+.login-pending {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 16px;
+  display: grid;
+  place-items: center;
+  border-radius: 22px;
+  background: var(--teal-soft);
+  color: var(--teal-dark);
+}
