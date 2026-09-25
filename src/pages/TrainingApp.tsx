@@ -359,7 +359,7 @@ function Topbar({
           aria-label="Call-Stars home"
         >
           <span className="brand-mark">
-            <PhoneCall size={23} strokeWidth={2.6} />
+            <PhoneCall size={18} strokeWidth={2.6} />
           </span>
           <span>
             <strong>CALL-STARS</strong>
@@ -368,11 +368,11 @@ function Topbar({
         </button>
         <div className="mode-switch" aria-label="Portal mode">
           <button className={mode === "rep" ? "active" : ""} onClick={() => onMode("rep")}>
-            <Home size={16} /> Rep portal
+            <Home size={13} /> Rep portal
           </button>
           {isAdmin() && (
             <button className={mode === "admin" ? "active" : ""} onClick={() => onMode("admin")}>
-              <Settings size={16} /> Admin
+              <Settings size={13} /> Admin
             </button>
           )}
         </div>
@@ -382,7 +382,7 @@ function Topbar({
             onClick={() => pb.authStore.clear()}
             aria-label="Sign out"
           >
-            <LogOut size={18} />
+            <LogOut size={14} />
           </button>
         </div>
       </div>
@@ -455,11 +455,11 @@ function RepHome({
                 >
                   <span>
                     {completed ? (
-                      <Check size={30} strokeWidth={3} />
+                      <Check size={24} strokeWidth={3} />
                     ) : unlocked ? (
                       courseModule.number
                     ) : (
-                      <Lock size={25} />
+                      <Lock size={20} />
                     )}
                   </span>
                 </button>
@@ -503,7 +503,7 @@ function RepHome({
                 <strong>{lab.title}</strong>
                 <small>{lab.description}</small>
               </span>
-              <ChevronRight size={20} />
+              <ChevronRight size={16} />
             </button>
           ))}
         </div>
@@ -541,10 +541,10 @@ function ModuleView({
   return (
     <div className="detail-page">
       <button className="back-button" onClick={onBack}>
-        <ChevronLeft size={18} /> Back to path
+        <ChevronLeft size={14} /> Back to path
       </button>
       <section className="detail-hero">
-        <div className="detail-number">{completed ? <Check size={34} /> : courseModule.number}</div>
+        <div className="detail-number">{completed ? <Check size={27} /> : courseModule.number}</div>
         <div>
           <span className="eyebrow">MODULE {courseModule.number}</span>
           <h1>{courseModule.title}</h1>
@@ -552,15 +552,16 @@ function ModuleView({
         </div>
         {completed && (
           <span className="complete-badge">
-            <Check size={16} /> Complete
+            <Check size={13} /> Complete
           </span>
         )}
       </section>
+      {/* The overview sits directly under the hero so reps read what the module
+          covers before the video. Renders for any module whose modules_content
+          row has an overview filled in; hides itself otherwise. */}
+      <FlexibleModuleContent content={moduleContent} />
       {videoUrl && (
         <ModuleVideo number={courseModule.number} title={courseModule.title} url={videoUrl} />
-      )}
-      {(moduleId === "intro" || moduleId === "mindset" || moduleId === "operations") && (
-        <FlexibleModuleContent content={moduleContent} />
       )}
       {moduleId === "scripts" && (
         <ScriptModule
@@ -588,7 +589,7 @@ function ModuleView({
             </p>
           </div>
           <button className="primary-button" disabled={!questionsConfigured} onClick={onStartQuiz}>
-            <CirclePlay size={19} /> {questionsConfigured ? "Start checkpoint" : "Quiz not set up"}
+            <CirclePlay size={15} /> {questionsConfigured ? "Start checkpoint" : "Quiz not set up"}
           </button>
         </section>
       )}
@@ -600,7 +601,7 @@ function ModuleVideo({ number, title, url }: { number: number; title: string; ur
   return (
     <section className="lesson-video-card">
       <div className="lesson-video-heading">
-        <CirclePlay size={20} />
+        <CirclePlay size={16} />
         <div>
           <span className="eyebrow">MODULE {number} VIDEO</span>
           <strong>{title}</strong>
@@ -639,7 +640,7 @@ function FlexibleModuleContent({ content }: { content?: ContentRecord }) {
   return (
     <article className="intro-card">
       <div className="intro-icon">
-        <Sparkles size={28} />
+        <Sparkles size={22} />
       </div>
       <div>
         <span className="eyebrow">START HERE</span>
@@ -648,7 +649,7 @@ function FlexibleModuleContent({ content }: { content?: ContentRecord }) {
         <div className="intro-topics">
           {stringList(content.overview_topics).map((topic) => (
             <span key={topic}>
-              <Check size={16} />
+              <Check size={13} />
               {topic}
             </span>
           ))}
@@ -779,7 +780,7 @@ function InfoList({
       <strong>{title}</strong>
       {items.map((item) => (
         <span key={item}>
-          {good ? <Check size={14} /> : <X size={14} />} {item}
+          {good ? <Check size={11} /> : <X size={11} />} {item}
         </span>
       ))}
     </div>
@@ -824,7 +825,7 @@ function SignOffModule({
         <h2>Sign your commitment</h2>
         {saved ? (
           <div className="signed-success">
-            <Trophy size={42} />
+            <Trophy size={34} />
             <strong>Signed and complete</strong>
             <p>Your acknowledgment is saved.</p>
           </div>
@@ -853,7 +854,7 @@ function SignOffModule({
               disabled={!typedName.trim() || !email.trim() || !signature}
               onClick={submit}
             >
-              <Save size={18} /> Submit sign-off
+              <Save size={14} /> Submit sign-off
             </button>
           </>
         )}
@@ -975,8 +976,8 @@ function QuizView({
               >
                 <span>{String.fromCharCode(65 + optionIndex)}</span>
                 {option}
-                {isCorrect && <Check size={20} />}
-                {chosen && !isCorrect && <X size={20} />}
+                {isCorrect && <Check size={16} />}
+                {chosen && !isCorrect && <X size={16} />}
               </button>
             );
           })}
@@ -985,7 +986,7 @@ function QuizView({
       {selected !== null && (
         <div className={`feedback-dock ${correct ? "correct" : "wrong"}`}>
           <div>
-            {correct ? <Check size={26} /> : <X size={26} />}
+            {correct ? <Check size={21} /> : <X size={21} />}
             <span>
               <strong>{correct ? "Nice work!" : "Not quite"}</strong>
               <small>
@@ -996,7 +997,7 @@ function QuizView({
             </span>
           </div>
           <button onClick={onAdvance}>
-            {index === questions.length - 1 ? "See results" : "Continue"} <ArrowRight size={18} />
+            {index === questions.length - 1 ? "See results" : "Continue"} <ArrowRight size={14} />
           </button>
         </div>
       )}
@@ -1009,20 +1010,20 @@ function SummaryView({ summary, onContinue }: { summary: Summary; onContinue: ()
     <div className="summary-page">
       <section className="summary-card">
         <div className="trophy-bubble">
-          <Trophy size={52} />
+          <Trophy size={42} />
         </div>
         <span className="eyebrow">LESSON COMPLETE</span>
         <h1>{summary.title}</h1>
         <p>You finished the checkpoint and saved your progress.</p>
         <div className="summary-stats">
           <div>
-            <Target size={25} />
+            <Target size={20} />
             <strong>{summary.accuracy}%</strong>
             <span>accuracy</span>
           </div>
         </div>
         <button className="primary-button full" onClick={onContinue}>
-          Continue to path <ArrowRight size={18} />
+          Continue to path <ArrowRight size={14} />
         </button>
       </section>
     </div>
@@ -1046,7 +1047,7 @@ function LabView({
   return (
     <div className="detail-page">
       <button className="back-button" onClick={onBack}>
-        <ChevronLeft size={18} /> Back to portal
+        <ChevronLeft size={14} /> Back to portal
       </button>
       <section className="lab-hero">
         <span className="lab-icon large">{labIcon(lab.id, 32)}</span>
@@ -1085,7 +1086,7 @@ function ScriptDocument({ content }: { content: ContentSnapshot }) {
       <div className="pdf-reader-toolbar">
         <div className="pdf-reader-title">
           <span>
-            <ScrollText size={25} />
+            <ScrollText size={20} />
           </span>
           <div>
             <span className="eyebrow">SCRIPT FIELD GUIDE</span>
@@ -1095,10 +1096,10 @@ function ScriptDocument({ content }: { content: ContentSnapshot }) {
         </div>
         <div className="pdf-reader-actions">
           <a className="outline-button compact" href={fileUrl} target="_blank" rel="noreferrer">
-            Open full screen <ExternalLink size={15} />
+            Open full screen <ExternalLink size={12} />
           </a>
           <a className="primary-button compact" href={fileUrl} download>
-            Download PDF <Download size={15} />
+            Download PDF <Download size={12} />
           </a>
         </div>
       </div>
@@ -1109,11 +1110,11 @@ function ScriptDocument({ content }: { content: ContentSnapshot }) {
         aria-label={title}
       >
         <div className="pdf-reader-fallback">
-          <ScrollText size={36} />
+          <ScrollText size={29} />
           <strong>Open the script field guide</strong>
           <p>Your browser cannot display the PDF inside this page.</p>
           <a className="primary-button" href={fileUrl} target="_blank" rel="noreferrer">
-            Open PDF <ExternalLink size={17} />
+            Open PDF <ExternalLink size={14} />
           </a>
         </div>
       </object>
@@ -1133,7 +1134,7 @@ function CallLibrary({ items }: { items: ContentRecord[] }) {
       {items.map((item) => (
         <article className="call-card" key={text(item.id)}>
           <div className="call-play">
-            <Headphones size={28} />
+            <Headphones size={22} />
           </div>
           <div className="card-main">
             <span className="eyebrow">
@@ -1271,7 +1272,7 @@ function MasteryLab({ items, onAward }: { items: ContentRecord[]; onAward: (id: 
           Check response
         </button>
         <button className="primary-button" onClick={next}>
-          {checked ? "Next scenario" : "Skip"} <ArrowRight size={17} />
+          {checked ? "Next scenario" : "Skip"} <ArrowRight size={14} />
         </button>
       </div>
     </section>
@@ -1415,7 +1416,7 @@ function RecordFormField({
               }
               aria-label="Remove item"
             >
-              <X size={14} />
+              <X size={11} />
             </button>
           </div>
         ))}
@@ -1424,7 +1425,7 @@ function RecordFormField({
           className="outline-button compact"
           onClick={() => onChange({ ...draft, [field.name]: [...list, ""] })}
         >
-          <Plus size={14} /> Add
+          <Plus size={11} /> Add
         </button>
       </div>
     );
@@ -1615,7 +1616,7 @@ function AdminStudio({
         <section className="record-panel">
           {showingCallRecordings || !meta ? (
             <div className="editor-empty">
-              <Headphones size={38} />
+              <Headphones size={30} />
               <h2>Call recordings</h2>
               <p>Upload and manage audio from the panel on the right.</p>
             </div>
@@ -1627,7 +1628,7 @@ function AdminStudio({
                 </div>
                 {!meta.singleton && (
                   <button className="primary-button compact" onClick={newRecord}>
-                    <Plus size={17} /> New record
+                    <Plus size={14} /> New record
                   </button>
                 )}
               </div>
@@ -1637,18 +1638,18 @@ function AdminStudio({
                   onClick={editSettings}
                 >
                   <span className="record-avatar">
-                    <Settings size={18} />
+                    <Settings size={14} />
                   </span>
                   <span>
                     <strong>Global portal settings</strong>
                     <small>SOP text and script PDF</small>
                   </span>
-                  <Pencil size={16} />
+                  <Pencil size={13} />
                 </button>
               ) : (
                 <>
                   <label className="search-box">
-                    <Search size={17} />
+                    <Search size={14} />
                     <input
                       value={search}
                       onChange={(event) => setSearch(event.target.value)}
@@ -1669,7 +1670,7 @@ function AdminStudio({
                           <strong>{recordTitle(record)}</strong>
                           <small>{text(record.id)}</small>
                         </span>
-                        <Pencil size={16} />
+                        <Pencil size={13} />
                       </button>
                     ))}
                   </div>
@@ -1695,7 +1696,7 @@ function AdminStudio({
                     onClick={() => setDeleteId(selectedId)}
                     aria-label="Delete record"
                   >
-                    <Trash2 size={18} />
+                    <Trash2 size={14} />
                   </button>
                 )}
               </div>
@@ -1712,14 +1713,14 @@ function AdminStudio({
               <div className="editor-footer">
                 <span>{notice}</span>
                 <button className="primary-button compact" onClick={saveDraft} disabled={saving}>
-                  <Save size={17} /> {saving ? "Saving…" : "Save record"}
+                  <Save size={14} /> {saving ? "Saving…" : "Save record"}
                 </button>
               </div>
             </>
           ) : (
             !showingCallRecordings && (
               <div className="editor-empty">
-                <BookOpen size={38} />
+                <BookOpen size={30} />
                 <h2>Select a record</h2>
                 <p>Choose an item to edit it, or create a new one.</p>
               </div>
@@ -1736,7 +1737,7 @@ function AdminStudio({
             aria-labelledby="delete-title"
           >
             <span className="danger-bubble">
-              <Trash2 size={24} />
+              <Trash2 size={19} />
             </span>
             <h2 id="delete-title">Delete this record?</h2>
             <p>
@@ -1813,7 +1814,7 @@ function AudioUploadPanel({
     <div className="audio-upload-manager">
       <div className="audio-upload-heading">
         <span className="upload-bubble">
-          <Upload size={22} />
+          <Upload size={18} />
         </span>
         <div>
           <span className="eyebrow">UPLOAD AUDIO</span>
@@ -1832,7 +1833,7 @@ function AudioUploadPanel({
             if (next && !title) setTitle(next.name.replace(/\.[^.]+$/, ""));
           }}
         />
-        <Upload size={25} />
+        <Upload size={20} />
         <span>
           <strong>{file ? file.name : "Choose an audio file"}</strong>
           <small>
@@ -1872,7 +1873,7 @@ function AudioUploadPanel({
       <div className="upload-actions">
         <span>{status}</span>
         <button className="primary-button compact" onClick={upload} disabled={busy || !file}>
-          <Upload size={16} /> {busy ? "Uploading…" : "Upload call"}
+          <Upload size={13} /> {busy ? "Uploading…" : "Upload call"}
         </button>
       </div>
       {recordings.length > 0 && (
@@ -1880,7 +1881,7 @@ function AudioUploadPanel({
           <span className="eyebrow">UPLOADED CALLS</span>
           {recordings.map((recording) => (
             <div className="uploaded-call-row" key={text(recording.id)}>
-              <Headphones size={18} />
+              <Headphones size={14} />
               <span>
                 <strong>{text(recording.title)}</strong>
                 <small>
@@ -1893,7 +1894,7 @@ function AudioUploadPanel({
                 onClick={() => remove(text(recording.id))}
                 aria-label={`Remove ${text(recording.title)}`}
               >
-                <Trash2 size={16} />
+                <Trash2 size={13} />
               </button>
             </div>
           ))}

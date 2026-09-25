@@ -103,7 +103,7 @@ export default function Login() {
       <div className="app-shell login-page">
         <div className="login-card">
           <div className="login-pending">
-            <MailCheck size={40} />
+            <MailCheck size={32} />
           </div>
           <h1>Account created</h1>
           <p>
@@ -129,7 +129,7 @@ export default function Login() {
       <div className="login-card">
         <div className="login-brand">
           <span className="brand-mark">
-            <PhoneCall size={26} strokeWidth={2.6} />
+            <PhoneCall size={21} strokeWidth={2.6} />
           </span>
           <div>
             <strong>CALL-STARS</strong>

@@ -503,7 +503,7 @@ export default function ColdCallTree() {
                     setActiveId(null);
                   }}
                 >
-                  <X size={18} />
+                  <X size={14} />
                 </button>
               </div>
               <div className="cct-legend-text">
@@ -532,7 +532,7 @@ export default function ColdCallTree() {
                   className="cct-legend-next"
                   onClick={() => activeCard.next && focusNode(activeCard.next)}
                 >
-                  Start the call <ArrowRight size={17} />
+                  Start the call <ArrowRight size={14} />
                 </button>
               )}
             </motion.div>
@@ -557,7 +557,7 @@ export default function ColdCallTree() {
                 if (prev) focusNode(prev);
               }}
             >
-              <ArrowLeft size={17} />
+              <ArrowLeft size={14} />
             </button>
             <span className="cct-focus-bar-label">
               {activeCard.eyebrow ?? treeSections.find((s) => s.id === activeCard.section)?.label}
@@ -567,7 +567,7 @@ export default function ColdCallTree() {
               disabled={!activeCard.next}
               onClick={() => activeCard.next && focusNode(activeCard.next)}
             >
-              <ArrowRight size={17} />
+              <ArrowRight size={14} />
             </button>
             <button
               className="cct-focus-bar-close"
@@ -577,7 +577,7 @@ export default function ColdCallTree() {
                 setActiveId(null);
               }}
             >
-              <X size={16} />
+              <X size={13} />
             </button>
           </motion.div>
         )}
@@ -590,7 +590,7 @@ export default function ColdCallTree() {
         transition={{ duration: 0.4 }}
       >
         <Link to="/" className="cct-nav-home" aria-label="Back to training portal" title="Home">
-          <Home size={19} />
+          <Home size={15} />
         </Link>
 
         <div className="cct-nav-items">

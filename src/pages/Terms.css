@@ -1,24 +1,24 @@
 .terms-page {
   min-height: 100vh;
-  padding-bottom: 60px;
+  padding-bottom: 48px;
 }
 
 .terms-header {
-  width: min(860px, calc(100% - 40px));
+  width: min(688px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 26px 0 14px;
+  padding: 20.8px 0 11.2px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: 16px;
 }
 
 .terms-back {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   color: var(--muted);
-  font-size: 0.85rem;
+  font-size: 0.68rem;
   font-weight: 800;
   text-decoration: none;
 }
@@ -30,57 +30,57 @@
 .terms-brand {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  font-size: 0.9rem;
+  gap: 8px;
+  font-size: 0.72rem;
   letter-spacing: 0.08em;
 }
 
 .terms-doc {
-  width: min(860px, calc(100% - 40px));
+  width: min(688px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 34px 40px 40px;
+  padding: 27.2px 32px 32px;
   border: 1px solid rgba(24, 51, 77, 0.1);
-  border-radius: 26px;
+  border-radius: 20.8px;
   background: #fff;
   box-shadow: var(--shadow);
 }
 
 .terms-doc h1 {
-  margin: 0 0 4px;
-  font-size: 2rem;
+  margin: 0 0 3.2px;
+  font-size: 1.6rem;
   letter-spacing: -0.03em;
 }
 
 .terms-updated {
-  margin-bottom: 26px;
+  margin-bottom: 20.8px;
   color: var(--muted);
-  font-size: 0.85rem;
+  font-size: 0.68rem;
 }
 
 .terms-doc h2 {
-  margin: 28px 0 10px;
-  font-size: 1.15rem;
+  margin: 22.4px 0 8px;
+  font-size: 0.92rem;
   letter-spacing: -0.015em;
 }
 
 .terms-doc h3 {
-  margin: 18px 0 8px;
-  font-size: 0.95rem;
+  margin: 14.4px 0 6.4px;
+  font-size: 0.76rem;
   color: var(--ink);
 }
 
 .terms-doc p,
 .terms-doc li {
-  margin-bottom: 11px;
+  margin-bottom: 8.8px;
   color: #3d5468;
-  font-size: 0.93rem;
+  font-size: 0.744rem;
   font-weight: 600;
   line-height: 1.6;
 }
 
 .terms-doc ul {
-  margin: 0 0 14px;
-  padding-left: 20px;
+  margin: 0 0 11.2px;
+  padding-left: 16px;
 }
 
 .terms-doc strong {
@@ -94,7 +94,7 @@
 
 @media (max-width: 640px) {
   .terms-doc {
-    padding: 24px 22px 30px;
-    border-radius: 20px;
+    padding: 19.2px 17.6px 24px;
+    border-radius: 16px;
   }
 }

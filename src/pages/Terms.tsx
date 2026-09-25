@@ -10,11 +10,11 @@ export default function Terms() {
     <div className="app-shell terms-page">
       <header className="terms-header">
         <Link to="/login" className="terms-back">
-          <ChevronLeft size={18} /> Back to sign in
+          <ChevronLeft size={14} /> Back to sign in
         </Link>
         <span className="terms-brand">
           <span className="brand-mark">
-            <PhoneCall size={20} strokeWidth={2.6} />
+            <PhoneCall size={16} strokeWidth={2.6} />
           </span>
           <strong>CALL-STARS</strong>
         </span>
