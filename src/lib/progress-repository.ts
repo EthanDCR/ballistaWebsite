@@ -1,9 +1,31 @@
+/** A finished activity. `correct`/`total` are absent for activities that
+ *  aren't scored (the sign-off) and for records saved before scores were
+ *  tracked, so every reader must treat them as optional. */
+export type ActivityRecord = {
+  completedAt: string;
+  correct?: number;
+  total?: number;
+};
+
 export type LearnerProgress = {
   schemaVersion: "1.0.0";
   learnerId: "local-learner";
-  completedActivities: Record<string, { completedAt: string }>;
+  completedActivities: Record<string, ActivityRecord>;
   updatedAt: string;
 };
+
+/** Totals every scored activity into one course-wide result. */
+export function courseScore(progress: LearnerProgress) {
+  let correct = 0;
+  let total = 0;
+  for (const entry of Object.values(progress.completedActivities)) {
+    if (typeof entry.correct === "number" && typeof entry.total === "number") {
+      correct += entry.correct;
+      total += entry.total;
+    }
+  }
+  return { correct, total, percent: total ? Math.round((correct / total) * 100) : 0 };
+}
 
 export interface ProgressRepository {
   getProgress(): Promise<LearnerProgress>;

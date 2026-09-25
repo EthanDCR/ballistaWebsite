@@ -14,8 +14,13 @@
   --heading: system-ui, "Segoe UI", Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
 
-  font: 14.4px/145% var(--sans);
-  letter-spacing: 0.144px;
+  /* Boxes, padding and borders are all in px and sit at 80% of the original
+     design. Type is the exception: every font-size in the app is in rem, so
+     this one value scales all of it and nothing else. 20% off proved too much
+     to read comfortably, so type stays at full size while the layout shrinks.
+     Nudge this single number to retune the app's text; boxes will not move. */
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.18px;
   color-scheme: light dark;
   color: var(--text);
   background: var(--bg);
@@ -25,7 +30,7 @@
   -moz-osx-font-smoothing: grayscale;
 
   @media (max-width: 1024px) {
-    font-size: 12.8px;
+    font-size: 16px;
   }
 }
 
@@ -64,21 +69,21 @@ h2 {
 }
 
 h1 {
-  font-size: 44.8px;
-  letter-spacing: -1.344px;
+  font-size: 56px;
+  letter-spacing: -1.68px;
   margin: 25.6px 0;
   @media (max-width: 1024px) {
-    font-size: 28.8px;
+    font-size: 36px;
     margin: 16px 0;
   }
 }
 h2 {
-  font-size: 19.2px;
+  font-size: 24px;
   line-height: 118%;
-  letter-spacing: -0.192px;
+  letter-spacing: -0.24px;
   margin: 0 0 6.4px;
   @media (max-width: 1024px) {
-    font-size: 16px;
+    font-size: 20px;
   }
 }
 p {
@@ -94,7 +99,7 @@ code,
 }
 
 code {
-  font-size: 12px;
+  font-size: 15px;
   line-height: 135%;
   padding: 3.2px 6.4px;
   background: var(--code-bg);

@@ -43,6 +43,12 @@ func main() {
 			if !e.HasSuperuserAuth() {
 				e.Record.Set("role", "rep")
 				e.Record.SetVerified(false)
+				// Stamped here rather than taken from the payload for the same
+				// reason as role: the signup request is attacker-controlled and
+				// could otherwise claim acceptance of any version it likes. The
+				// signup form refuses to submit without the box ticked.
+				e.Record.Set("terms_accepted_at", types.NowDateTime())
+				e.Record.Set("terms_version", termsVersion)
 			}
 			return e.Next()
 		},
@@ -80,6 +86,12 @@ const (
 	ruleAdmin  = "@request.auth.role = 'admin'"
 )
 
+// termsVersion is the Terms of Service revision stamped onto an account when
+// it signs up. Bump it when the terms in Terms.tsx change; comparing it against
+// a user's terms_version is what tells you who still owes a fresh acceptance.
+// Unrelated to the Standard of Performance version recorded in sign_offs.
+const termsVersion = "1.0"
+
 // lockDownUsersCollection opens self-registration on the built-in users
 // collection but gates it behind manual approval: anyone may create an
 // account, yet PocketBase refuses to issue a token until a superuser ticks
@@ -109,6 +121,17 @@ func lockDownUsersCollection(app core.App) error {
 			Values:    []string{"rep", "admin"},
 			MaxSelect: 1,
 		})
+	}
+
+	// Terms of Service acceptance, recorded once at signup so reps aren't
+	// asked again on every sign-in. The version travels with the timestamp:
+	// a bool could not say *which* terms were accepted, so revising them
+	// would leave no way to tell who still needs to re-accept.
+	if collection.Fields.GetByName("terms_accepted_at") == nil {
+		collection.Fields.Add(&core.DateField{Name: "terms_accepted_at"})
+	}
+	if collection.Fields.GetByName("terms_version") == nil {
+		collection.Fields.Add(&core.TextField{Name: "terms_version", Max: 20})
 	}
 
 	return app.Save(collection)

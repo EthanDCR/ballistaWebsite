@@ -236,5 +236,61 @@
     "correct_index": 3,
     "explanation": "Keep the lesson, drop the judgment — that is what makes the reset actually a reset.",
     "order": 4
+  },
+  {
+    "module_key": "operations",
+    "question": "Which five performance metrics should every caller track from the beginning of the pipeline through the final sale?",
+    "type": "concept",
+    "options": [
+      "Calls Made, Emails Sent, Inspections, Estimates, Revenue",
+      "Prospects Found, Calls Made, Appointments, Roof Reports, Contracts",
+      "Calls Made, DMs Spoken To, Leads Set, Presentations, Closes",
+      "Dials, Voicemails, Follow-Ups, Inspections, Referrals"
+    ],
+    "correct_index": 2,
+    "explanation": "",
+    "order": 1
+  },
+  {
+    "module_key": "operations",
+    "question": "After an inspection is booked, what must the caller do to create a strong handoff between the owner and the inspection representative?",
+    "type": "scenario",
+    "options": [
+      "Send an email connecting the owner and inspection representative, confirm the appointment details, and establish the next step",
+      "Enter the lead into the CRM and allow the inspection representative to handle everything else",
+      "Wait until after the inspection to introduce the inspection representative",
+      "Send the owner a generic company brochure without introducing the inspection representative"
+    ],
+    "correct_index": 0,
+    "explanation": "",
+    "order": 2
+  },
+  {
+    "module_key": "operations",
+    "question": "What follow-up sequence should be used to increase the likelihood that an owner attends the roof-report meeting?",
+    "type": "sequence",
+    "options": [
+      "Send only a calendar invitation and wait for the owner to confirm",
+      "Call repeatedly on the day of the inspection and stop communicating after the inspection is completed",
+      "Send the roof report without scheduling a presentation",
+      "Connect with the owner after booking, send an inspection video from the roof, send reminders the night before and morning of the meeting, and immediately follow up if the owner is absent"
+    ],
+    "correct_index": 3,
+    "explanation": "If the owner is absent, message them at approximately two minutes, call at five minutes, and call again at eight minutes. If there is still no response, move the meeting and offer specific alternative times.",
+    "order": 3
+  },
+  {
+    "module_key": "operations",
+    "question": "What is the target number of decision-maker conversations a caller should produce per calling hour?",
+    "type": "concept",
+    "options": [
+      "2 DMs per hour",
+      "5 DMs per hour",
+      "10 DMs per hour",
+      "20 DMs per hour"
+    ],
+    "correct_index": 1,
+    "explanation": "",
+    "order": 4
   }
 ]

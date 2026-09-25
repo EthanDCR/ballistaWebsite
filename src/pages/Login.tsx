@@ -81,7 +81,7 @@ export default function Login() {
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    if (!acceptedTerms) {
+    if (mode === "signup" && !acceptedTerms) {
       setError("Please accept the Terms of Service to continue.");
       return;
     }
@@ -198,20 +198,28 @@ export default function Login() {
               placeholder="••••••••"
             />
           </label>
-          <label className="login-terms">
-            <input
-              type="checkbox"
-              checked={acceptedTerms}
-              onChange={(event) => setAcceptedTerms(event.target.checked)}
-            />
-            <span>
-              I agree to the{" "}
-              <Link to="/terms" target="_blank" rel="noreferrer">
-                Terms of Service
-              </Link>
-            </span>
-          </label>
-          <button className="primary-button full" type="submit" disabled={busy || !acceptedTerms}>
+          {/* Acceptance is recorded on the account at signup, so signing in
+              again never re-asks. */}
+          {mode === "signup" && (
+            <label className="login-terms">
+              <input
+                type="checkbox"
+                checked={acceptedTerms}
+                onChange={(event) => setAcceptedTerms(event.target.checked)}
+              />
+              <span>
+                I agree to the{" "}
+                <Link to="/terms" target="_blank" rel="noreferrer">
+                  Terms of Service
+                </Link>
+              </span>
+            </label>
+          )}
+          <button
+            className="primary-button full"
+            type="submit"
+            disabled={busy || (mode === "signup" && !acceptedTerms)}
+          >
             {busy
               ? mode === "signin"
                 ? "Signing in…"

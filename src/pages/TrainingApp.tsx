@@ -45,6 +45,7 @@ import {
 } from "../lib/content-repository";
 import {
   createDefaultProgress,
+  courseScore,
   createProgressRepository,
   type LearnerProgress,
 } from "../lib/progress-repository";
@@ -191,15 +192,21 @@ export default function TrainingApp() {
   }, []);
 
   const awardActivity = useCallback(
-    (activityId: string) => {
+    (activityId: string, score?: { correct: number; total: number }) => {
       const current = progressRef.current;
       const existing = current.completedActivities[activityId];
-      if (existing) return;
+      // Already done and nothing new to record — an unscored repeat is a no-op.
+      if (existing && !score) return;
       const next: LearnerProgress = {
         ...current,
         completedActivities: {
           ...current.completedActivities,
-          [activityId]: { completedAt: new Date().toISOString() },
+          [activityId]: {
+            // A retake keeps the original completion date but refreshes the
+            // score, so the course total reflects the most recent attempt.
+            completedAt: existing?.completedAt ?? new Date().toISOString(),
+            ...score,
+          },
         },
         updatedAt: new Date().toISOString(),
       };
@@ -266,7 +273,7 @@ export default function TrainingApp() {
     }
     const correctCount = quizResults.filter((item) => item.correct).length;
     const accuracy = Math.round((correctCount / quizQuestions.length) * 100);
-    awardActivity(quizActivityId);
+    awardActivity(quizActivityId, { correct: correctCount, total: quizQuestions.length });
     setSummary({ title: quizTitle, accuracy, activityId: quizActivityId });
     setScreen("summary");
   }
@@ -576,7 +583,9 @@ function ModuleView({
       {moduleId === "closing" && (
         <ClosingModule items={records(content, "closingScripts")} scenario={scenario} />
       )}
-      {moduleId === "signoff" && <SignOffModule content={content} onAward={onAward} />}
+      {moduleId === "signoff" && (
+        <SignOffModule content={content} progress={progress} onAward={onAward} />
+      )}
       {moduleId !== "signoff" && (
         <section className="checkpoint-card">
           <div>
@@ -787,32 +796,44 @@ function InfoList({
   );
 }
 
+// Version of the Standard of Performance document, stored with each sign-off
+// so a signature stays tied to the text that was actually signed. Separate
+// from the Terms of Service version stamped on the user record.
+const SOP_VERSION = "1.0";
+
 function SignOffModule({
   content,
+  progress,
   onAward,
 }: {
   content: ContentSnapshot;
+  progress: LearnerProgress;
   onAward: (id: string) => void;
 }) {
   const [typedName, setTypedName] = useState("");
   const [email, setEmail] = useState("");
   const [signature, setSignature] = useState("");
   const [saved, setSaved] = useState(false);
+  const [showScore, setShowScore] = useState(false);
+  // Read before awarding the sign-off: it is unscored, so it cannot change the
+  // total, and this avoids depending on the parent's state having re-rendered.
+  const score = courseScore(progress);
   async function submit() {
     if (!typedName.trim() || !email.trim() || !signature) return;
     await createContentRecord("signOffs", {
       typed_name: typedName.trim(),
       user_email: email.trim(),
       signed_at: new Date().toISOString(),
-      document_version: "1.0",
+      document_version: SOP_VERSION,
     });
     onAward("module-signoff");
     setSaved(true);
+    setShowScore(true);
   }
   return (
     <div className="signoff-layout">
       <article className="sop-document">
-        <span className="eyebrow">DOCUMENT VERSION 1.0</span>
+        <span className="eyebrow">DOCUMENT VERSION {SOP_VERSION}</span>
         <h2>Standard of Performance</h2>
         {text(appSettings(content).sop_document_text)
           .split("\n\n")
@@ -859,6 +880,43 @@ function SignOffModule({
           </>
         )}
       </aside>
+      {showScore && (
+        <div className="modal-backdrop" onClick={() => setShowScore(false)}>
+          <div
+            className="confirm-dialog course-score-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="course-score-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <span className="score-bubble">
+              <Trophy size={28} />
+            </span>
+            <h2 id="course-score-title">Course complete</h2>
+            {score.total > 0 ? (
+              <>
+                <p>You signed the Standard of Performance. Here's how you scored overall.</p>
+                <div className="course-score-readout">
+                  <strong>{score.percent}%</strong>
+                  <span>
+                    {score.correct} of {score.total} correct
+                  </span>
+                </div>
+              </>
+            ) : (
+              <p>
+                You signed the Standard of Performance. No quiz scores are recorded yet — finish a
+                module checkpoint to start building your score.
+              </p>
+            )}
+            <div>
+              <button className="primary-button" onClick={() => setShowScore(false)}>
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
