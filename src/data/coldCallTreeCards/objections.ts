@@ -1,5 +1,7 @@
-// Hand-transcribed from public/cold-call-tree/main-tree.webp (no source
-// mermaid/doc exists — this was read directly off the flowchart image).
+// Card prose was hand-transcribed from the source flowchart. The wiring
+// (every option target and `next`) is generated from coldcalltree.csv, the
+// Lucidchart shape-data export — see scripts/gen_cold_call_mmd.py and
+// coldCallTree.mmd. Re-verify against the CSV rather than the artwork.
 // Covers the "Insurance Objections" section: the claim-denied / "no
 // insurance" / "don't want to file" objection-handling cluster that grows
 // out of First Ask's damage questions.
@@ -13,7 +15,8 @@ export const objectionsCards: Record<string, TreeCard> = {
     kind: "dialogue",
     text: "I get it, you already filed the claim — I'm sure it was a pain, took a bunch of time and didn't get anywhere. I'm not looking to add anything to your plate. How about this: I'll stop by and take a look, and if I think they messed up I'll let you know — I can win the claim and we can have a 20 minute meeting on how. If not, I won't bother you again.",
     box: box(0.114, 0.537, 0.065, 0.06),
-    options: [],
+    next: "collect-good-email",
+    options: [{ label: "Ok sounds good", target: "collect-good-email" }],
   },
 
   "obj-aw-man-why": {
@@ -38,6 +41,7 @@ export const objectionsCards: Record<string, TreeCard> = {
         target: "obj-damned-if-you-do",
         labelPos: { x: 0.281, y: 0.6327 },
       },
+      { label: "Bad policy", target: "gov-programs" },
     ],
   },
 
@@ -74,7 +78,11 @@ export const objectionsCards: Record<string, TreeCard> = {
     eyebrow: "4",
     text: "Or you proceed and get a brand new roof, which increases your asset value. Worst case your carrier drops you — that does happen, but it's rare. Although you'll have a much better roof, which makes the building extremely attractive to new carriers.",
     box: box(0.362, 0.711, 0.06, 0.06),
-    options: [],
+    next: "close-claim-necessary-check",
+    options: [
+      { label: '"Not interested"', target: "close-text-info-goodluck" },
+      { label: "Continue", target: "close-claim-necessary-check" },
+    ],
   },
 
   "obj-thats-why-here": {
@@ -105,7 +113,10 @@ export const objectionsCards: Record<string, TreeCard> = {
     text: "Ok great. What day works best for me to stop by?.... Are mornings or afternoons better?....",
     box: box(0.299, 0.715, 0.055, 0.045),
     next: "obj-meeting-scheduled",
-    options: [{ label: "Continue", target: "obj-meeting-scheduled" }],
+    options: [
+      { label: "Continue", target: "obj-meeting-scheduled" },
+      { label: "No thanks", target: "close-text-info-goodluck" },
+    ],
   },
 
   "obj-meeting-scheduled": {
@@ -125,8 +136,12 @@ export const objectionsCards: Record<string, TreeCard> = {
     text: "Perfect. What time this week works best to do a quick zoom call and go over everything?",
     box: box(0.291, 0.76, 0.055, 0.045),
     options: [
-      { label: "This time", target: "obj-meeting-scheduled", labelPos: { x: 0.3208, y: 0.7593 } },
-      { label: "No thanks", target: "obj-no-worries-info", labelPos: { x: 0.3047, y: 0.7339 } },
+      { label: "This time", target: "collect-good-email", labelPos: { x: 0.3208, y: 0.7593 } },
+      {
+        label: "No thanks",
+        target: "close-text-info-goodluck",
+        labelPos: { x: 0.3047, y: 0.7339 },
+      },
     ],
   },
 
@@ -136,7 +151,8 @@ export const objectionsCards: Record<string, TreeCard> = {
     kind: "dialogue",
     text: "No worries. Well, I'll just send over more information about us and this process in case you ever need our help in the future.",
     box: box(0.249, 0.797, 0.06, 0.045),
-    options: [],
+    next: "collect-good-email",
+    options: [{ label: "Continue", target: "collect-good-email" }],
   },
 
   "obj-familiar-insurance": {
@@ -157,7 +173,10 @@ export const objectionsCards: Record<string, TreeCard> = {
     kind: "dialogue",
     text: "It's very important to have a third party working on your behalf, so you have the best chance of getting all the damage fully covered through your insurance provider. We handle hundreds of claims a year and handle the whole process from start to finish. When would be a good time for us to talk more about if there's anything we could do to help you through the process?",
     box: box(0.194, 0.69, 0.065, 0.06),
-    options: [],
+    options: [
+      { label: '"This time"', target: "collect-good-email" },
+      { label: "No", target: "obj-no-worries-info" },
+    ],
   },
 
   "obj-anyone-in-place": {
@@ -168,6 +187,7 @@ export const objectionsCards: Record<string, TreeCard> = {
     box: box(0.151, 0.666, 0.05, 0.04),
     options: [
       { label: "No", target: "obj-help-with-that", labelPos: { x: 0.149, y: 0.692 } },
+      { label: "Yes", target: "qualify-out-of-blue-or-roofer" },
     ],
   },
 
@@ -177,7 +197,8 @@ export const objectionsCards: Record<string, TreeCard> = {
     kind: "dialogue",
     text: "I can help with that.",
     box: box(0.138, 0.725, 0.04, 0.032),
-    options: [],
+    next: "collect-good-email",
+    options: [{ label: "Continue", target: "collect-good-email" }],
   },
 
   // Reached from First Ask's damage/inspection branches — "ok great" is the
@@ -195,12 +216,26 @@ export const objectionsCards: Record<string, TreeCard> = {
     ],
   },
 
+  // First Ask's "I'll call my insurance" branch — head it off before they
+  // hang up to dial their carrier.
+  "obj-may-not-need-to-call": {
+    id: "obj-may-not-need-to-call",
+    section: "objections",
+    kind: "dialogue",
+    text: "You may not even need to. If you don't have any damage, it'll at least save them some time. I'm happy to stop by this week and let you know if you have anything to worry about, or a reason to have them come out.",
+    box: box(0.3634, 0.5350, 0.0472, 0.0259),
+    next: "close-free-inspection",
+    options: [
+      { label: "And", target: "close-free-inspection", labelPos: { x: 0.4072, y: 0.5352 } },
+    ],
+  },
+
   "obj-got-it-radar-hail": {
     id: "obj-got-it-radar-hail",
     section: "objections",
     kind: "dialogue",
     text: "Got it, the only reason I called is because our weather radar says (hail size) hit the building. So regardless if there's damage or not, it's important to document the effects of this storm for your insurance — this protects you from future insurance denials when you do get storm damage. Would you be opposed to us getting those photos for you when we're nearby your building (next week, later this week, etc)?",
     box: box(0.4362, 0.4694, 0.065, 0.06),
-    options: [{ label: "Ok, you can inspect", target: "close-free-inspection" }],
+    options: [{ label: "Ok, you can inspect", target: "close-qualify-up-at-building" }],
   },
 };

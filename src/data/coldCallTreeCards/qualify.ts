@@ -1,5 +1,7 @@
-// Hand-transcribed from public/cold-call-tree/main-tree.webp (no source
-// mermaid/doc exists — this was read directly off the flowchart image).
+// Card prose was hand-transcribed from the source flowchart. The wiring
+// (every option target and `next`) is generated from coldcalltree.csv, the
+// Lucidchart shape-data export — see scripts/gen_cold_call_mmd.py and
+// coldCallTree.mmd. Re-verify against the CSV rather than the artwork.
 // Covers the "Qualify" section: the roofer/maintenance-guy qualifying
 // chain that First Ask's "I'll get someone else to look" branch leads
 // into, plus the "Do you work on-site at that building?" checkpoint.
@@ -59,8 +61,8 @@ export const qualifyCards: Record<string, TreeCard> = {
     eyebrow: "Close",
     text: "I'm gonna go ahead and send you an email, and I'd love to stop by, shake your hand, and show you what we can do to help ya, later this week or next week.",
     box: box(0.4959, 0.2414, 0.0278, 0.0335),
-    next: "close-gotcha",
-    options: [{ label: "Continue", target: "close-gotcha" }],
+    next: "collect-good-email",
+    options: [{ label: "Continue", target: "collect-good-email" }],
   },
 
   "qualify-close-no": {
@@ -70,7 +72,7 @@ export const qualifyCards: Record<string, TreeCard> = {
     eyebrow: "Close",
     text: "Alright, well I'm gonna go ahead and send you an email with our company info, and I'm happy to stop by and take a look for you when we're near your building. We can catch up sometime next week and go over everything.",
     box: box(0.4959, 0.2834, 0.0318, 0.0396),
-    next: "close-gotcha",
-    options: [{ label: "Continue", target: "close-gotcha" }],
+    next: "collect-good-email",
+    options: [{ label: "Continue", target: "collect-good-email" }],
   },
 };

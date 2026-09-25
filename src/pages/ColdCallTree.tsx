@@ -18,10 +18,11 @@ import "./ColdCallTree.css";
 // the image's own background — content that's now fully covered by an
 // interactive card and no longer needs to show up baked into the artwork
 // itself. Coordinates are fractional (0..1) of the full image.
-const IMAGE_MASKS = [
-  // The "Start Here" title + green legend box, top-left.
-  { x: 0, y: 0.338, width: 0.059, height: 0.119 },
-];
+//
+// Currently empty: the one entry here covered the "Start Here" legend block,
+// which only exists in the older .webp export. main-tree.svg leaves that
+// corner blank and marks the opener with a "CALL STARTS HERE" sticky instead.
+const IMAGE_MASKS: { x: number; y: number; width: number; height: number }[] = [];
 
 // Sections that have been transcribed into interactive cards so far, mapped
 // to the card that opens when you jump into that section.
@@ -99,6 +100,9 @@ function unionBox(boxes: Box[]): Box {
   };
 }
 
+// How long the view must hold still before the crisp vector copy is mounted.
+const SHARP_DELAY_MS = 180;
+
 const MIN_SCALE = 0.08;
 const MAX_SCALE = 6;
 const FIT_PADDING = 0.9;
@@ -152,7 +156,36 @@ export default function ColdCallTree() {
 
   const [activeId, setActiveId] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
+  // The artwork is swapped for a crisp vector copy once the view stops
+  // moving — see SHARP_DELAY_MS below.
+  const [sharp, setSharp] = useState(true);
   const [activeCardId, setActiveCardId] = useState<string | null>(null);
+
+  // Vector artwork is far too expensive to re-rasterise on every frame of a
+  // pan or pinch — the browser redraws ~10k glyph/path nodes each time the
+  // scale changes, which drops frames badly. So we ride on a flat raster
+  // while the view is moving and only mount the SVG once it settles, where
+  // a single rasterisation buys full sharpness at any zoom.
+  const sharpRef = useRef(true);
+  useEffect(() => {
+    let timer: number | undefined;
+    const bump = () => {
+      if (sharpRef.current) {
+        sharpRef.current = false;
+        setSharp(false);
+      }
+      if (timer) window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        sharpRef.current = true;
+        setSharp(true);
+      }, SHARP_DELAY_MS);
+    };
+    const stop = [x.on("change", bump), y.on("change", bump), scale.on("change", bump)];
+    return () => {
+      stop.forEach((off) => off());
+      if (timer) window.clearTimeout(timer);
+    };
+  }, [x, y, scale]);
   const activeCard = useMemo<TreeCard | null>(
     () => (activeCardId ? (treeCards[activeCardId] ?? null) : null),
     [activeCardId],
@@ -391,10 +424,19 @@ export default function ColdCallTree() {
         >
           <img
             className="cct-image"
-            src="/cold-call-tree/main-tree.webp"
+            src="/cold-call-tree/main-tree-base.webp"
             alt="Cold call decision tree flowchart"
             draggable={false}
           />
+          {sharp && (
+            <img
+              className="cct-image cct-image-sharp"
+              src="/cold-call-tree/main-tree.svg"
+              alt=""
+              aria-hidden
+              draggable={false}
+            />
+          )}
           {IMAGE_MASKS.map((mask, index) => (
             <div
               key={index}

@@ -424,3 +424,12 @@
 .cct-legend-next:hover {
   opacity: 0.9;
 }
+
+/* The crisp vector copy sits exactly on top of the raster one. Both are
+   generated from the same source SVG, so the swap only changes sharpness. */
+.cct-image-sharp {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-shadow: none;
+}

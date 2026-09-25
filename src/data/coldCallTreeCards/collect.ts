@@ -1,5 +1,7 @@
-// Hand-transcribed from public/cold-call-tree/main-tree.webp (no source
-// mermaid/doc exists — this was read directly off the flowchart image).
+// Card prose was hand-transcribed from the source flowchart. The wiring
+// (every option target and `next`) is generated from coldcalltree.csv, the
+// Lucidchart shape-data export — see scripts/gen_cold_call_mmd.py and
+// coldCallTree.mmd. Re-verify against the CSV rather than the artwork.
 // Covers the "Collect & Lead Set" section: collecting an email, classifying
 // the client, the insurance-policy favor ask, and the LEAD SET! outcome.
 

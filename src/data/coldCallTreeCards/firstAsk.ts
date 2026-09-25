@@ -1,5 +1,7 @@
-// Hand-transcribed from public/cold-call-tree/main-tree.webp (no source
-// mermaid/doc exists — this was read directly off the flowchart image).
+// Card prose was hand-transcribed from the source flowchart. The wiring
+// (every option target and `next`) is generated from coldcalltree.csv, the
+// Lucidchart shape-data export — see scripts/gen_cold_call_mmd.py and
+// coldCallTree.mmd. Re-verify against the CSV rather than the artwork.
 // Covers the "Start Here" legend and the "First Ask" section.
 
 import { box, type TreeCard } from "./types";
@@ -18,7 +20,9 @@ export const firstAskCards: Record<string, TreeCard> = {
       "When someone is warm, seek to get a deeper understanding of their situation. When they're cold, get the conversation back to the golden line and finish setting the lead.",
       '**Questions I like to ask if people are warm:**\n"If we find damage, is this something you\'re gonna want to pursue?"\n"Do you know anything about your policy?"\n"Have you filed a claim on this property before?"\n"How familiar are you with the claims process?"\n"Do you own other properties?"',
     ].join("\n\n"),
-    box: { x: 0, y: 0.3139, width: 0.0532, height: 0.1275 },
+    // Aimed at the "CALL STARTS HERE" sticky next to the opener. The old
+    // coords pointed at the legend block, which only exists in the .webp.
+    box: { x: 0.0958, y: 0.3985, width: 0.0335, height: 0.0615 },
     next: "opener",
     options: [],
   },
@@ -93,7 +97,7 @@ export const firstAskCards: Record<string, TreeCard> = {
       },
       {
         label: "No one has inspected the building yet",
-        target: "of-course-not-note",
+        target: "close-gotcha",
         labelPos: { x: 0.3833, y: 0.4268 },
       },
       {
@@ -103,8 +107,23 @@ export const firstAskCards: Record<string, TreeCard> = {
       },
       {
         label: '"Not interested"',
-        target: "obj-proceed-new-roof",
+        target: "of-course-not-note",
         labelPos: { x: 0.337, y: 0.4201 },
+      },
+      {
+        label: "I have a roofer",
+        target: "qualify-out-of-blue-or-roofer",
+        labelPos: { x: 0.3487, y: 0.3805 },
+      },
+      {
+        label: "Don't have damage",
+        target: "obj-ok-great-missed-you",
+        labelPos: { x: 0.35, y: 0.4676 },
+      },
+      {
+        label: "I'll call my insurance",
+        target: "obj-may-not-need-to-call",
+        labelPos: { x: 0.3467, y: 0.4849 },
       },
     ],
   },
@@ -148,8 +167,8 @@ export const firstAskCards: Record<string, TreeCard> = {
     kind: "dialogue",
     text: "Wow, that's awesome — I'm glad that storm missed you guys. The damage I've seen has been pretty bad. Well, just so nobody else calls you again…",
     box: box(0.3097, 0.5362, 0.0317, 0.0283),
-    next: "obj-insurance-cant-raise",
-    options: [{ label: "Continue", target: "obj-insurance-cant-raise" }],
+    next: "close-photo-report-clearance",
+    options: [{ label: "Continue", target: "close-photo-report-clearance" }],
   },
 
   "sorry-hear-damage": {
@@ -164,6 +183,7 @@ export const firstAskCards: Record<string, TreeCard> = {
         target: "obj-already-filed-claim",
         labelPos: { x: 0.1462, y: 0.5477 },
       },
+      { label: "Yes", target: "qualify-onsite" },
     ],
   },
 
@@ -174,7 +194,11 @@ export const firstAskCards: Record<string, TreeCard> = {
     text: "Do you have someone helping you through that process?",
     box: box(0.2217, 0.5874, 0.0320, 0.0174),
     options: [
-      { label: "Yes", target: "obj-thats-why-here", labelPos: { x: 0.2333, y: 0.6058 } },
+      {
+        label: "Yes",
+        target: "qualify-out-of-blue-or-roofer",
+        labelPos: { x: 0.2333, y: 0.6058 },
+      },
       { label: "No", target: "obj-familiar-insurance", labelPos: { x: 0.2058, y: 0.6043 } },
     ],
   },
@@ -185,8 +209,8 @@ export const firstAskCards: Record<string, TreeCard> = {
     kind: "dialogue",
     text: "I wouldn't expect you to — the damage we're seeing isn't stuff that's causing immediate leaks, but it will cause problems in the future. I can let you know if you're in the same boat and….",
     box: box(0.3867, 0.4505, 0.0310, 0.0323),
-    next: "obj-got-it-radar-hail",
-    options: [{ label: "Continue", target: "obj-got-it-radar-hail" }],
+    next: "close-free-inspection",
+    options: [{ label: "Continue", target: "close-free-inspection" }],
   },
 
   "of-course-not-note": {
@@ -195,8 +219,7 @@ export const firstAskCards: Record<string, TreeCard> = {
     kind: "dialogue",
     text: "Of course not — just so no one from my company calls you again (I'll go ahead and put a note in the file), did you guys already come take a look, or just don't have any leaks after the storm?",
     box: box(0.3913, 0.3970, 0.0310, 0.0377),
-    next: "obj-ok-great-missed-you",
-    options: [{ label: "Continue", target: "obj-ok-great-missed-you" }],
+    options: [],
   },
 
   "gov-programs": {
@@ -206,7 +229,11 @@ export const firstAskCards: Record<string, TreeCard> = {
     text: "That's no problem — there's a few government programs and grants that let you put a new roof on at no cost, even if you don't have insurance. Are you dealing with any issues or leaks currently?",
     box: box(0.28, 0.359, 0.06, 0.045),
     options: [
-      { label: "They have issues", target: "biggest-reason", labelPos: { x: 0.273, y: 0.323 } },
+      {
+        label: "They have issues",
+        target: "gov-manager-meeting",
+        labelPos: { x: 0.273, y: 0.323 },
+      },
       { label: "No issues", target: "biggest-reason", labelPos: { x: 0.2838, y: 0.3312 } },
     ],
   },
@@ -217,7 +244,8 @@ export const firstAskCards: Record<string, TreeCard> = {
     kind: "dialogue",
     text: "The biggest reason we'd get a look into this now is #1, to let you know if the damage sustained will cause you any leaks or problems in the future, and #2, to help stop them from happening before they start.",
     box: box(0.2851, 0.3002, 0.0288, 0.0304),
-    options: [],
+    next: "gov-manager-meeting",
+    options: [{ label: "Continue", target: "gov-manager-meeting" }],
   },
 
   "maintenance-or-roofer": {
@@ -233,9 +261,9 @@ export const firstAskCards: Record<string, TreeCard> = {
         labelPos: { x: 0.3287, y: 0.3465 },
       },
       {
-        label: "I have a roofer",
+        label: "Roofer",
         target: "qualify-out-of-blue-or-roofer",
-        labelPos: { x: 0.3487, y: 0.3811 },
+        labelPos: { x: 0.344, y: 0.3418 },
       },
     ],
   },
@@ -246,6 +274,25 @@ export const firstAskCards: Record<string, TreeCard> = {
     kind: "dialogue",
     text: "Pretty much all my clients have a maintenance guy and they're great, but they're not looking for the same kind of stuff we are. We'll be able to tell you if you have legitimate storm damage, if it affected the lifespan of your roof, and if it's worth looking into filing a claim.",
     box: box(0.3169, 0.3090, 0.0325, 0.0493),
-    options: [],
+    next: "close-free-inspection",
+    options: [{ label: "Continue", target: "close-free-inspection" }],
+  },
+
+  // Where both government-programs branches land: hand the no-insurance
+  // prospect to a manager rather than winging the grant conversation.
+  "gov-manager-meeting": {
+    id: "gov-manager-meeting",
+    section: "first-ask",
+    kind: "dialogue",
+    text: "I'd love to set up a meeting to go over the options available for you, but I'm gonna have a manager reach out because I'm not super well versed in it. Do you have time in your schedule this week, or is next week better?",
+    box: box(0.2458, 0.2571, 0.0265, 0.0271),
+    next: "collect-good-email",
+    options: [
+      {
+        label: "This time works…",
+        target: "collect-good-email",
+        labelPos: { x: 0.2458, y: 0.2301 },
+      },
+    ],
   },
 };

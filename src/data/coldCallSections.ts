@@ -1,4 +1,5 @@
-// Natural pixel size of /cold-call-tree/main-tree.webp
+// Natural pixel size of /cold-call-tree/main-tree.svg (its viewBox is
+// reframed to match, so these fractional coords are unchanged).
 export const TREE_IMAGE_WIDTH = 6000;
 export const TREE_IMAGE_HEIGHT = 3285;
 
@@ -12,15 +13,15 @@ export interface TreeSection {
   height: number;
 }
 
-// Boxes were hand-mapped from the source flowchart PDF.
+// Boxes were hand-mapped from the source flowchart.
 export const treeSections: TreeSection[] = [
   {
     id: "start",
     label: "Start Here",
-    x: 0,
-    y: 0.3139,
-    width: 0.0532,
-    height: 0.1275,
+    x: 0.0958,
+    y: 0.3985,
+    width: 0.0887,
+    height: 0.0615,
   },
   {
     id: "first-ask",

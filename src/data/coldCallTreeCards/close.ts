@@ -1,5 +1,7 @@
-// Hand-transcribed from public/cold-call-tree/main-tree.webp (no source
-// mermaid/doc exists — this was read directly off the flowchart image).
+// Card prose was hand-transcribed from the source flowchart. The wiring
+// (every option target and `next`) is generated from coldcalltree.csv, the
+// Lucidchart shape-data export — see scripts/gen_cold_call_mmd.py and
+// coldCallTree.mmd. Re-verify against the CSV rather than the artwork.
 // Covers the "Close & Schedule" section.
 
 import { box, type TreeCard } from "./types";
@@ -53,11 +55,8 @@ export const closeCards: Record<string, TreeCard> = {
     kind: "dialogue",
     text: "Since we are already going to be in the area, we can do it for free.",
     box: box(0.5208, 0.4837),
-    next: "close-photo-report-clearance",
-    options: [
-      { label: "Ok great", target: "close-qualify-up-at-building" },
-      { label: "Continue", target: "close-photo-report-clearance" },
-    ],
+    next: "close-qualify-up-at-building",
+    options: [{ label: "Ok great", target: "close-qualify-up-at-building" }],
   },
 
   "close-photo-report-clearance": {
@@ -75,7 +74,8 @@ export const closeCards: Record<string, TreeCard> = {
     kind: "dialogue",
     text: "A certificate of clearance. It's basically a report to turn into the insurance company that shows you had a contractor come out, inspect, and your roof was free of damage. As well as a photo report for your records. It can keep the insurance companies from raising your rates due to a storm.",
     box: box(0.481, 0.5192, 0.065, 0.055),
-    options: [],
+    next: "close-free-inspection",
+    options: [{ label: "Continue", target: "close-free-inspection" }],
   },
 
   "close-qualify-up-at-building": {
@@ -138,7 +138,7 @@ export const closeCards: Record<string, TreeCard> = {
     text: "But before we talk more about this, I have no idea if a claim is even necessary. My job is to let you know if the damage is bad enough to even go down that path, so while my guys are in the area, I'll have them take a look at your property and let you know what's up.",
     box: box(0.4992, 0.5822, 0.065, 0.055),
     options: [
-      { label: "Ok", target: "close-text-info-goodluck" },
+      { label: "Ok", target: "close-qualify-up-at-building" },
       { label: "No", target: "close-text-info-goodluck" },
     ],
   },

@@ -19,6 +19,8 @@ pb_data
 # Local working files
 notes.md
 coldCallTree.pdf
+# raw Lucid export; the reframed copy ships as public/cold-call-tree/main-tree.svg
+coldcalltree.svg
 Call-Stars-source-handoff-v15.zip
 
 # Editor directories and files
