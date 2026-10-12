@@ -72,9 +72,9 @@
      toward the landing page's crisper corners without going all the way
      down to its 3-5px, which would read as severe on dense app UI. */
   --r-sm: 3px;
-  --r-md: 6px;
-  --r-lg: 10px;
-  --r-xl: 14px;
+  --r-md: 5px;
+  --r-lg: 7px;
+  --r-xl: 9px;
   --r-pill: 999px;
 
   /* shadows warmed to match the canvas */
@@ -644,13 +644,18 @@
    already tells them apart, so the tile does not need to as well — the
    previous blue / mint / amber / lilac set was the loudest thing on a page
    that otherwise sits in one colour. tone-1..3 are kept as no-ops so the
-   `tone-${index % 4}` class in TrainingApp.tsx stays harmless. */
+   `tone-${index % 4}` class in TrainingApp.tsx stays harmless.
+
+   --r-lg rather than --r-sm: the landing rounds its small tiles to about a
+   fifth of their size (20px pill at 5px, 58px CTA mark at 14px), and 7px on
+   36px keeps that proportion. The scale's top end is for big panels, which
+   want the opposite treatment. */
 .lab-icon {
   width: 36px;
   height: 36px;
   display: grid;
   place-items: center;
-  border-radius: var(--r-sm);
+  border-radius: var(--r-lg);
   background: color-mix(in srgb, var(--teal) 10%, transparent);
   color: var(--teal);
 }
