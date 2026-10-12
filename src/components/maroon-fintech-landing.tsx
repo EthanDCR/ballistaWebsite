@@ -130,6 +130,15 @@ export interface MaroonFintechLandingProps {
   onRequestDemo?: (data: MflDemoRequest) => unknown
   /** LOCAL ADDITION (not upstream): wording for that dialog. See `MflDemoCopy`. */
   demo?: MflDemoCopy
+  /**
+   * LOCAL ADDITION (not upstream). Arbitrary content dropped in as its own
+   * band between the feature panel and the closing call to action, inside the
+   * dark `main`. The section is given `data-sec="platform"`, so a nav or
+   * footer link to `#platform` scrolls to it like any built-in section. It
+   * carries no styling of its own beyond the container — style the contents
+   * from the host page.
+   */
+  aside?: React.ReactNode
   /** Minimum height of the hero. A definite length, so it survives any host layout. */
   height?: string
   className?: string
@@ -1351,6 +1360,7 @@ export default function MaroonFintechLanding({
   palette = "maroon",
   onRequestDemo,
   demo,
+  aside,
   height = "100svh",
   className = "",
 }: MaroonFintechLandingProps) {
@@ -1819,6 +1829,12 @@ export default function MaroonFintechLanding({
           </section>
         )}
 
+        {aside && (
+          <section className="mfl-aside" data-sec="platform">
+            {aside}
+          </section>
+        )}
+
         {cta && (
           <section className="mfl-cta" data-sec="contact" aria-labelledby={uid + "-cta"}>
             <div className="mfl-cta-mark mfl-rise" aria-hidden="true">
@@ -2122,6 +2138,10 @@ const MFL_CSS = `
 .mfl-heat-m{font-size:7.5px;color:#8a8079;margin-top:1px}
 .mfl-heat-tip{margin-top:8px;min-height:14px;font-size:9.5px;color:#6e655e}
 .mfl-heat-tip b{color:#1c1412;font-weight:500}
+
+/* ---- local addition: host-supplied band (see the aside prop) ---- */
+.mfl-aside{max-width:1180px;margin:0 auto;padding:110px 16px 0}
+@media (max-width:640px){.mfl-aside{padding-top:70px}}
 
 /* ---- cta + footer ---- */
 .mfl-cta{display:flex;flex-direction:column;align-items:center;text-align:center;padding:130px 16px 110px}

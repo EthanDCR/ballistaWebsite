@@ -70,7 +70,7 @@ export default function Landing() {
         nav={[
           { label: "Why Call-Stars", href: "#about" },
           { label: "What's inside", href: "#features" },
-          { label: "Ballista platform", href: "#contact" },
+          { label: "Ballista platform", href: "#platform" },
           { label: "Request access", href: "#contact" },
           { label: "Log in", href: "/login" },
         ]}
@@ -158,6 +158,35 @@ export default function Landing() {
           subtitle:
             "The script, the call library, the objection tree and the operating standard — in one portal your reps will actually open.",
         }}
+        // Dropped in as its own band between the feature panel and the closing
+        // CTA — see the `aside` prop in the vendored component. This is the
+        // platform's one piece of real estate above the footer, and it sits
+        // after all the Call-Stars material rather than competing with it.
+        aside={
+          <div className="platform-demo">
+            <p className="platform-demo-badge">Ballista platform</p>
+            <h2 className="platform-demo-title">Watch it work a real storm</h2>
+            <p className="platform-demo-sub">
+              Hail map to target list to dialer, in the order a rep actually does it.
+            </p>
+
+            {/* SWAP ME. Replace this whole figure with the embed, keeping the
+                wrapper class so the 16:9 frame and styling carry over:
+                  <video className="platform-demo-frame" controls poster="/platform-poster.jpg">
+                    <source src="/platform-demo.mp4" type="video/mp4" />
+                  </video>
+                or an <iframe className="platform-demo-frame" ... allowFullScreen />
+                for YouTube, Loom, Wistia and the like. */}
+            <figure className="platform-demo-frame is-placeholder">
+              <span className="platform-demo-play" aria-hidden="true" />
+              <figcaption>Demo video goes here</figcaption>
+            </figure>
+
+            <a className="platform-demo-cta" href="#contact" onClick={scrollToContact}>
+              Join the waitlist →
+            </a>
+          </div>
+        }
         // The template's two feature cards are a multi-currency wallet and a
         // spend heatmap, both hardwired to currency formatting and finance
         // wording. Nothing here is a ledger, so they are off; the satin panel

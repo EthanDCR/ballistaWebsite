@@ -26,7 +26,7 @@ stylesheet.
 
 ### Local changes
 
-Two, both marked `LOCAL ADDITION` in the source:
+Three, each marked `LOCAL ADDITION` in the source:
 
 1. The original first line was a Next.js `"use client"` directive. Replaced by
    the provenance header.
@@ -37,6 +37,13 @@ Two, both marked `LOCAL ADDITION` in the source:
    page is for. The change is purely additive: every field falls back to the
    original string, so the component behaves identically when `demo` is
    omitted. `src/pages/Landing.tsx` passes waitlist wording.
+
+3. **Added an `aside` prop** taking arbitrary content, rendered as its own
+   band between the feature panel and the closing call to action, inside the
+   dark `main`. The section gets `data-sec="platform"` so in-page links to
+   `#platform` scroll to it like any built-in section. Also additive: omit the
+   prop and the markup is identical to upstream. `src/pages/Landing.tsx` uses
+   it for the platform demo video.
 
 Everything else is byte-for-byte upstream. In particular the two feature-panel
 widgets were left alone: `WalletWidget` is hardwired to currency flags and
@@ -71,7 +78,7 @@ curl -sSf -o src/components/maroon-fintech-landing.tsx \
   https://raw.githubusercontent.com/Kedhareswer/21stdev-my-components/main/components/maroon-fintech-landing/maroon-fintech-landing.tsx
 ```
 
-Then re-apply the provenance header and the `demo` prop, and re-check
+Then re-apply the provenance header and the `demo` and `aside` props, and re-check
 `src/pages/Landing.css` — it
 neutralises global tag styles that leak in from `index.css`, and it depends on
 the class names and specificity the template uses internally.
