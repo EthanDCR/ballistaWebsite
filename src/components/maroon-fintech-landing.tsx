@@ -1176,7 +1176,7 @@ function DemoDialog({
   onRequestDemo?: MaroonFintechLandingProps["onRequestDemo"]
   copy?: MflDemoCopy
 }) {
-  const [form, setForm] = React.useState({ name: "", email: "", phone: "", company: "", size: "11–50" } as MflDemoRequest)
+  const [form, setForm] = React.useState({ name: "", email: "", phone: "", company: "", size: "6–10" } as MflDemoRequest)
   const [state, setState] = React.useState("idle" as "idle" | "sending" | "done" | "error")
   const [err, setErr] = React.useState("")
   const boxRef = React.useRef(null as HTMLDivElement | null)
@@ -1313,7 +1313,7 @@ function DemoDialog({
               <label>
                 <span>Team size</span>
                 <select value={form.size} onChange={set("size")}>
-                  {["1–10", "11–50", "51–200", "201–1000", "1000+"].map((s) => (
+                  {["1–5", "6–10", "11–20", "21–50", "50+"].map((s) => (
                     <option key={s}>{s}</option>
                   ))}
                 </select>

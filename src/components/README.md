@@ -53,6 +53,11 @@ Four, each marked `LOCAL ADDITION` in the source:
    the payload shape changed, so `onRequestDemo` handlers see a new key.
    Delete the one validation line to make the number optional.
 
+   The team size bands were rescaled at the same time, from upstream's
+   1-10 / 11-50 / 51-200 / 201-1000 / 1000+ to 1-5 / 6-10 / 11-20 / 21-50 /
+   50+. The originals are enterprise-shaped and would have put nearly every
+   storm crew in the first option.
+
 Everything else is byte-for-byte upstream. In particular the two feature-panel
 widgets were left alone: `WalletWidget` is hardwired to currency flags and
 per-USD conversion, and `SpendingWidget` to "Spending Overview", `$`
