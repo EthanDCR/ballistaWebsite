@@ -1,34 +1,59 @@
+/* Retuned to sit with the landing page's forest palette (see
+   src/pages/Landing.tsx). The landing page is marketing — big type, hard
+   contrast, dark bands — and this is a portal people read in for an hour at a
+   time, so these borrow its hues without its contrast. Cards stay white on a
+   warm canvas rather than going cream-on-forest.
+
+   Status colours deliberately do NOT join the forest family. Red, green and
+   gold mean wrong / right / warning in a scored course, and a sage "incorrect"
+   next to a forest "correct" would cost more in legibility than it gains in
+   consistency. They are only desaturated enough to stop clashing with the warm
+   neutrals, and `--green` is kept brighter and cooler than `--teal` so a
+   correct answer never reads as chrome.
+
+   The literals scattered through the rest of this file still hold the old cool
+   palette — this block is roughly half the colour in the app. */
 :root {
-  --ink: #18334d;
-  --muted: #66788a;
-  --line: #d8e6ee;
-  --canvas: #f4f9fc;
+  /* neutrals — warm, derived from the landing's paper and ink */
+  --ink: #18231d;
+  --muted: #6b736a;
+  --line: #dcd9cc;
+  --canvas: #f2f0e8;
   --white: #fff;
-  --teal: #20bda2;
-  --teal-dark: #118d7d;
-  --teal-soft: #dff8f2;
-  --blue: #4b7bec;
-  --blue-dark: #315cc2;
-  --blue-soft: #e8eeff;
-  --gold: #ffbd45;
-  --orange: #ff8c42;
-  --red: #ef5b63;
-  --red-dark: #c8424c;
-  --red-soft: #fff0f1;
-  --green: #25b77e;
-  --green-dark: #14895d;
-  --green-soft: #e7f9f1;
-  --purple: #8c6bea;
-  --shadow: 0 14.4px 40px rgba(31, 67, 95, 0.1);
-  --shadow-tight: 0 6.4px 17.6px rgba(31, 67, 95, 0.1);
+
+  /* primary — was a bright teal, now the landing's brand green */
+  --teal: #2f5640;
+  --teal-dark: #1f3b2b;
+  --teal-soft: #e3e9e3;
+
+  /* secondary — kept recognisably blue so it stays distinct from the
+     primary, but dusty enough to sit on a warm canvas */
+  --blue: #456b96;
+  --blue-dark: #33527a;
+  --blue-soft: #e6ebf2;
+
+  /* status — hues preserved, saturation pulled back */
+  --gold: #e0a338;
+  --orange: #e07a3c;
+  --red: #d4545c;
+  --red-dark: #b03b45;
+  --red-soft: #f7e8e8;
+  --green: #2f9e63;
+  --green-dark: #1f7a4a;
+  --green-soft: #e3f1e8;
+  --purple: #7d66c4;
+
+  /* shadows warmed to match the canvas */
+  --shadow: 0 14.4px 40px rgba(26, 36, 30, 0.1);
+  --shadow-tight: 0 6.4px 17.6px rgba(26, 36, 30, 0.1);
 }
 
 .app-shell {
   min-height: 100vh;
   margin: 0;
   background:
-    radial-gradient(circle at 8% 10%, rgba(75, 123, 236, 0.08), transparent 20.8rem),
-    radial-gradient(circle at 92% 24%, rgba(32, 189, 162, 0.09), transparent 22.4rem), var(--canvas);
+    radial-gradient(circle at 8% 10%, rgba(47, 86, 64, 0.07), transparent 20.8rem),
+    radial-gradient(circle at 92% 24%, rgba(201, 183, 154, 0.18), transparent 22.4rem), var(--canvas);
   color: var(--ink);
   font-family: "Avenir Next", "Nunito Sans", "Segoe UI", sans-serif;
   font-weight: 600;
@@ -45,6 +70,15 @@
 .app-shell button {
   color: inherit;
   -webkit-tap-highlight-color: transparent;
+}
+/* That reset is (0,1,1) and outranks the (0,1,0) `.primary-button` and
+   `.danger-button` rules further down, so their `color: #fff` has never
+   applied — both have been rendering in --ink. On the old bright teal and red
+   that was merely poor contrast; on the forest green it is unreadable. Win the
+   cascade here rather than weakening the reset. */
+.app-shell .primary-button,
+.app-shell .danger-button {
+  color: #fff;
 }
 .app-shell button:focus-visible,
 .app-shell input:focus-visible,
@@ -124,7 +158,7 @@
   place-items: center;
   border-radius: 10.4px;
   background: var(--ink);
-  color: #6ce1ce;
+  color: #ecebe1; /* forest cream — matches the landing wordmark */
   box-shadow: 0 4px 0 #0f2439;
 }
 .mode-switch {

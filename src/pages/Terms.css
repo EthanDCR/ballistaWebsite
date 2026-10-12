@@ -72,7 +72,7 @@
 .terms-doc p,
 .terms-doc li {
   margin-bottom: 8.8px;
-  color: #3d5468;
+  color: #46524b; /* warm equivalent of the old slate #3d5468 */
   font-size: 0.93rem;
   font-weight: 600;
   line-height: 1.6;

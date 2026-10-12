@@ -2,9 +2,13 @@
   position: fixed;
   inset: 0;
   overflow: hidden;
+  /* Matches .app-shell in TrainingApp.css. This file defines no custom
+     properties at all — every colour in it is a literal, so the page is still
+     on the old cool palette below this line. Converting it is the rest of the
+     job, not part of this spike. */
   background:
-    radial-gradient(circle at 8% 10%, rgba(75, 123, 236, 0.08), transparent 20.8rem),
-    radial-gradient(circle at 92% 24%, rgba(32, 189, 162, 0.09), transparent 22.4rem), #f4f9fc;
+    radial-gradient(circle at 8% 10%, rgba(47, 86, 64, 0.07), transparent 20.8rem),
+    radial-gradient(circle at 92% 24%, rgba(201, 183, 154, 0.18), transparent 22.4rem), #f2f0e8;
   font-family: "Avenir Next", "Nunito Sans", "Segoe UI", sans-serif;
 }
 
@@ -414,7 +418,7 @@
   border-radius: 9.6px;
   border: none;
   background: #18334d;
-  color: #6ce1ce;
+  color: #ecebe1; /* forest cream — matches the landing wordmark */
   font-family: inherit;
   font-size: 0.82rem;
   font-weight: 800;
