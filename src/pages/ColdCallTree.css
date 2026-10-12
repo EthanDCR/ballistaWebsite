@@ -36,7 +36,7 @@
   height: 100%;
   user-select: none;
   pointer-events: none;
-  border-radius: 14.4px;
+  border-radius: var(--r-lg);
   box-shadow: var(--shadow);
 }
 
@@ -48,7 +48,7 @@
 
 .cct-spotlight {
   position: absolute;
-  border-radius: 20.8px;
+  border-radius: var(--r-xl);
   pointer-events: none;
   box-shadow: 0 0 0 3200px color-mix(in srgb, var(--ink) 50%, transparent);
   transition:
@@ -62,7 +62,7 @@
   position: absolute;
   appearance: none;
   border: 2px solid transparent;
-  border-radius: 11.2px;
+  border-radius: var(--r-md);
   background: transparent;
   padding: 0;
   cursor: pointer;
@@ -89,7 +89,7 @@
   padding: 0;
   cursor: pointer;
   border: 2.4px solid var(--gold);
-  border-radius: 11.2px;
+  border-radius: var(--r-md);
   background: color-mix(in srgb, var(--gold) 14%, transparent);
   animation: cct-pulse-glow 1.6s ease-in-out infinite;
   transition: background 0.15s ease;
@@ -101,7 +101,7 @@
 
 .cct-option-marker-label {
   border-width: 2px;
-  border-radius: 799.2px;
+  border-radius: var(--r-pill);
   background: color-mix(in srgb, var(--gold) 22%, transparent);
   box-shadow: 0 3.2px 11.2px color-mix(in srgb, var(--gold) 35%, transparent);
 }
@@ -134,7 +134,7 @@
   gap: 8px;
   height: 52.8px;
   padding: 0 9.6px;
-  border-radius: 16px;
+  border-radius: var(--r-xl);
   background: color-mix(in srgb, var(--white) 92%, transparent);
   backdrop-filter: blur(14.4px);
   border: 1px solid var(--line);
@@ -149,7 +149,7 @@
   height: 33.6px;
   display: grid;
   place-items: center;
-  border-radius: 9.6px;
+  border-radius: var(--r-md);
   border: 1px solid var(--line);
   background: var(--white);
   color: var(--ink);
@@ -172,7 +172,7 @@
   height: 40px;
   min-width: 0;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--r-lg);
   background: var(--canvas);
   overflow-x: auto;
   scrollbar-width: none;
@@ -189,7 +189,7 @@
   white-space: nowrap;
   padding: 0 11.2px;
   height: 35.2px;
-  border-radius: 8.8px;
+  border-radius: var(--r-md);
   font-size: 0.82rem;
   font-family: inherit;
   font-weight: 800;
@@ -223,7 +223,7 @@
 .cct-zoom-controls button {
   width: 32px;
   height: 32px;
-  border-radius: 9.6px;
+  border-radius: var(--r-md);
   border: 1px solid var(--line);
   background: color-mix(in srgb, var(--white) 92%, transparent);
   backdrop-filter: blur(14.4px);
@@ -249,7 +249,7 @@
   align-items: center;
   gap: 4.8px;
   padding: 4.8px;
-  border-radius: 12.8px;
+  border-radius: var(--r-lg);
   background: color-mix(in srgb, var(--white) 92%, transparent);
   backdrop-filter: blur(14.4px);
   border: 1px solid var(--line);
@@ -262,7 +262,7 @@
   height: 27.2px;
   display: grid;
   place-items: center;
-  border-radius: 8px;
+  border-radius: var(--r-md);
   border: none;
   background: transparent;
   color: var(--ink);
@@ -305,7 +305,7 @@
     height: auto;
     flex-wrap: wrap;
     padding: 9.6px;
-    border-radius: 14.4px;
+    border-radius: var(--r-lg);
   }
   .cct-nav-home {
   flex-shrink: 0;
@@ -313,7 +313,7 @@
   height: 33.6px;
   display: grid;
   place-items: center;
-  border-radius: 9.6px;
+  border-radius: var(--r-md);
   border: 1px solid var(--line);
   background: var(--white);
   color: var(--ink);
@@ -354,7 +354,7 @@
   flex-direction: column;
   gap: 11.2px;
   padding: 17.6px 20.8px;
-  border-radius: 17.6px;
+  border-radius: var(--r-xl);
   background: var(--green);
   border: 1px solid var(--green-dark);
   color: var(--ink);
@@ -384,7 +384,7 @@
   height: 25.6px;
   display: grid;
   place-items: center;
-  border-radius: 8px;
+  border-radius: var(--r-md);
   background: color-mix(in srgb, var(--ink) 12%, transparent);
   color: inherit;
   cursor: pointer;
@@ -414,7 +414,7 @@
   align-items: center;
   gap: 6.4px;
   padding: 8px 12.8px;
-  border-radius: 9.6px;
+  border-radius: var(--r-md);
   border: none;
   background: var(--ink);
   color: var(--cream);

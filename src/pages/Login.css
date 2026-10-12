@@ -8,7 +8,7 @@
 .login-card {
   width: min(380px, 100%);
   padding: 40px 32px;
-  border-radius: 24px;
+  border-radius: var(--r-xl);
   background: #fff;
   border: 1px solid rgba(24, 51, 77, 0.1);
   box-shadow: var(--shadow);
@@ -26,7 +26,7 @@
 .login-brand .brand-mark {
   width: 56px;
   height: 56px;
-  border-radius: 16px;
+  border-radius: var(--r-xl);
   background: var(--ink);
   color: var(--cream);
   display: grid;
@@ -63,7 +63,7 @@
 .login-error {
   margin-bottom: 16px;
   padding: 10px 14px;
-  border-radius: 12px;
+  border-radius: var(--r-lg);
   background: var(--red-soft);
   color: var(--red-dark);
   font-size: 0.8rem;
@@ -120,7 +120,7 @@
   margin-bottom: 14px;
   padding: 4px;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--r-lg);
   background: #edf5f8;
 }
 
@@ -128,7 +128,7 @@
   flex: 1;
   height: 38px;
   border: 0;
-  border-radius: 10px;
+  border-radius: var(--r-md);
   background: transparent;
   color: var(--muted);
   font-family: inherit;
@@ -149,7 +149,7 @@
   margin: 0 auto 16px;
   display: grid;
   place-items: center;
-  border-radius: 22px;
+  border-radius: var(--r-xl);
   background: var(--teal-soft);
   color: var(--teal-dark);
 }
