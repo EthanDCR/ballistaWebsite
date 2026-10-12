@@ -72,7 +72,14 @@ export type MflPalette = {
   satin: [string, string, string]
 }
 
-export type MflDemoRequest = { name: string; email: string; company: string; size: string }
+export type MflDemoRequest = {
+  name: string
+  email: string
+  /** LOCAL ADDITION (not upstream): the dialog collects a phone number too. */
+  phone: string
+  company: string
+  size: string
+}
 
 /**
  * LOCAL ADDITION (not upstream). Copy for the request-demo dialog and the
@@ -1169,7 +1176,7 @@ function DemoDialog({
   onRequestDemo?: MaroonFintechLandingProps["onRequestDemo"]
   copy?: MflDemoCopy
 }) {
-  const [form, setForm] = React.useState({ name: "", email: "", company: "", size: "11–50" } as MflDemoRequest)
+  const [form, setForm] = React.useState({ name: "", email: "", phone: "", company: "", size: "11–50" } as MflDemoRequest)
   const [state, setState] = React.useState("idle" as "idle" | "sending" | "done" | "error")
   const [err, setErr] = React.useState("")
   const boxRef = React.useRef(null as HTMLDivElement | null)
@@ -1225,6 +1232,10 @@ function DemoDialog({
     if (state === "sending") return
     if (!form.name.trim()) return setErr("Tell us who to ask for.")
     if (!isEmail(form.email)) return setErr("That email doesn't look right.")
+    // Counts digits rather than matching a format, so "(303) 555-0134",
+    // "+1 303-555-0134" and "3035550134" are all accepted. Drop this line to
+    // make the number optional.
+    if (form.phone.replace(/\D/g, "").length < 7) return setErr("That phone number doesn't look right.")
     setErr("")
     setState("sending")
     try {
@@ -1281,6 +1292,18 @@ function DemoDialog({
             <label>
               <span>Work email</span>
               <input value={form.email} onChange={set("email")} type="email" autoComplete="email" placeholder="ada@company.com" aria-invalid={!!err && !isEmail(form.email)} />
+            </label>
+            <label>
+              <span>Phone</span>
+              <input
+                value={form.phone}
+                onChange={set("phone")}
+                type="tel"
+                inputMode="tel"
+                autoComplete="tel"
+                placeholder="(303) 555-0134"
+                aria-invalid={!!err && form.phone.replace(/\D/g, "").length < 7}
+              />
             </label>
             <div className="mfl-dialog-row">
               <label>

@@ -1,0 +1,6 @@
+
+- phone number on req access module (more than one optional)
+- block eveything aside from module 1, paywall everything
+- instead of request access, just "join waitlist"
+- some type of way for clients to follow the journey. blog? newsLetter? 
+- 

@@ -26,7 +26,7 @@ stylesheet.
 
 ### Local changes
 
-Three, each marked `LOCAL ADDITION` in the source:
+Four, each marked `LOCAL ADDITION` in the source:
 
 1. The original first line was a Next.js `"use client"` directive. Replaced by
    the provenance header.
@@ -44,6 +44,14 @@ Three, each marked `LOCAL ADDITION` in the source:
    `#platform` scroll to it like any built-in section. Also additive: omit the
    prop and the markup is identical to upstream. `src/pages/Landing.tsx` uses
    it for the platform demo video.
+
+4. **Added a phone field** to the request dialog. `MflDemoRequest` gains a
+   `phone`, the input sits full width between the email and the company/size
+   row, and submit refuses fewer than 7 digits. Validation counts digits
+   rather than matching a format, so `(303) 555-0134`, `+1 303-555-0134` and
+   `3035550134` all pass. Unlike the other three this one is *not* additive —
+   the payload shape changed, so `onRequestDemo` handlers see a new key.
+   Delete the one validation line to make the number optional.
 
 Everything else is byte-for-byte upstream. In particular the two feature-panel
 widgets were left alone: `WalletWidget` is hardwired to currency flags and
@@ -78,7 +86,7 @@ curl -sSf -o src/components/maroon-fintech-landing.tsx \
   https://raw.githubusercontent.com/Kedhareswer/21stdev-my-components/main/components/maroon-fintech-landing/maroon-fintech-landing.tsx
 ```
 
-Then re-apply the provenance header and the `demo` and `aside` props, and re-check
+Then re-apply the provenance header, the `demo` and `aside` props and the phone field, and re-check
 `src/pages/Landing.css` — it
 neutralises global tag styles that leak in from `index.css`, and it depends on
 the class names and specificity the template uses internally.
