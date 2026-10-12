@@ -76,14 +76,14 @@ export default function Landing() {
           { label: "Log in", href: "/login" },
         ]}
         login={{ label: "Log in", href: "/login" }}
-        signup={{ label: "Join waitlist", href: "#contact" }}
+        signup={{ label: "Create an account", href: "/login" }}
         // The mark badge always renders; omitting it falls back to the first
         // letter of `name`, which reads as a stray "s". A star ties it to the
         // Call-Stars name.
         backer={{ prefix: "Cold-call training for", name: "storm-restoration teams", mark: "★" }}
         title={"New rep Monday.\n*Booking* by Friday."}
         subtitle="The cold-call training we built for our own floor. Now open to yours."
-        primaryAction={{ label: "Join the waitlist", href: "#contact" }}
+        primaryAction={{ label: "Create an account", href: "/login" }}
         secondaryAction={{ label: "Open Call-Stars", href: "/training" }}
         // Deliberately does not enumerate what's in the portal — the counts
         // are already in `about.stats` below, and the "What's inside" section
@@ -183,8 +183,8 @@ export default function Landing() {
               <figcaption>Call-Stars demo video goes here</figcaption>
             </figure>
 
-            <a className="demo-cta" href="#contact" onClick={scrollToContact}>
-              Join the waitlist →
+            <a className="demo-cta" href="/training">
+              Open Call-Stars →
             </a>
           </div>
         }
@@ -197,23 +197,23 @@ export default function Landing() {
         cta={{
           title: "Your next hire, *ready to dial.*",
           subtitle:
-            "Module 1 is open to anyone — go and take it. The rest of the course unlocks with an account, and the waitlist covers the Ballista platform too.",
-          action: { label: "Open Call-Stars", href: "/training" },
+            "Module 1 is open to anyone — go and take it. Create an account for the rest; every account is approved by hand, so it takes us a moment.",
+          action: { label: "Create an account", href: "/login" },
         }}
         // One dialog, two jobs: the page's main ask is Call-Stars access, and
         // the platform waitlist rides along rather than competing for a second
         // form. If the waitlist ever needs its own fields, that is the point to
         // split them.
         demo={{
-          badge: "Join the waitlist",
-          title: "Get your crew on Call-Stars.",
+          badge: "Platform waitlist",
+          title: "Get early access to Ballista.",
           subtitle:
-            "Tell us about your team and we'll be in touch as seats open. You'll go on the Ballista platform waitlist too.",
+            "The storm canvassing platform, in private beta. Call-Stars has no waitlist — for that, just create an account.",
           submit: "Join the waitlist",
           sending: "Adding you…",
           doneTitle: "You're on the list.",
           doneText:
-            "We'll email {email} as soon as seats open — and you're on the Ballista platform waitlist.",
+            "We'll email {email} as soon as a seat opens on the platform. No newsletter, no drip — just the invite.",
           openLabel: "Join the waitlist",
         }}
         footer={{
@@ -239,7 +239,7 @@ export default function Landing() {
             {
               title: "Company",
               links: [
-                { label: "Join the waitlist", href: "#contact" },
+                { label: "Create an account", href: "/login" },
                 { label: "Support", href: "mailto:support@theballista.com" },
                 { label: "Terms", href: "/terms" },
               ],

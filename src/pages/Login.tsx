@@ -16,6 +16,38 @@ type Mode = "signin" | "signup";
 const PENDING_MESSAGE =
   "This account is still awaiting approval. You'll be able to sign in once an admin approves it.";
 
+/**
+ * Who to chase about an approval.
+ *
+ * Accounts are approved by hand, so somebody who has signed up and is waiting
+ * has no way through the product itself — these are the only route to a
+ * person. The phone number is rendered only once it is set here; leaving it
+ * null shows the email alone rather than a placeholder nobody can call.
+ */
+const CONTACT: { email: string; phone: string | null } = {
+  email: "support@theballista.com",
+  phone: null, // TODO: add the number reps should call, e.g. "(303) 555-0134"
+};
+
+/** Shown wherever someone is stuck waiting on an approval. */
+function ApprovalContact() {
+  return (
+    <div className="login-contact">
+      <p>Need access sooner, or think something has gone wrong? Reach us directly.</p>
+      <ul>
+        <li>
+          <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+        </li>
+        {CONTACT.phone && (
+          <li>
+            <a href={`tel:${CONTACT.phone.replace(/[^\d+]/g, "")}`}>{CONTACT.phone}</a>
+          </li>
+        )}
+      </ul>
+    </div>
+  );
+}
+
 export default function Login() {
   const isValid = useAuth();
   const navigate = useNavigate();
@@ -28,6 +60,9 @@ export default function Login() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [signedUp, setSignedUp] = useState(false);
+  // Separate from `error`: an unapproved account is not a mistake the person
+  // can fix by retyping, so it gets the contact details rather than a red line.
+  const [awaitingApproval, setAwaitingApproval] = useState(false);
 
   if (isValid) {
     const from = (location.state as { from?: Location } | null)?.from;
@@ -37,6 +72,7 @@ export default function Login() {
   function switchMode(next: Mode) {
     setMode(next);
     setError("");
+    setAwaitingApproval(false);
     setPassword("");
   }
 
@@ -48,11 +84,9 @@ export default function Login() {
     } catch (err) {
       // A pending account and a wrong password both come back as a failed
       // auth, so check whether the record exists but isn't approved yet.
-      setError(
-        err instanceof ClientResponseError && err.status === 403
-          ? PENDING_MESSAGE
-          : "Incorrect email or password.",
-      );
+      const pending = err instanceof ClientResponseError && err.status === 403;
+      setAwaitingApproval(pending);
+      setError(pending ? PENDING_MESSAGE : "Incorrect email or password.");
     }
   }
 
@@ -107,9 +141,10 @@ export default function Login() {
           </div>
           <h1>Account created</h1>
           <p>
-            Your account is pending approval. An admin needs to approve it before you can sign in —
-            you'll get access as soon as that's done.
+            Every account is approved by hand, so yours needs a quick check before you can sign in.
+            We'll get to it as fast as we can — you'll be able to log in as soon as it's done.
           </p>
+          <ApprovalContact />
           <button
             className="primary-button full"
             onClick={() => {
@@ -164,6 +199,7 @@ export default function Login() {
             : "Create an account — an admin approves it before you get access."}
         </p>
         {error && <div className="login-error">{error}</div>}
+        {awaitingApproval && <ApprovalContact />}
         <form className="login-form" onSubmit={handleSubmit}>
           {mode === "signup" && (
             <label>

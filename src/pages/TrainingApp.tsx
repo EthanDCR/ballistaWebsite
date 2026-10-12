@@ -464,9 +464,9 @@ function RepHome({
             <strong>You&apos;re previewing Call-Stars.</strong> Module 1 is open to everyone. The
             rest of the course and every training lab come with an account.
           </p>
-          <a className="primary-button compact" href="/#contact">
-            Join the waitlist
-          </a>
+          <Link className="primary-button compact" to="/login">
+            Create an account
+          </Link>
         </aside>
       )}
       <div className="portal-columns">
