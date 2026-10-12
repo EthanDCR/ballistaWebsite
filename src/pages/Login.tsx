@@ -31,7 +31,7 @@ export default function Login() {
 
   if (isValid) {
     const from = (location.state as { from?: Location } | null)?.from;
-    return <Navigate to={from ? `${from.pathname}${from.search}` : "/"} replace />;
+    return <Navigate to={from ? `${from.pathname}${from.search}` : "/training"} replace />;
   }
 
   function switchMode(next: Mode) {
@@ -44,7 +44,7 @@ export default function Login() {
     try {
       await pb.collection("users").authWithPassword(email, password);
       const from = (location.state as { from?: Location } | null)?.from;
-      navigate(from ? `${from.pathname}${from.search}` : "/", { replace: true });
+      navigate(from ? `${from.pathname}${from.search}` : "/training", { replace: true });
     } catch (err) {
       // A pending account and a wrong password both come back as a failed
       // auth, so check whether the record exists but isn't approved yet.

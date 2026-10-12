@@ -1,0 +1,166 @@
+/* The landing template ships its own stylesheet, scoped under `.mfl-root` and
+   injected by the component itself. It resets the tags it uses with
+   `:where(p, h1, h2, h3, ul)`, which carries zero specificity — so the bare
+   `h1`, `h2` and `p` rules in index.css win and leak their font and margins
+   into the template. These rules take that bleed back out.
+
+   Specificity here is deliberate and load-bearing. Every selector below is
+   `:where(.mfl-root)` + a tag, which scopes the rule while contributing
+   nothing of its own, leaving it at (0,0,1) — the same weight as the bare tag
+   rules in index.css. That puts these rules in a narrow band:
+
+     index.css `h1`      (0,0,1)  loses on source order (this file is imported
+                                  after index.css, via Landing.tsx)
+     this file            (0,0,1)
+     component `.mfl-h1`  (0,1,0)  wins, so the template still styles itself
+
+   Writing `.mfl-root h1` instead would score (0,1,1) and outrank the template's
+   own classes — which silently shrinks the headline to the inherited size.
+   Keep the `:where()`.
+
+   Everything here is a neutraliser; none of it styles the template. If a global
+   tag rule is added to index.css for an element the template uses, undo it
+   here too. */
+
+:where(.mfl-root) h1,
+:where(.mfl-root) h2,
+:where(.mfl-root) h3,
+:where(.mfl-root) p,
+:where(.mfl-root) ul {
+  margin: 0;
+  padding: 0;
+}
+
+:where(.mfl-root) h1,
+:where(.mfl-root) h2,
+:where(.mfl-root) h3 {
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+}
+
+/* index.css sets `color-scheme: light dark`, which repaints form controls and
+   the scrollbar to the OS theme. The template is a single fixed light design,
+   so pin it back. */
+.mfl-root {
+  color-scheme: light;
+}
+
+/* index.css gives `:root` a dark background under `prefers-color-scheme: dark`.
+   The template paints its own frame, but the page behind it (and any
+   overscroll gutter) would still show through dark. */
+.landing-page {
+  background: #2f4436; /* forest `frame` */
+}
+
+/* Both feature cards are switched off in Landing.tsx, so the satin panel keeps
+   its heading and loses the two finance widgets. The empty flex row would
+   still contribute its 44px top margin. */
+.mfl-root .mfl-fcards:empty {
+  margin-top: 0;
+}
+
+/* In the closing CTA band the template fills `cta.action` and outlines the
+   button that opens the dialog. This page sells Call-Stars, so the dialog —
+   "Request access" — is the conversion and should carry the weight, while
+   "Open Call-Stars" is for people who already have an account. The template
+   hardwires which button is which, so swap the two treatments here rather
+   than forking the component. Both selectors are (0,2,0) and beat the
+   component's own (0,1,0) rules whatever the source order. */
+.mfl-cta .mfl-btn--ghost {
+  background: var(--mfl-cream);
+  color: var(--mfl-night);
+  box-shadow: none;
+}
+.mfl-cta .mfl-btn--ghost:hover {
+  background: #fff;
+  box-shadow: none;
+}
+.mfl-cta .mfl-btn--cream {
+  background: none;
+  color: var(--mfl-cream);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--mfl-cream) 30%, transparent);
+}
+.mfl-cta .mfl-btn--cream:hover {
+  background: none;
+  box-shadow: inset 0 0 0 1px var(--mfl-cream);
+}
+
+/* ---- platform announcement bar ----------------------------------------- */
+/* Above the template's sticky nav and painted in the same frame colour, so it
+   reads as part of the page chrome. The palette variables live on `.mfl-root`
+   and this sits outside it, so the two forest values are repeated here. */
+.platform-bar {
+  /* This project sets no global border-box, so without this the 42px
+     min-height is the content box and the padding lands on top of it — the bar
+     comes out 56px and no longer matches the hero's `height` compensation in
+     Landing.tsx. Keep the two in step. */
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  min-height: 42px;
+  padding: 7px 16px;
+  background: #2f4436; /* forest `frame` */
+  color: #ecebe1; /* forest `cream` */
+  font-family:
+    "Inter Tight", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 12.5px;
+  line-height: 1.3;
+  text-align: center;
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+
+.platform-bar-tag {
+  flex: none;
+  padding: 2px 7px;
+  border-radius: 3px;
+  background: #ecebe1;
+  color: #121d17; /* forest `night` */
+  font-size: 9.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.platform-bar-text {
+  color: color-mix(in srgb, #ecebe1 72%, transparent);
+}
+.platform-bar-text strong {
+  font-weight: 600;
+  color: #ecebe1;
+}
+
+/* Underline grows from the left on hover, matching the footer links. */
+.platform-bar-cta {
+  flex: none;
+  font-weight: 500;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size 0.3s;
+}
+.platform-bar:hover .platform-bar-cta,
+.platform-bar:focus-visible .platform-bar-cta {
+  background-size: 100% 1px;
+}
+
+.platform-bar:focus-visible {
+  outline: 2px solid #ffd98a; /* forest `glow` */
+  outline-offset: -2px;
+}
+
+/* Below the nav's own breakpoint the sentence is the first thing to go — the
+   tag and the call to action still say what it is. */
+@media (max-width: 640px) {
+  .platform-bar-text {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .platform-bar-cta {
+    transition: none;
+  }
+}

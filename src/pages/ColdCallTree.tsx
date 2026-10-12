@@ -631,7 +631,7 @@ export default function ColdCallTree() {
         animate={{ opacity: ready ? 1 : 0, y: ready ? 0 : 16 }}
         transition={{ duration: 0.4 }}
       >
-        <Link to="/" className="cct-nav-home" aria-label="Back to training portal" title="Home">
+        <Link to="/training" className="cct-nav-home" aria-label="Back to training portal" title="Home">
           <Home size={15} />
         </Link>
 

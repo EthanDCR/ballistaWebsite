@@ -6,6 +6,7 @@ import TrainingApp from "./pages/TrainingApp.tsx";
 import ColdCallTree from "./pages/ColdCallTree.tsx";
 import Login from "./pages/Login.tsx";
 import Terms from "./pages/Terms.tsx";
+import Landing from "./pages/Landing.tsx";
 import RequireAuth from "./lib/RequireAuth.tsx";
 
 createRoot(document.getElementById("root")!).render(
@@ -14,8 +15,9 @@ createRoot(document.getElementById("root")!).render(
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/terms" element={<Terms />} />
+        <Route path="/" element={<Landing />} />
         <Route
-          path="/"
+          path="/training"
           element={
             <RequireAuth>
               <TrainingApp />
