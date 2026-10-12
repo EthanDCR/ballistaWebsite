@@ -198,13 +198,13 @@ export default function Landing() {
               ],
             },
             {
+              // One link, deliberately. Hail map / target lists / dialer used
+              // to sit here, but none of them have anywhere to go — they all
+              // pointed at #contact, which is navigation in appearance only.
+              // The column heading already says a platform exists and is in
+              // beta; the waitlist is the only thing a visitor can act on.
               title: "Platform — beta",
-              links: [
-                { label: "Hail map", href: "#contact" },
-                { label: "Target lists", href: "#contact" },
-                { label: "Dialer", href: "#contact" },
-                { label: "Join the waitlist", href: "#contact" },
-              ],
+              links: [{ label: "Join the waitlist", href: "#contact" }],
             },
             {
               title: "Company",
