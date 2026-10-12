@@ -84,6 +84,19 @@ func publicDir() string {
 const (
 	ruleAuthed = "@request.auth.id != ''"
 	ruleAdmin  = "@request.auth.role = 'admin'"
+
+	// previewModuleKey is the one module a signed-out visitor may read. The
+	// landing page sends people straight into the portal to look around, and
+	// this is what they are allowed to see; everything else needs an account.
+	// Must stay in sync with PREVIEW_MODULES in src/pages/TrainingApp.tsx.
+	previewModuleKey = "intro"
+
+	// rulePreview guards the two collections keyed by module. Signed-in reps
+	// read everything; anyone at all reads the preview module. Note this is
+	// readable by guests on purpose — it is the only content on the site that
+	// is. PocketBase applies a list rule as a filter rather than refusing the
+	// request, so a visitor simply gets the preview rows and nothing else.
+	rulePreview = ruleAuthed + " || module_key = '" + previewModuleKey + "'"
 )
 
 // termsVersion is the Terms of Service revision stamped onto an account when
@@ -152,6 +165,7 @@ type collectionDef struct {
 // is readable by any signed-in rep; only accounts with role=admin may write.
 func ensureContentCollections(app core.App) error {
 	authed := types.Pointer(ruleAuthed)
+	preview := types.Pointer(rulePreview)
 	adminOnly := types.Pointer(ruleAdmin)
 
 	defs := []collectionDef{
@@ -252,7 +266,7 @@ func ensureContentCollections(app core.App) error {
 				&core.JSONField{Name: "overview_topics"},
 			},
 			seedFile: "modules_content.json",
-			list:     authed, view: authed, create: adminOnly, update: adminOnly, delete: adminOnly,
+			list:     preview, view: preview, create: adminOnly, update: adminOnly, delete: adminOnly,
 		},
 		{
 			name: "quiz_questions",
@@ -266,7 +280,7 @@ func ensureContentCollections(app core.App) error {
 				&core.NumberField{Name: "order"},
 			},
 			seedFile: "quiz_questions.json",
-			list:     authed, view: authed, create: adminOnly, update: adminOnly, delete: adminOnly,
+			list:     preview, view: preview, create: adminOnly, update: adminOnly, delete: adminOnly,
 		},
 		{
 			name: "sign_offs",

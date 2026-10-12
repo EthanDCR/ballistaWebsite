@@ -16,14 +16,10 @@ createRoot(document.getElementById("root")!).render(
         <Route path="/login" element={<Login />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/" element={<Landing />} />
-        <Route
-          path="/training"
-          element={
-            <RequireAuth>
-              <TrainingApp />
-            </RequireAuth>
-          }
-        />
+        {/* Public on purpose: a signed-out visitor gets the preview module and
+            nothing else. TrainingApp decides what to show, and the collection
+            rules in main.go decide what is actually served. */}
+        <Route path="/training" element={<TrainingApp />} />
         <Route
           path="/cold-call-tree"
           element={

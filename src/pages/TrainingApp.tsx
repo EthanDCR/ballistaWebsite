@@ -30,7 +30,7 @@ import {
   X,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { modules, trainingLabs } from "../config/modules";
 import {
   contentMeta,
@@ -135,8 +135,19 @@ const EMPTY_SNAPSHOT: ContentSnapshot = contentMeta.reduce((snapshot, meta) => {
   return snapshot;
 }, {} as ContentSnapshot);
 
+/**
+ * Modules a signed-out visitor may open. The landing page sends people
+ * straight in to look around, and this is what they get.
+ *
+ * This list only decides what the UI offers. The real gate is the collection
+ * rules in main.go, which serve a signed-out request nothing but these
+ * modules however it asks — keep `previewModuleKey` there in sync with this.
+ */
+const PREVIEW_MODULES = new Set(["intro"]);
+
 export default function TrainingApp() {
-  useAuth();
+  const signedIn = useAuth();
+  const previewing = !signedIn;
   const navigate = useNavigate();
   const [mode, setMode] = useState<AppMode>("rep");
   const [screen, setScreen] = useState<RepScreen>("home");
@@ -215,14 +226,19 @@ export default function TrainingApp() {
     [persistProgress],
   );
 
-  const openModule = useCallback((moduleId: string) => {
-    setMode("rep");
-    setActiveModuleId(moduleId);
-    setScreen("module");
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
+  const openModule = useCallback(
+    (moduleId: string) => {
+      if (previewing && !PREVIEW_MODULES.has(moduleId)) return;
+      setMode("rep");
+      setActiveModuleId(moduleId);
+      setScreen("module");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
+    [previewing],
+  );
   const openLab = useCallback(
     (labId: string) => {
+      if (previewing) return;
       if (labId === "decision-tree") {
         navigate("/cold-call-tree");
         return;
@@ -232,7 +248,7 @@ export default function TrainingApp() {
       setScreen("lab");
       window.scrollTo({ top: 0, behavior: "smooth" });
     },
-    [navigate],
+    [navigate, previewing],
   );
 
   function setModeGuarded(next: AppMode) {
@@ -287,7 +303,7 @@ export default function TrainingApp() {
 
   return (
     <div className="app-shell">
-      <Topbar mode={effectiveMode} onMode={setModeGuarded} onHome={goHome} />
+      <Topbar mode={effectiveMode} onMode={setModeGuarded} onHome={goHome} previewing={previewing} />
       {effectiveMode === "admin" ? (
         <AdminStudio
           content={content}
@@ -298,7 +314,7 @@ export default function TrainingApp() {
       ) : (
         <main>
           {screen === "home" && (
-            <RepHome progress={progress} onModule={openModule} onLab={openLab} />
+            <RepHome progress={progress} onModule={openModule} onLab={openLab} previewing={previewing} />
           )}
           {screen === "module" && (
             <ModuleView
@@ -349,7 +365,9 @@ function Topbar({
   mode,
   onMode,
   onHome,
+  previewing,
 }: {
+  previewing: boolean;
   mode: AppMode;
   onMode: (mode: AppMode) => void;
   onHome: () => void;
@@ -377,20 +395,26 @@ function Topbar({
           <button className={mode === "rep" ? "active" : ""} onClick={() => onMode("rep")}>
             <Home size={13} /> Rep portal
           </button>
-          {isAdmin() && (
+          {!previewing && isAdmin() && (
             <button className={mode === "admin" ? "active" : ""} onClick={() => onMode("admin")}>
               <Settings size={13} /> Admin
             </button>
           )}
         </div>
         <div className="stats">
-          <button
-            className="sign-out-button"
-            onClick={() => pb.authStore.clear()}
-            aria-label="Sign out"
-          >
-            <LogOut size={14} />
-          </button>
+          {previewing ? (
+            <Link className="primary-button compact" to="/login">
+              Log in
+            </Link>
+          ) : (
+            <button
+              className="sign-out-button"
+              onClick={() => pb.authStore.clear()}
+              aria-label="Sign out"
+            >
+              <LogOut size={14} />
+            </button>
+          )}
         </div>
       </div>
     </header>
@@ -401,10 +425,12 @@ function RepHome({
   progress,
   onModule,
   onLab,
+  previewing,
 }: {
   progress: LearnerProgress;
   onModule: (id: string) => void;
   onLab: (id: string) => void;
+  previewing: boolean;
 }) {
   const completedCount = modules.filter(
     (item) => progress.completedActivities[`module-${item.id}`],
@@ -432,6 +458,17 @@ function RepHome({
           </div>
         </div>
       </section>
+      {previewing && (
+        <aside className="preview-notice">
+          <p>
+            <strong>You&apos;re previewing Call-Stars.</strong> Module 1 is open to everyone. The
+            rest of the course and every training lab come with an account.
+          </p>
+          <a className="primary-button compact" href="/#contact">
+            Join the waitlist
+          </a>
+        </aside>
+      )}
       <div className="portal-columns">
       <section className="path-panel">
         <div className="section-heading">
@@ -447,9 +484,12 @@ function RepHome({
           <div className="path-spine" />
           {modules.map((courseModule, index) => {
             const completed = Boolean(progress.completedActivities[`module-${courseModule.id}`]);
-            const unlocked =
-              index === 0 ||
-              Boolean(progress.completedActivities[`module-${modules[index - 1].id}`]);
+            // Signed in, the course unlocks in order. Previewing, only the
+            // preview modules ever open, however far you get.
+            const unlocked = previewing
+              ? PREVIEW_MODULES.has(courseModule.id)
+              : index === 0 ||
+                Boolean(progress.completedActivities[`module-${modules[index - 1].id}`]);
             return (
               <article
                 className={`module-step step-${index % 2} ${completed ? "completed" : ""} ${!unlocked ? "locked" : ""}`}
@@ -482,7 +522,9 @@ function RepHome({
                       ? "Completed"
                       : unlocked
                         ? "Ready to start"
-                        : "Complete the previous module"}
+                        : previewing
+                          ? "Included with an account"
+                          : "Complete the previous module"}
                   </small>
                 </button>
               </article>
@@ -501,16 +543,17 @@ function RepHome({
         <div className="labs-grid">
           {trainingLabs.map((lab, index) => (
             <button
-              className={`lab-card tone-${index % 4}`}
+              className={`lab-card tone-${index % 4} ${previewing ? "locked" : ""}`}
               key={lab.id}
               onClick={() => onLab(lab.id)}
+              disabled={previewing}
             >
-              <span className="lab-icon">{labIcon(lab.id)}</span>
+              <span className="lab-icon">{previewing ? <Lock size={16} /> : labIcon(lab.id)}</span>
               <span>
                 <strong>{lab.title}</strong>
-                <small>{lab.description}</small>
+                <small>{previewing ? "Included with an account" : lab.description}</small>
               </span>
-              <ChevronRight size={16} />
+              {previewing ? <Lock size={14} /> : <ChevronRight size={16} />}
             </button>
           ))}
         </div>

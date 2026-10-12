@@ -2309,3 +2309,40 @@
     grid-column: auto;
   }
 }
+
+/* ---- preview notice ----------------------------------------------------- */
+/* Shown to signed-out visitors under the hero, so the limits of the preview
+   are stated before they hit a locked module rather than after. */
+.preview-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 16px;
+  padding: 14px 18px;
+  border-radius: var(--r-lg);
+  background: var(--white);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-tight);
+}
+
+.preview-notice p {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+.preview-notice strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* Locked labs keep their layout and lose their affordance. */
+.lab-card.locked {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+.lab-card.locked:hover {
+  transform: none;
+}
