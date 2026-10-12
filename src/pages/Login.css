@@ -109,7 +109,7 @@
 }
 
 .login-form label.login-terms a {
-  color: var(--blue-dark);
+  color: var(--accent-dark);
   font-weight: 900;
   text-decoration: underline;
 }

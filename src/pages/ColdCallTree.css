@@ -8,7 +8,7 @@
   inset: 0;
   overflow: hidden;
   background: var(--page-wash), var(--canvas);
-  font-family: "Avenir Next", "Nunito Sans", "Segoe UI", sans-serif;
+  font-family: var(--font-sans);
 }
 
 .cct-viewport {
@@ -359,7 +359,7 @@
   border: 1px solid var(--green-dark);
   color: var(--ink);
   box-shadow: 0 24px 56px color-mix(in srgb, var(--ink) 35%, transparent);
-  font-family: "Avenir Next", "Nunito Sans", "Segoe UI", sans-serif;
+  font-family: var(--font-sans);
 }
 
 .cct-legend-top {

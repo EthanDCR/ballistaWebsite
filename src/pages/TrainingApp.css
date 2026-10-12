@@ -26,11 +26,14 @@
   --teal-dark: #1f3b2b;
   --teal-soft: #e3e9e3;
 
-  /* secondary — kept recognisably blue so it stays distinct from the
-     primary, but dusty enough to sit on a warm canvas */
-  --blue: #456b96;
-  --blue-dark: #33527a;
-  --blue-soft: #e6ebf2;
+  /* Secondary accent: eyebrow labels, chips, links. This was a blue, kept
+     that way so the lab tiles stayed distinguishable from the primary — but
+     those tiles are one colour now, so the blue had nothing left to earn and
+     was the only thing on the page outside the forest family. Still a step
+     lighter than --teal so a label never reads as a button. */
+  --accent: #4a6b57;
+  --accent-dark: #2b4435;
+  --accent-soft: #e6ece7;
 
   /* status — hues preserved, saturation pulled back */
   --gold: #e0a338;
@@ -43,6 +46,11 @@
   --green-soft: #e3f1e8;
   --purple: #7d66c4;
 
+  /* Same stack the landing template sets on .mfl-root, so the two surfaces
+     are set in one typeface rather than two. */
+  --font-sans: "Inter Tight", "Inter", "Geist", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
   /* surfaces borrowed straight from the landing palette */
   --cream: #ecebe1;
   --sand: #c9b79a;
@@ -50,14 +58,23 @@
      cream text — the hero card is the portal's equivalent of it */
   --night: #121d17;
 
-  /* Corner radii. The file used ~28 distinct values where it meant about
+  /* The landing sets its headings at -.05em. Matching that here, scaled back a
+   little because portal headings are a third the size and tracking that tight
+   starts to close up small text. */
+.app-shell h1,
+.app-shell h2,
+.app-shell h3 {
+  letter-spacing: -0.025em;
+}
+
+/* Corner radii. The file used ~28 distinct values where it meant about
      four, most of them fractional because of the 20% scale-down. Tightened
      toward the landing page's crisper corners without going all the way
      down to its 3-5px, which would read as severe on dense app UI. */
-  --r-sm: 4px;
-  --r-md: 8px;
-  --r-lg: 12px;
-  --r-xl: 16px;
+  --r-sm: 3px;
+  --r-md: 6px;
+  --r-lg: 10px;
+  --r-xl: 14px;
   --r-pill: 999px;
 
   /* shadows warmed to match the canvas */
@@ -83,8 +100,13 @@
   margin: 0;
   background: var(--page-wash), var(--canvas);
   color: var(--ink);
-  font-family: "Avenir Next", "Nunito Sans", "Segoe UI", sans-serif;
-  font-weight: 600;
+  font-family: var(--font-sans);
+  /* The landing leans on size and colour for hierarchy, not weight. Base text
+     sits at regular; the scale above carries the emphasis. */
+  font-weight: 400;
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 .app-shell * {
   box-sizing: border-box;
@@ -112,7 +134,7 @@
 .app-shell input:focus-visible,
 .app-shell select:focus-visible,
 .app-shell textarea:focus-visible {
-  outline: 3.2px solid color-mix(in srgb, var(--blue) 22%, transparent);
+  outline: 3.2px solid color-mix(in srgb, var(--accent) 22%, transparent);
   outline-offset: 1.6px;
 }
 .app-shell button:disabled {
@@ -177,7 +199,7 @@
   margin-top: 0.8px;
   color: var(--muted);
   font-size: 0.7rem;
-  font-weight: 800;
+  font-weight: 500;
 }
 .brand-mark {
   width: 32px;
@@ -208,7 +230,7 @@
   color: var(--muted);
   cursor: pointer;
   font-size: 0.8rem;
-  font-weight: 900;
+  font-weight: 600;
 }
 .mode-switch button.active {
   background: var(--white);
@@ -261,9 +283,9 @@
 .eyebrow {
   display: inline-block;
   margin-bottom: 6.4px;
-  color: var(--blue);
+  color: var(--accent);
   font-size: 0.72rem;
-  font-weight: 950;
+  font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -280,7 +302,7 @@
 .hero-card p {
   max-width: 528px;
   margin-bottom: 0;
-  color: var(--blue-soft);
+  color: var(--accent-soft);
   line-height: 1.55;
 }
 .hero-score {
@@ -288,7 +310,7 @@
   padding: 19.2px;
   border: 1px solid color-mix(in srgb, var(--white) 22%, transparent);
   border-radius: var(--r-xl);
-  background: color-mix(in srgb, var(--blue-dark) 28%, transparent);
+  background: color-mix(in srgb, var(--accent-dark) 28%, transparent);
   text-align: center;
 }
 .hero-score strong {
@@ -390,10 +412,10 @@
 .section-count {
   padding: 5.6px 8.8px;
   border-radius: var(--r-pill);
-  background: var(--blue-soft);
-  color: var(--blue-dark);
+  background: var(--accent-soft);
+  color: var(--accent-dark);
   font-size: 0.74rem;
-  font-weight: 900;
+  font-weight: 600;
 }
 .module-path {
   position: relative;
@@ -450,7 +472,7 @@
   background: var(--teal);
   color: var(--white);
   font-size: 1.55rem;
-  font-weight: 950;
+  font-weight: 600;
 }
 .module-node:hover:not(:disabled) {
   transform: translateY(-2.4px) scale(1.04);
@@ -460,7 +482,7 @@
   box-shadow: 0 6.4px 0 #2e5683;
 }
 .module-step.completed .module-node span {
-  background: var(--blue);
+  background: var(--accent);
 }
 .module-step.locked .module-node {
   background: #d3d0c5;
@@ -483,9 +505,9 @@
   text-align: left;
 }
 .module-copy > span {
-  color: var(--blue);
+  color: var(--accent);
   font-size: 0.66rem;
-  font-weight: 950;
+  font-weight: 600;
   letter-spacing: 0.09em;
 }
 .module-copy strong {
@@ -531,7 +553,7 @@
   padding: 8px 14.4px;
   border-radius: var(--r-md);
   cursor: pointer;
-  font-weight: 900;
+  font-weight: 600;
   transition:
     transform 0.15s ease,
     box-shadow 0.15s ease;
@@ -618,26 +640,19 @@
   font-size: 0.72rem;
   line-height: 1.45;
 }
+/* One treatment for all four, in the brand green. The lucide glyph inside
+   already tells them apart, so the tile does not need to as well — the
+   previous blue / mint / amber / lilac set was the loudest thing on a page
+   that otherwise sits in one colour. tone-1..3 are kept as no-ops so the
+   `tone-${index % 4}` class in TrainingApp.tsx stays harmless. */
 .lab-icon {
   width: 36px;
   height: 36px;
   display: grid;
   place-items: center;
-  border-radius: var(--r-md);
-  background: var(--blue-soft);
-  color: var(--blue);
-}
-.tone-1 .lab-icon {
-  background: var(--teal-soft);
-  color: var(--teal-dark);
-}
-.tone-2 .lab-icon {
-  background: #fff2d8;
-  color: #c98000;
-}
-.tone-3 .lab-icon {
-  background: #f1eee1;
-  color: var(--purple);
+  border-radius: var(--r-sm);
+  background: color-mix(in srgb, var(--teal) 10%, transparent);
+  color: var(--teal);
 }
 
 .back-button {
@@ -651,7 +666,7 @@
   color: var(--muted);
   cursor: pointer;
   font-size: 0.83rem;
-  font-weight: 900;
+  font-weight: 600;
 }
 .detail-hero,
 .lab-hero {
@@ -676,7 +691,7 @@
   background: var(--teal);
   box-shadow: 0 5.6px 0 var(--teal-dark);
   font-size: 2rem;
-  font-weight: 950;
+  font-weight: 600;
 }
 .detail-hero .eyebrow,
 .lab-hero .eyebrow {
@@ -705,7 +720,7 @@
   background: color-mix(in srgb, var(--green) 18%, transparent);
   color: #99dbb4;
   font-size: 0.75rem;
-  font-weight: 950;
+  font-weight: 600;
 }
 .lab-hero .lab-icon.large {
   flex: 0 0 60.8px;
@@ -735,8 +750,8 @@
   display: grid;
   place-items: center;
   border-radius: var(--r-xl);
-  background: var(--blue-soft);
-  color: var(--blue);
+  background: var(--accent-soft);
+  color: var(--accent);
 }
 .intro-card h2 {
   margin-bottom: 6.4px;
@@ -774,7 +789,7 @@
   align-items: center;
   gap: 9.6px;
   margin: 1.6px 1.6px 12.8px;
-  color: var(--blue);
+  color: var(--accent);
 }
 .lesson-video-heading > svg {
   flex: 0 0 auto;
@@ -815,9 +830,9 @@
   display: grid;
   place-items: center;
   border-radius: var(--r-lg);
-  background: var(--blue-soft);
-  color: var(--blue);
-  font-weight: 950;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
 }
 .card-main {
   flex: 1;
@@ -845,22 +860,22 @@
   background: #f5f4ef;
   color: var(--muted);
   font-size: 0.72rem;
-  font-weight: 850;
+  font-weight: 500;
 }
 .call-audio {
   display: block;
   width: min(100%, 496px);
   height: 33.6px;
   margin: 6.4px 0 10.4px;
-  accent-color: var(--blue);
+  accent-color: var(--accent);
 }
 .text-link {
   display: inline-flex;
   align-items: center;
   gap: 5.6px;
-  color: var(--blue);
+  color: var(--accent);
   font-size: 0.8rem;
-  font-weight: 900;
+  font-weight: 600;
 }
 .scenario-bar {
   display: flex;
@@ -901,10 +916,10 @@
   align-self: start;
   padding: 8px 9.6px;
   border-radius: var(--r-md);
-  background: var(--blue-soft);
-  color: var(--blue);
+  background: var(--accent-soft);
+  color: var(--accent);
   font-size: 0.73rem;
-  font-weight: 950;
+  font-weight: 600;
   text-align: center;
 }
 .app-shell blockquote {
@@ -983,7 +998,7 @@
   background: var(--teal-soft);
   color: var(--teal-dark);
   font-size: 0.65rem;
-  font-weight: 950;
+  font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -1027,7 +1042,7 @@
   background: #f4f3ed;
   color: var(--muted);
   font-size: 0.68rem;
-  font-weight: 850;
+  font-weight: 500;
 }
 .keyword-row span.hit {
   background: var(--green-soft);
@@ -1037,9 +1052,9 @@
   min-height: 112px;
 }
 .close-tone-1 blockquote {
-  border-color: var(--blue);
-  background: var(--blue-soft);
-  color: var(--blue-dark);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-dark);
 }
 .close-tone-2 blockquote {
   border-color: var(--gold);
@@ -1088,7 +1103,7 @@
   margin-top: 11.2px;
   color: var(--muted);
   font-size: 0.75rem;
-  font-weight: 900;
+  font-weight: 600;
 }
 .signature-field {
   margin: 12px 0;
@@ -1099,12 +1114,12 @@
   margin-bottom: 4.8px;
   color: var(--muted);
   font-size: 0.75rem;
-  font-weight: 900;
+  font-weight: 600;
 }
 .signature-field button {
   border: 0;
   background: transparent;
-  color: var(--blue);
+  color: var(--accent);
   cursor: pointer;
   font-size: 0.72rem;
 }
@@ -1208,7 +1223,7 @@
   border: 1px solid var(--line);
   border-radius: var(--r-md);
   color: var(--muted);
-  font-weight: 950;
+  font-weight: 600;
 }
 .answer-grid button.correct {
   border-color: var(--green);
@@ -1340,7 +1355,7 @@
   color: var(--gold);
 }
 .summary-stats div:nth-child(2) svg {
-  color: var(--blue);
+  color: var(--accent);
 }
 .summary-stats div:nth-child(3) svg {
   color: var(--orange);
@@ -1383,8 +1398,8 @@
   display: grid;
   place-items: center;
   border-radius: var(--r-lg);
-  background: var(--blue-soft);
-  color: var(--blue);
+  background: var(--accent-soft);
+  color: var(--accent);
 }
 .pdf-reader-title > div {
   min-width: 0;
@@ -1441,8 +1456,8 @@
   display: grid;
   place-items: center;
   border-radius: var(--r-lg);
-  background: var(--blue-soft);
-  color: var(--blue);
+  background: var(--accent-soft);
+  color: var(--accent);
 }
 .timestamp-row {
   display: flex;
@@ -1459,7 +1474,7 @@
   font-size: 0.68rem;
 }
 .timestamp-row strong {
-  color: var(--blue);
+  color: var(--accent);
 }
 .tool-card {
   padding: 21.6px;
@@ -1481,13 +1496,13 @@
   margin-left: 8px;
   color: #cbc8bb;
   font-size: 0.68rem;
-  font-weight: 950;
+  font-weight: 600;
   letter-spacing: 0.08em;
 }
 .practice-prompt blockquote {
   margin: 14.4px 0 0;
   font-size: clamp(1.5rem, 2.4vw, 2.15rem);
-  font-weight: 900;
+  font-weight: 600;
   line-height: 1.25;
 }
 .response-box {
@@ -1496,7 +1511,7 @@
   margin-top: 17.6px;
   color: var(--muted);
   font-size: 0.78rem;
-  font-weight: 900;
+  font-weight: 600;
 }
 .response-box textarea {
   min-height: 120px;
@@ -1541,7 +1556,7 @@
   gap: 5.6px;
   color: var(--muted);
   font-size: 0.75rem;
-  font-weight: 900;
+  font-weight: 600;
 }
 .tree-sidebar > div {
   display: grid;
@@ -1565,7 +1580,7 @@
   align-items: center;
   color: var(--muted);
   font-size: 0.7rem;
-  font-weight: 900;
+  font-weight: 600;
 }
 .tree-node-card h2 {
   margin: 16px 0 6.4px;
@@ -1574,10 +1589,10 @@
 .tree-node-card > blockquote {
   padding: 20px;
   border-radius: var(--r-lg);
-  background: var(--blue-soft);
-  color: var(--blue-dark);
+  background: var(--accent-soft);
+  color: var(--accent-dark);
   font-size: 1.35rem;
-  font-weight: 800;
+  font-weight: 500;
   line-height: 1.5;
 }
 .coach-note {
@@ -1611,11 +1626,11 @@
   cursor: pointer;
   box-shadow: 0 2.4px 0 #e8e5db;
   text-align: left;
-  font-weight: 850;
+  font-weight: 500;
 }
 .tree-choices button:hover {
-  border-color: var(--blue);
-  color: var(--blue);
+  border-color: var(--accent);
+  color: var(--accent);
   transform: translateY(-1.6px);
 }
 .tree-outcome {
@@ -1683,9 +1698,9 @@
   text-align: left;
 }
 .entity-nav button.active {
-  background: var(--blue-soft);
-  color: var(--blue-dark);
-  font-weight: 900;
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+  font-weight: 600;
 }
 .entity-nav small {
   min-width: 20px;
@@ -1763,7 +1778,7 @@
   border-radius: var(--r-md);
   background: var(--teal-soft);
   color: var(--teal-dark);
-  font-weight: 950;
+  font-weight: 600;
 }
 .record-row > span:nth-child(2) {
   min-width: 0;
@@ -1813,7 +1828,7 @@
   gap: 4.8px;
   color: var(--muted);
   font-size: 0.75rem;
-  font-weight: 900;
+  font-weight: 600;
 }
 .record-form input,
 .record-form select,
@@ -1842,7 +1857,7 @@
   gap: 4.8px;
   color: var(--muted);
   font-size: 0.75rem;
-  font-weight: 900;
+  font-weight: 600;
 }
 .record-form-list-row {
   display: flex;
@@ -1951,7 +1966,7 @@
   gap: 4.8px;
   color: #424f60;
   font-size: 0.72rem;
-  font-weight: 850;
+  font-weight: 500;
 }
 .audio-upload-manager textarea {
   min-height: 65.6px;
@@ -1985,7 +2000,7 @@
   background: var(--white);
 }
 .uploaded-call-row > svg {
-  color: var(--blue);
+  color: var(--accent);
 }
 .uploaded-call-row > span {
   min-width: 0;
