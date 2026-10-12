@@ -4,10 +4,11 @@
 //
 // The Ballista platform (hail map, target lists, dialer, callbacks, pipeline)
 // is secondary but not hidden. It isn't commercially available, so it never
-// competes with Call-Stars for the hero — instead it gets the announcement bar
-// above the nav, a menu entry, its own footer column, and a line in both the
-// closing CTA and the request form. There is one dialog on the page and it
-// does double duty: requesting Call-Stars access also joins the waitlist.
+// competes with Call-Stars for the hero or the demo band — instead it gets the
+// announcement bar above the nav, a menu entry, its own footer column, and a
+// line in both the closing CTA and the request form. There is one dialog on
+// the page and it does double duty: requesting Call-Stars access also joins
+// the waitlist.
 //
 // Every string here is a prop on the vendored template. The prop table is in
 // src/components/maroon-fintech-landing.README.md; `demo` is a local addition
@@ -70,8 +71,8 @@ export default function Landing() {
         nav={[
           { label: "Why Call-Stars", href: "#about" },
           { label: "What's inside", href: "#features" },
-          { label: "Ballista platform", href: "#platform" },
-          { label: "Request access", href: "#contact" },
+          { label: "Watch the demo", href: "#demo" },
+          { label: "Ballista platform", href: "#contact" },
           { label: "Log in", href: "/login" },
         ]}
         login={{ label: "Log in", href: "/login" }}
@@ -158,32 +159,32 @@ export default function Landing() {
           subtitle:
             "The script, the call library, the objection tree and the operating standard — in one portal your reps will actually open.",
         }}
-        // Dropped in as its own band between the feature panel and the closing
-        // CTA — see the `aside` prop in the vendored component. This is the
-        // platform's one piece of real estate above the footer, and it sits
-        // after all the Call-Stars material rather than competing with it.
+        // The Call-Stars sales video, dropped in through the `aside` prop on
+        // the vendored component. It lands between "Inside Call-Stars" and the
+        // closing CTA, so the page reads: here is what is in it, here it is
+        // working, here is how to get it.
         aside={
-          <div className="platform-demo">
-            <p className="platform-demo-badge">Ballista platform</p>
-            <h2 className="platform-demo-title">Watch it work a real storm</h2>
-            <p className="platform-demo-sub">
-              Hail map to target list to dialer, in the order a rep actually does it.
+          <div className="demo-band">
+            <p className="demo-badge">See it in action</p>
+            <h2 className="demo-title">Watch a call, start to close</h2>
+            <p className="demo-sub">
+              The opener, the objection and the close — the way Call-Stars teaches it.
             </p>
 
             {/* SWAP ME. Replace this whole figure with the embed, keeping the
                 wrapper class so the 16:9 frame and styling carry over:
-                  <video className="platform-demo-frame" controls poster="/platform-poster.jpg">
-                    <source src="/platform-demo.mp4" type="video/mp4" />
+                  <video className="demo-frame" controls poster="/callstars-poster.jpg">
+                    <source src="/callstars-demo.mp4" type="video/mp4" />
                   </video>
-                or an <iframe className="platform-demo-frame" ... allowFullScreen />
+                or an <iframe className="demo-frame" ... allowFullScreen />
                 for YouTube, Loom, Wistia and the like. */}
-            <figure className="platform-demo-frame is-placeholder">
-              <span className="platform-demo-play" aria-hidden="true" />
-              <figcaption>Demo video goes here</figcaption>
+            <figure className="demo-frame is-placeholder">
+              <span className="demo-play" aria-hidden="true" />
+              <figcaption>Call-Stars demo video goes here</figcaption>
             </figure>
 
-            <a className="platform-demo-cta" href="#contact" onClick={scrollToContact}>
-              Join the waitlist →
+            <a className="demo-cta" href="#contact" onClick={scrollToContact}>
+              Request access →
             </a>
           </div>
         }

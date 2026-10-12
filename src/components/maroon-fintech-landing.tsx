@@ -133,8 +133,8 @@ export interface MaroonFintechLandingProps {
   /**
    * LOCAL ADDITION (not upstream). Arbitrary content dropped in as its own
    * band between the feature panel and the closing call to action, inside the
-   * dark `main`. The section is given `data-sec="platform"`, so a nav or
-   * footer link to `#platform` scrolls to it like any built-in section. It
+   * dark `main`. The section is given `data-sec="demo"`, so a nav or footer
+   * link to `#demo` scrolls to it like any built-in section. It
    * carries no styling of its own beyond the container — style the contents
    * from the host page.
    */
@@ -1830,7 +1830,7 @@ export default function MaroonFintechLanding({
         )}
 
         {aside && (
-          <section className="mfl-aside" data-sec="platform">
+          <section className="mfl-aside" data-sec="demo">
             {aside}
           </section>
         )}
