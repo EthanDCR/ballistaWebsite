@@ -164,3 +164,24 @@
     transition: none;
   }
 }
+
+/* ---- brand mark --------------------------------------------------------- */
+/* Stands in for the template's .mfl-logo-mark, so it keeps that element's
+   footprint: a 20px tile with the glyph inset. Dark tile and tan glyph are the
+   logo's own two colours, which means the one element works on the light nav
+   pill and the dark footer without a second variant. */
+.ballista-mark {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  background: #203b2c;
+}
+
+.ballista-mark img {
+  width: 14px;
+  height: 14px;
+  display: block;
+}

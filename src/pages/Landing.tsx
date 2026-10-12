@@ -54,6 +54,16 @@ export default function Landing() {
         height="calc(100svh - 42px)"
         brand="ballista."
         palette="forest"
+        // Replaces the template's drawn asterisk in the nav pill and the
+        // footer. Those are the only two places `logo` reaches — the big marks
+        // on the CTA band and the request dialog are still the asterisk.
+        // The nav pill is light and the footer is dark, and the same element
+        // serves both, so the tile carries the contrast rather than the glyph.
+        logo={
+          <span className="ballista-mark" aria-hidden="true">
+            <img src="/bow-ai-mark.svg" alt="" />
+          </span>
+        }
         // The template scrolls to #about / #features / #contact in-page and
         // treats anything else as a normal link. /login is a real route, so it
         // leaves the marketing page and hands off to the app.

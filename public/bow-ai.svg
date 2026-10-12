@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <!-- Definitions for clean styling -->
+  <defs>
+    <style>
+      .forest-green { fill: #203B2C; }
+      .tan-gold { fill: #C49767; }
+      .stroke-green { stroke: #203B2C; stroke-width: 10; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+      .stroke-tan { stroke: #C49767; stroke-width: 8; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    </style>
+  </defs>
+
+  <!-- Background Compass Rose / Target (Tan / Gold Accent) -->
+  <g id="compass-target">
+    <!-- Star Points -->
+    <polygon points="250,70 263,220 380,180 270,240 430,250 270,260 380,320 263,280 250,430 237,280 120,320 230,260 70,250 230,240 120,180 237,220" class="tan-gold" opacity="0.85" />
+    <!-- Concentric Target Circles -->
+    <circle cx="250" cy="250" r="140" class="stroke-tan" stroke-dasharray="10 15" opacity="0.6" />
+    <circle cx="250" cy="250" r="90" class="stroke-tan" />
+  </g>
+
+  <!-- Crossbow / Ballista (Angled - Dark Forest Green & Tan) -->
+  <g id="ballista-crossbow" transform="rotate(-35 250 250)">
+    <!-- Bolt / Arrow Shaft (Fired Through Center) -->
+    <path d="M 250 60 L 250 410" class="stroke-tan" stroke-width="12" />
+    <!-- Arrowhead -->
+    <polygon points="250,30 225,80 250,70 275,80" class="tan-gold" />
+    <!-- Fletching / Feathers -->
+    <polygon points="250,390 225,420 250,410 275,420" class="tan-gold" />
+
+    <!-- Curved Bow Limbs -->
+    <path d="M 100,220 Q 250,140 400,220" class="stroke-green" stroke-width="22" />
+    <path d="M 100,220 Q 250,170 400,220" class="stroke-green" stroke-width="12" />
+
+    <!-- Bow String -->
+    <polyline points="105,223 250,310 395,223" class="stroke-tan" stroke-width="6" />
+
+    <!-- Main Stock / Body & Grip -->
+    <rect x="235" y="160" width="30" height="210" rx="8" class="forest-green" />
+    <!-- Trigger Guard & Grip Handle -->
+    <path d="M 250,330 C 210,350 200,400 220,430 C 235,450 260,430 250,370" class="forest-green" />
+
+    <!-- Metallic/Mechanical Center Joint -->
+    <circle cx="250" cy="220" r="18" class="forest-green" />
+    <circle cx="250" cy="220" r="8" class="tan-gold" />
+  </g>
+</svg>

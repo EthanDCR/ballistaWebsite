@@ -1,0 +1,18 @@
+<!-- Small-size variant of bow-ai.svg, for the 20-32px marks where the full
+     logo turns to mush. The compass rose and dashed ring are dropped and the
+     strokes redrawn on a 24-unit grid at 2.2 wide, so at 20px they land at
+     ~1.8px rather than the original's 0.24-0.88px.
+
+     The gap between the limbs and the string is deliberately wide: at 20px a
+     narrow one fills in with antialiasing and the pair reads as a solid lens
+     rather than a drawn bow. Keep roughly 9 units between the arc apex and the
+     string's low point if this is ever redrawn.
+
+     Tan on its own, so it wants a dark tile behind it — see .ballista-mark in
+     Landing.css. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+     stroke="#C49767" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M3.5 11 Q12 2.5 20.5 11" />
+  <path d="M3.5 11 L12 16.5 L20.5 11" />
+  <path d="M12 21 L12 4" />
+</svg>

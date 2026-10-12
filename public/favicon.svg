@@ -1,6 +1,13 @@
+<!-- Ballista mark. Uses the simplified crossbow from bow-ai-mark.svg rather
+     than the full bow-ai.svg: a favicon renders at 16px, where the compass
+     rose and dashed ring of the full logo disappear entirely. -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="16" fill="#19324d"/>
-  <path d="M38 12c-11 0-19 8-19 19 0 8 4 11 7 15 2 3 2 7 6 8 6 2 10-3 10-9 0-5-3-8-8-8h-3c-2 0-4-2-4-5 0-7 4-12 11-12 6 0 10 4 10 10" fill="none" stroke="#6ce1ce" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="43" cy="24" r="4" fill="#4b7bec"/>
-  <path d="M49 18c4 4 4 9 0 13M53 14c7 7 7 15 0 22" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+  <rect width="64" height="64" rx="14" fill="#203B2C" />
+  <g transform="translate(8 8) scale(2)" fill="none" stroke="#C49767"
+     stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3.5 9 Q12 3 20.5 9" />
+    <path d="M3.5 9 L12 14 L20.5 9" />
+    <path d="M12 21 L12 5" />
+    <path d="M9 8 L12 4 L15 8" />
+  </g>
 </svg>
