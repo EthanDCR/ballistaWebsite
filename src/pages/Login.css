@@ -28,7 +28,7 @@
   height: 56px;
   border-radius: 16px;
   background: var(--ink);
-  color: #ecebe1; /* forest cream — matches the landing wordmark */
+  color: var(--cream);
   display: grid;
   place-items: center;
   box-shadow: 0 5px 0 #0f2439;
