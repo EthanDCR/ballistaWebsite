@@ -85,6 +85,31 @@ func main() {
 		},
 	})
 
+	// A rep uploads for themselves, into their own company. Both fields are
+	// taken from the token rather than the request body — the collection rule
+	// would reject a mismatch anyway, but stamping means a wrong value cannot
+	// be sent in the first place, and the client never has to know its org id.
+	app.OnRecordCreateRequest("call_recordings").Bind(&hook.Handler[*core.RecordRequestEvent]{
+		Func: func(e *core.RecordRequestEvent) error {
+			if !e.HasSuperuserAuth() && e.Auth != nil {
+				e.Record.Set("owner", e.Auth.Id)
+				e.Record.Set("org", e.Auth.GetString("org"))
+			}
+			return e.Next()
+		},
+	})
+
+	// Same for a review: it belongs to whoever wrote it, in their company.
+	app.OnRecordCreateRequest("call_reviews").Bind(&hook.Handler[*core.RecordRequestEvent]{
+		Func: func(e *core.RecordRequestEvent) error {
+			if !e.HasSuperuserAuth() && e.Auth != nil {
+				e.Record.Set("author", e.Auth.Id)
+				e.Record.Set("org", e.Auth.GetString("org"))
+			}
+			return e.Next()
+		},
+	})
+
 	// serve the built frontend (npm run build -> pb_public) so prod only
 	// needs this one process; falls back to index.html for client routing.
 	app.OnServe().Bind(&hook.Handler[*core.ServeEvent]{
@@ -471,6 +496,9 @@ func ensureContentCollections(app core.App) error {
 	if err := ensureCallRecordingsCollection(app); err != nil {
 		return err
 	}
+	if err := protectRecordingFiles(app); err != nil {
+		return err
+	}
 
 	return ensureAppSettingsRecord(app)
 }
@@ -534,15 +562,47 @@ func seedCollection(app core.App, collection *core.Collection, file string) erro
 	return nil
 }
 
-// ensureCallRecordingsCollection creates the call_recordings collection on
-// first boot so the Call Library upload feature has somewhere to store
-// audio, and keeps its access rules in sync on every boot. Only admins may
-// upload/remove recordings; any signed-in rep can list/listen.
+// ensureCallRecordingsCollection creates call_recordings and call_reviews and
+// keeps their rules in sync. Reps upload their own calls; everyone in the same
+// company can listen; nobody sees another company's.
+//
+// Recordings are created before reviews because a relation field must name an
+// existing collection — PocketBase rejects a blank collectionId on save, so
+// the two cannot be wired up in either order.
 func ensureCallRecordingsCollection(app core.App) error {
-	authed := types.Pointer(ruleAuthed)
-	adminOnly := types.Pointer(ruleStaffAdmin)
+	orgs, err := app.FindCollectionByNameOrId("orgs")
+	if err != nil {
+		return err
+	}
+	users, err := app.FindCollectionByNameOrId("users")
+	if err != nil {
+		return err
+	}
 
-	return ensureCollection(app, collectionDef{
+	// Read is company-wide: a rep learns from a colleague's call as much as
+	// their own. Ballista staff see everything so they can support customers.
+	visible := types.Pointer(ruleOwnOrg + " || " + ruleStaffAdmin)
+	// Create rules are evaluated against the *submitted* body, before
+	// OnRecordCreateRequest runs — so they cannot check org or owner, which
+	// the hook supplies. (Requiring the client to send them instead would be
+	// worse: it would have to know its own org id, and could lie about it.)
+	// So the rule answers only "may this account upload at all", and the hook
+	// in main() is what makes the stored org and owner correct. It overwrites
+	// whatever arrived, so a forged payload gains nothing.
+	upload := types.Pointer(ruleAuthed + " && @request.auth.org != ''")
+	// Your own call, or anyone managing your company.
+	mutate := types.Pointer(
+		"owner = @request.auth.id || " + ruleOrgManager + " || " + ruleStaffAdmin,
+	)
+	// Reviews are written by whoever runs the company, not by the rep being
+	// reviewed. Create is split from update/delete for the same reason as
+	// upload above: it cannot look at the row's own org.
+	reviewCreate := types.Pointer(
+		"(@request.auth.org_role = 'manager' && @request.auth.org != '') || " + ruleStaffAdmin,
+	)
+	review := types.Pointer(ruleOrgManager + " || " + ruleStaffAdmin)
+
+	if err := ensureCollection(app, collectionDef{
 		name: "call_recordings",
 		fields: []core.Field{
 			&core.TextField{Name: "title", Required: true, Max: 200},
@@ -552,16 +612,69 @@ func ensureCallRecordingsCollection(app core.App) error {
 				Name:      "file",
 				MaxSelect: 1,
 				MaxSize:   100 << 20,
+				// Without this the file URL works for anyone holding it,
+				// whatever the collection rules say — which would make the
+				// org scoping decorative. Playback must mint a token; see
+				// recordingUrl() in TrainingApp.tsx.
+				Protected: true,
 				MimeTypes: []string{
 					"audio/mpeg", "audio/mp4", "audio/x-m4a", "audio/wav", "audio/x-wav",
 					"audio/aac", "audio/ogg", "audio/webm",
 				},
 			},
 			&core.JSONField{Name: "timestamps"},
+			&core.RelationField{Name: "org", CollectionId: orgs.Id, MaxSelect: 1, Required: true},
+			// Who uploaded it. Stamped from the token, never from the payload.
+			&core.RelationField{Name: "owner", CollectionId: users.Id, MaxSelect: 1, Required: true},
 			&core.AutodateField{Name: "created", OnCreate: true},
 		},
-		list: authed, view: authed, create: adminOnly, delete: adminOnly,
+		list: visible, view: visible, create: upload, update: mutate, delete: mutate,
+	}); err != nil {
+		return err
+	}
+
+	recordings, err := app.FindCollectionByNameOrId("call_recordings")
+	if err != nil {
+		return err
+	}
+
+	return ensureCollection(app, collectionDef{
+		name: "call_reviews",
+		fields: []core.Field{
+			&core.RelationField{
+				Name: "recording", CollectionId: recordings.Id, MaxSelect: 1, Required: true,
+				// A review is about one call; losing the call loses the review.
+				CascadeDelete: true,
+			},
+			&core.RelationField{Name: "org", CollectionId: orgs.Id, MaxSelect: 1, Required: true},
+			&core.RelationField{Name: "author", CollectionId: users.Id, MaxSelect: 1},
+			&core.TextField{Name: "body", Max: 4000},
+			&core.TextField{Name: "loom_url", Max: 500},
+			&core.AutodateField{Name: "created", OnCreate: true},
+		},
+		list: visible, view: visible, create: reviewCreate, update: review, delete: review,
 	})
+}
+
+// protectRecordingFiles flips the file field to protected.
+//
+// It is separate because ensureCollection reconciles by *adding* fields that
+// are missing and leaves existing ones alone — which is the right default
+// (it will not clobber something changed in the dashboard) but means a
+// changed attribute on a field that already exists is silently ignored. The
+// file field predates org scoping, so its Protected flag needs setting by
+// hand. Anything similar in future needs the same treatment.
+func protectRecordingFiles(app core.App) error {
+	collection, err := app.FindCollectionByNameOrId("call_recordings")
+	if err != nil {
+		return err
+	}
+	field, ok := collection.Fields.GetByName("file").(*core.FileField)
+	if !ok || field.Protected {
+		return nil
+	}
+	field.Protected = true
+	return app.Save(collection)
 }
 
 // ensureAppSettingsRecord makes sure exactly one app_settings row exists;

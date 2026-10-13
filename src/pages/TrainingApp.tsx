@@ -114,11 +114,43 @@ function interpolate(script: string, scenario?: ContentRecord) {
 }
 async function fetchUploadedRecordings(): Promise<ContentRecord[]> {
   const items = await pb.collection("call_recordings").getFullList({ sort: "-created" });
-  return items.map((item) => ({
-    ...item,
-    file_name: text(item.file),
-    recording_url: text(item.file) ? pb.files.getURL(item, text(item.file)) : "",
-  }));
+  // The URL is built at playback, not here: the file is protected, so it needs
+  // a token that outlives neither this fetch nor a page left open. See
+  // useFileToken.
+  return items.map((item) => ({ ...item, file_name: text(item.file) }));
+}
+
+/**
+ * A short-lived token for protected file downloads.
+ *
+ * `call_recordings.file` is protected, so its URL only works with a token on
+ * the query string — without that, anyone holding the link could play another
+ * company's calls whatever the collection rules say. One token covers every
+ * protected file the signed-in rep may read, so this mints one and keeps it
+ * fresh rather than one per file. PocketBase issues them for 180s; refreshing
+ * at 150 leaves room for a slow request.
+ */
+function useFileToken() {
+  const [token, setToken] = useState("");
+  useEffect(() => {
+    let active = true;
+    const mint = () => {
+      if (!pb.authStore.isValid) return;
+      void pb.files
+        .getToken()
+        .then((next) => {
+          if (active) setToken(next);
+        })
+        .catch(() => undefined);
+    };
+    mint();
+    const timer = setInterval(mint, 150_000);
+    return () => {
+      active = false;
+      clearInterval(timer);
+    };
+  }, []);
+  return token;
 }
 function labIcon(id: string, size = 24) {
   if (id === "script") return <ScrollText size={size} />;
@@ -1223,11 +1255,19 @@ function ScriptDocument({ content }: { content: ContentSnapshot }) {
   );
 }
 
+/** Playback URL for a protected recording, empty until a token is in hand. */
+function recordingUrl(item: ContentRecord, token: string) {
+  const file = text(item.file);
+  if (!file || !token) return "";
+  return pb.files.getURL(item, file, { token });
+}
+
 function CallLibrary({ items }: { items: ContentRecord[] }) {
+  const fileToken = useFileToken();
   if (!items.length)
     return (
       <p className="empty-media">
-        No calls uploaded yet. Admins can add some from Admin → Call recordings.
+        No calls uploaded yet. Upload one from the Call Library, or ask your manager.
       </p>
     );
   return (
@@ -1243,12 +1283,12 @@ function CallLibrary({ items }: { items: ContentRecord[] }) {
             </span>
             <h2>{text(item.title)}</h2>
             <p>{text(item.coaching_notes)}</p>
-            {text(item.recording_url) && (
+            {recordingUrl(item, fileToken) && (
               <audio
                 className="call-audio"
                 controls
                 preload="metadata"
-                src={text(item.recording_url)}
+                src={recordingUrl(item, fileToken)}
               >
                 Your browser does not support audio playback.
               </audio>
