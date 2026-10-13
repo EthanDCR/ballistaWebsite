@@ -1,8 +1,21 @@
 
 - phone number on req access module (more than one optional)
+
 - block eveything aside from module 1, paywall everything
 - instead of request access, just "join waitlist"
 
-
 - some type of way for clients to follow the journey. blog? newsLetter? 
- 
+
+- call review section on 
+- admin section on the review to where paxton can drop loom recordings where he is reviewing call recordings
+ - add a section for reps to upload their call recordings so paxton can go in and review them
+ - lets say you submit a call recording when paxton responds it it you get a notification 
+ - 2 sections personal call reviews and then other for other peoples call reviews
+ - org roles so you can see your own and your teams call recordings and reviews
+
+
+
+
+
+
+

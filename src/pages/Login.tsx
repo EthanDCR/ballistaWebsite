@@ -26,7 +26,7 @@ const PENDING_MESSAGE =
  */
 const CONTACT: { email: string; phone: string | null } = {
   email: "support@theballista.com",
-  phone: null, // TODO: add the number reps should call, e.g. "(303) 555-0134"
+  phone: "(850)797-9698", // TODO: add the number reps should call, e.g. "(303) 555-0134"
 };
 
 /** Shown wherever someone is stuck waiting on an approval. */

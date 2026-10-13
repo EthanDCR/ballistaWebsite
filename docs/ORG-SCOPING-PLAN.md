@@ -170,10 +170,25 @@ must land as a single deploy.
 
 ## Not covered here, but needed
 
-- **An admin screen to create orgs and assign people to them.** Nothing in the
-  app does this yet, and the approval flow is already manual (an admin ticks
-  `verified`), so assigning an org fits naturally in the same step. Until that
-  exists, org assignment happens in the PocketBase dashboard.
+- **Extending the admin studio.** `AdminStudio` is generic — it renders its
+  nav, list and edit form from `contentMeta` in `content-repository.ts`. Adding
+  `orgs` and `call_reviews` entries there gets both a full CRUD screen with no
+  new UI code.
+
+  **Assigning people to orgs is the harder half.** `users` is not in
+  `contentMeta`, and `collection.ListRule = nil` means only a superuser can
+  list accounts — that is deliberate, and it is what currently forces approval
+  through the PocketBase dashboard. Putting it in the admin studio means
+  opening the list rule, which has to be scoped carefully:
+
+  - Ballista staff (`staff_role = 'admin'`) see every account.
+  - An org manager must see only their own company's
+    (`org = @request.auth.org`), or the screen leaks the customer list.
+  - The update hook from above still has to hold, or an org manager could
+    move someone into another company.
+
+  Approval is already manual, so assigning an org belongs in the same step as
+  ticking `verified`.
 - **A rep-facing upload path.** `AudioUploadPanel` currently lives inside
   `AdminStudio` and `call_recordings.create` is `adminOnly`. Reps uploading
   their own calls needs the panel moved or duplicated into the rep portal.
