@@ -178,20 +178,23 @@ must land as a single deploy.
   Both entries are in now, along with a `relation` field type so a review is
   attached by picking a recording by name rather than pasting an id.
 
-  **Assigning people to orgs is still the harder half, and is not done.** `users` is not in
-  `contentMeta`, and `collection.ListRule = nil` means only a superuser can
-  list accounts — that is deliberate, and it is what currently forces approval
-  through the PocketBase dashboard. Putting it in the admin studio means
-  opening the list rule, which has to be scoped carefully:
+  **Assigning people to orgs** is done, as a People entity. The roster rules
+  ended up tighter than planned:
 
-  - Ballista staff (`staff_role = 'admin'`) see every account.
-  - An org manager must see only their own company's
-    (`org = @request.auth.org`), or the screen leaks the customer list.
-  - The update hook from above still has to hold, or an org manager could
-    move someone into another company.
+  - `users.ListRule`/`ViewRule` are Ballista staff only, not staff plus org
+    managers. The admin studio is itself gated on `staff_role`, so a manager
+    can never reach the screen — and PocketBase hides `email` from anyone
+    without manage access, so a manager's view would have been a list of
+    names with the useful column blank. Widen it when managers have something
+    to do with it.
+  - `users.ManageRule` had to be set at all: PocketBase refuses to let a
+    non-superuser change `verified` without it, so approving an account was
+    otherwise impossible outside the dashboard. Staff only, because manage
+    access also covers setting a password.
+  - `staff_role` is not editable from the studio by anyone, staff included.
+    It grants write access to the shared course content, so promoting someone
+    stays a dashboard action.
 
-  Approval is already manual, so assigning an org belongs in the same step as
-  ticking `verified`.
 - ~~A rep-facing upload path.~~ Done: `AudioUploadPanel` takes a `variant`
   and the Call Library lab renders the rep version, which only offers a delete
   button on your own uploads. The server allows more than that — a manager may

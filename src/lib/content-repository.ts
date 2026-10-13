@@ -33,6 +33,12 @@ export interface ContentTypeMeta {
   fields: FieldSchema[];
   /** true for the single app_settings row: no list, no create/delete. */
   singleton?: boolean;
+  /**
+   * Rows exist already and are only ever edited here — no create, no delete.
+   * Accounts are the case: one is made by signing up, and the API refuses to
+   * delete one at all, so offering either button would only produce errors.
+   */
+  existingOnly?: boolean;
 }
 
 const activeField: FieldSchema = { name: "active", label: "Active", type: "boolean" };
@@ -167,6 +173,29 @@ export const contentMeta: ContentTypeMeta[] = [
     ],
   },
   {
+    key: "people",
+    collection: "users",
+    label: "People",
+    sort: "email",
+    existingOnly: true,
+    // `staff_role` is absent on purpose: it grants write access to the course
+    // content every company shares, so promoting someone to it is a
+    // PocketBase dashboard action, and the server refuses it here regardless.
+    fields: [
+      { name: "name", label: "Name", type: "text" },
+      { name: "email", label: "Email", type: "text" },
+      {
+        name: "org",
+        label: "Company",
+        type: "relation",
+        collection: "orgs",
+        optionLabel: "name",
+      },
+      { name: "org_role", label: "Role in company", type: "select", options: ["rep", "manager"] },
+      { name: "verified", label: "Approved", type: "boolean" },
+    ],
+  },
+  {
     key: "orgs",
     collection: "orgs",
     label: "Companies",
@@ -234,6 +263,7 @@ export type ContentKey =
   | "modulesContent"
   | "quizQuestions"
   | "signOffs"
+  | "people"
   | "orgs"
   | "callReviews"
   | "appSettings";

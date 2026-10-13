@@ -74,9 +74,21 @@ func main() {
 	// Reset all four from what is stored.
 	app.OnRecordUpdateRequest("users").Bind(&hook.Handler[*core.RecordRequestEvent]{
 		Func: func(e *core.RecordRequestEvent) error {
-			if !e.HasSuperuserAuth() {
-				original := e.Record.Original()
-				e.Record.Set("staff_role", original.GetString("staff_role"))
+			if e.HasSuperuserAuth() {
+				return e.Next()
+			}
+			original := e.Record.Original()
+
+			// staff_role grants write access to the course content every
+			// company shares. Promoting someone to it stays a dashboard
+			// action — there is no path to it through the app, for anyone.
+			e.Record.Set("staff_role", original.GetString("staff_role"))
+
+			// Ballista staff administer membership from the admin studio.
+			// Everyone else — including a rep editing their own record — gets
+			// these reset, which is what stops someone moving themselves into
+			// another company to read its recordings.
+			if e.Auth == nil || e.Auth.GetString("staff_role") != "admin" {
 				e.Record.Set("org", original.GetString("org"))
 				e.Record.Set("org_role", original.GetString("org_role"))
 				e.Record.SetVerified(original.GetBool("verified"))
@@ -188,11 +200,30 @@ func lockDownUsersCollection(app core.App) error {
 		return err
 	}
 
-	// anyone can sign up; nobody can list or delete accounts
+	// Anyone can sign up; nobody can delete an account through the API.
 	openSignup := ""
 	collection.CreateRule = &openSignup
-	collection.ListRule = nil
 	collection.DeleteRule = nil
+
+	// Ballista staff only. The admin studio is itself gated on staff_role, so
+	// a customer's manager cannot reach the screen this feeds — and PocketBase
+	// hides `email` from anyone without manage access, so letting managers
+	// list their company would show them a roster of names with the useful
+	// column blank. Widen this when managers get something to do with it.
+	roster := types.Pointer(ruleStaffAdmin)
+	collection.ListRule = roster
+	collection.ViewRule = roster
+
+	// Your own record, or anyone staff is administering.
+	ownOrStaff := types.Pointer("id = @request.auth.id || " + ruleStaffAdmin)
+	collection.UpdateRule = ownOrStaff
+
+	// ManageRule is what PocketBase checks before letting a non-superuser
+	// change `verified` (and email) on someone else's record — without it,
+	// approving an account is impossible outside the dashboard. Staff only:
+	// manage access also covers setting a password, which is more than a
+	// customer's manager should hold over a colleague.
+	collection.ManageRule = types.Pointer(ruleStaffAdmin)
 
 	// ...but only approved (verified) accounts may obtain an auth token
 	onlyApproved := "verified = true"

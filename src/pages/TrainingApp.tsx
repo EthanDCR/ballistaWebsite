@@ -1851,7 +1851,7 @@ function AdminStudio({
                 <div>
                   <h2>{meta.label}</h2>
                 </div>
-                {!meta.singleton && (
+                {!meta.singleton && !meta.existingOnly && (
                   <button className="primary-button compact" onClick={newRecord}>
                     <Plus size={14} /> New record
                   </button>
@@ -1915,7 +1915,7 @@ function AdminStudio({
                   <span className="eyebrow">{meta.label.toUpperCase()}</span>
                   <h2>{selectedId ? recordTitle(draft) || selectedId : "New record"}</h2>
                 </div>
-                {!meta.singleton && selectedId && (
+                {!meta.singleton && !meta.existingOnly && selectedId && (
                   <button
                     className="danger-icon"
                     onClick={() => setDeleteId(selectedId)}
