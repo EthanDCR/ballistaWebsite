@@ -175,7 +175,10 @@ must land as a single deploy.
   `orgs` and `call_reviews` entries there gets both a full CRUD screen with no
   new UI code.
 
-  **Assigning people to orgs is the harder half.** `users` is not in
+  Both entries are in now, along with a `relation` field type so a review is
+  attached by picking a recording by name rather than pasting an id.
+
+  **Assigning people to orgs is still the harder half, and is not done.** `users` is not in
   `contentMeta`, and `collection.ListRule = nil` means only a superuser can
   list accounts — that is deliberate, and it is what currently forces approval
   through the PocketBase dashboard. Putting it in the admin studio means
@@ -189,9 +192,11 @@ must land as a single deploy.
 
   Approval is already manual, so assigning an org belongs in the same step as
   ticking `verified`.
-- **A rep-facing upload path.** `AudioUploadPanel` currently lives inside
-  `AdminStudio` and `call_recordings.create` is `adminOnly`. Reps uploading
-  their own calls needs the panel moved or duplicated into the rep portal.
+- ~~A rep-facing upload path.~~ Done: `AudioUploadPanel` takes a `variant`
+  and the Call Library lab renders the rep version, which only offers a delete
+  button on your own uploads. The server allows more than that — a manager may
+  delete any call in their company — so the variant is about what to offer,
+  not what to permit.
 - **Storage growth.** Disk is the right call for now — `pb_data` is already a
   mounted volume in the Dockerfile. But curated review clips and "every rep
   uploads every call" are different orders of magnitude: at ~2.4 MB for a

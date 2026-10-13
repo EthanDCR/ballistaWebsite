@@ -3,13 +3,26 @@ import { pb } from "./pb";
 export type ContentRecord = Record<string, unknown>;
 
 export type FieldType =
-  "text" | "textarea" | "number" | "boolean" | "select" | "string-list" | "file";
+  | "text"
+  | "textarea"
+  | "number"
+  | "boolean"
+  | "select"
+  | "string-list"
+  | "file"
+  /** A link to a record in another collection. Needs `collection`. */
+  | "relation";
 
 export interface FieldSchema {
   name: string;
   label: string;
   type: FieldType;
+  /** Fixed choices, for `select`. */
   options?: string[];
+  /** For `relation`: the collection to pick a record from. */
+  collection?: string;
+  /** For `relation`: which field to show in the picker. Defaults to `title`. */
+  optionLabel?: string;
 }
 
 export interface ContentTypeMeta {
@@ -154,6 +167,33 @@ export const contentMeta: ContentTypeMeta[] = [
     ],
   },
   {
+    key: "orgs",
+    collection: "orgs",
+    label: "Companies",
+    sort: "name",
+    fields: [{ name: "name", label: "Company name", type: "text" }],
+  },
+  {
+    key: "callReviews",
+    collection: "call_reviews",
+    label: "Call reviews",
+    sort: "-created",
+    // `org` and `author` are deliberately absent: the server stamps both from
+    // the token on create (see main.go), so offering them here would be an
+    // input that cannot change anything.
+    fields: [
+      {
+        name: "recording",
+        label: "Recording",
+        type: "relation",
+        collection: "call_recordings",
+        optionLabel: "title",
+      },
+      { name: "body", label: "Review notes", type: "textarea" },
+      { name: "loom_url", label: "Loom link", type: "text" },
+    ],
+  },
+  {
     key: "signOffs",
     collection: "sign_offs",
     label: "Sign-offs",
@@ -194,6 +234,8 @@ export type ContentKey =
   | "modulesContent"
   | "quizQuestions"
   | "signOffs"
+  | "orgs"
+  | "callReviews"
   | "appSettings";
 
 export type ContentSnapshot = Record<ContentKey, ContentRecord[] | ContentRecord>;

@@ -371,6 +371,7 @@ export default function TrainingApp() {
               labId={activeLabId}
               content={content}
               uploadedRecordings={uploadedRecordings}
+              onRecordingsChanged={refreshUploadedRecordings}
               onBack={goHome}
               onAward={awardActivity}
             />
@@ -1167,12 +1168,14 @@ function LabView({
   labId,
   content,
   uploadedRecordings,
+  onRecordingsChanged,
   onBack,
   onAward,
 }: {
   labId: string;
   content: ContentSnapshot;
   uploadedRecordings: ContentRecord[];
+  onRecordingsChanged: () => Promise<void>;
   onBack: () => void;
   onAward: (id: string) => void;
 }) {
@@ -1191,7 +1194,9 @@ function LabView({
         </div>
       </section>
       {labId === "script" && <ScriptDocument content={content} />}
-      {labId === "calls" && <CallLibrary items={uploadedRecordings} />}
+      {labId === "calls" && (
+        <CallLibrary items={uploadedRecordings} onChanged={onRecordingsChanged} />
+      )}
       {labId === "tools" && <ToolsLab items={records(content, "trainingVideos")} />}
       {labId === "mastery" && (
         <MasteryLab items={records(content, "objectionMasteryLabs")} onAward={onAward} />
@@ -1255,6 +1260,64 @@ function ScriptDocument({ content }: { content: ContentSnapshot }) {
   );
 }
 
+/**
+ * Picker for a `relation` field.
+ *
+ * Loads the related collection so the admin chooses a record by name rather
+ * than pasting a 15-character id. The list is already scoped by that
+ * collection's own rules, so a manager only ever sees their own company's
+ * rows here — no extra filtering needed.
+ */
+function RelationField({
+  field,
+  draft,
+  onChange,
+}: {
+  field: FieldSchema;
+  draft: Draft;
+  onChange: (next: Draft) => void;
+}) {
+  const [options, setOptions] = useState<ContentRecord[]>([]);
+  const [failed, setFailed] = useState(false);
+  const { collection, optionLabel } = field;
+
+  useEffect(() => {
+    if (!collection) return;
+    let active = true;
+    void pb
+      .collection(collection)
+      .getFullList({ requestKey: null })
+      .then((items) => {
+        if (active) setOptions(items as unknown as ContentRecord[]);
+      })
+      .catch(() => {
+        if (active) setFailed(true);
+      });
+    return () => {
+      active = false;
+    };
+  }, [collection]);
+
+  return (
+    <label>
+      {field.label}
+      <select
+        value={text(draft[field.name])}
+        onChange={(event) => onChange({ ...draft, [field.name]: event.target.value })}
+      >
+        <option value="">—</option>
+        {options.map((item) => (
+          <option key={text(item.id)} value={text(item.id)}>
+            {text(item[optionLabel ?? "title"]) || text(item.id)}
+          </option>
+        ))}
+      </select>
+      {failed && <small>Could not load {collection}.</small>}
+      {!failed && options.length === 0 && <small>Nothing in {collection} yet.</small>}
+    </label>
+  );
+}
+
 /** Playback URL for a protected recording, empty until a token is in hand. */
 function recordingUrl(item: ContentRecord, token: string) {
   const file = text(item.file);
@@ -1262,14 +1325,31 @@ function recordingUrl(item: ContentRecord, token: string) {
   return pb.files.getURL(item, file, { token });
 }
 
-function CallLibrary({ items }: { items: ContentRecord[] }) {
+function CallLibrary({
+  items,
+  onChanged,
+}: {
+  items: ContentRecord[];
+  onChanged: () => Promise<void>;
+}) {
   const fileToken = useFileToken();
-  if (!items.length)
-    return (
-      <p className="empty-media">
-        No calls uploaded yet. Upload one from the Call Library, or ask your manager.
-      </p>
-    );
+  return (
+    <>
+      {/* Reps upload their own calls here. The server decides what they may
+          remove; see the variant note on AudioUploadPanel. */}
+      <AudioUploadPanel recordings={items} onChanged={onChanged} variant="rep" />
+      {items.length === 0 ? (
+        <p className="empty-media">
+          No calls yet. Upload one above and your manager will review it.
+        </p>
+      ) : (
+        <CallLibraryList items={items} fileToken={fileToken} />
+      )}
+    </>
+  );
+}
+
+function CallLibraryList({ items, fileToken }: { items: ContentRecord[]; fileToken: string }) {
   return (
     <div className="content-stack">
       {items.map((item) => (
@@ -1495,6 +1575,10 @@ function RecordFormField({
         {field.label}
       </label>
     );
+  }
+
+  if (field.type === "relation") {
+    return <RelationField field={field} draft={draft} onChange={onChange} />;
   }
 
   if (field.type === "select") {
@@ -1899,13 +1983,28 @@ function AdminStudio({
   );
 }
 
+/**
+ * Upload and manage call recordings.
+ *
+ * Two audiences, one panel. A rep uploads their own calls to be reviewed and
+ * may only remove their own; a manager is curating the whole company's
+ * library and may remove any of it. The server enforces both — the delete
+ * rule is `owner = @request.auth.id || manager || staff` — so `variant` is
+ * only about not offering a rep a button that would be refused.
+ */
 function AudioUploadPanel({
   recordings,
   onChanged,
+  variant = "admin",
 }: {
   recordings: ContentRecord[];
   onChanged: () => Promise<void>;
+  variant?: "rep" | "admin";
 }) {
+  const isRep = variant === "rep";
+  const currentUserId = text((pb.authStore.record as ContentRecord | null)?.id);
+  const canRemove = (recording: ContentRecord) =>
+    !isRep || text(recording.owner) === currentUserId;
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
   const [duration, setDuration] = useState("");
@@ -1930,7 +2029,11 @@ function AudioUploadPanel({
       setTitle("");
       setDuration("");
       setNotes("");
-      setStatus("Audio uploaded. It is now available in the Call Library.");
+      setStatus(
+        isRep
+          ? "Uploaded. Your manager can see it in the Call Library."
+          : "Audio uploaded. It is now available in the Call Library.",
+      );
       const input = document.getElementById("call-audio-file") as HTMLInputElement | null;
       if (input) input.value = "";
       await onChanged();
@@ -1958,8 +2061,8 @@ function AudioUploadPanel({
           <Upload size={18} />
         </span>
         <div>
-          <span className="eyebrow">UPLOAD AUDIO</span>
-          <h2>Add a coached call</h2>
+          <span className="eyebrow">{isRep ? "UPLOAD A CALL" : "UPLOAD AUDIO"}</span>
+          <h2>{isRep ? "Submit a call for review" : "Add a coached call"}</h2>
           <p>MP3, M4A, WAV, AAC, OGG, or WebM. Maximum file size: 100 MB.</p>
         </div>
       </div>
@@ -1990,7 +2093,9 @@ function AudioUploadPanel({
           <input
             value={title}
             onChange={(event) => setTitle(event.target.value)}
-            placeholder="Example: Warm lead — inspection set"
+            placeholder={
+              isRep ? "Example: Tuesday morning — gatekeeper" : "Example: Warm lead — inspection set"
+            }
           />
         </label>
         <label>
@@ -2003,11 +2108,15 @@ function AudioUploadPanel({
         </label>
       </div>
       <label>
-        Coaching notes
+        {isRep ? "Anything you want looked at?" : "Coaching notes"}
         <textarea
           value={notes}
           onChange={(event) => setNotes(event.target.value)}
-          placeholder="What should the rep listen for in this call?"
+          placeholder={
+            isRep
+              ? "Optional. Where did it get away from you?"
+              : "What should the rep listen for in this call?"
+          }
           maxLength={1500}
         />
       </label>
@@ -2019,7 +2128,7 @@ function AudioUploadPanel({
       </div>
       {recordings.length > 0 && (
         <div className="uploaded-call-list">
-          <span className="eyebrow">UPLOADED CALLS</span>
+          <span className="eyebrow">{isRep ? "YOUR TEAM'S CALLS" : "UPLOADED CALLS"}</span>
           {recordings.map((recording) => (
             <div className="uploaded-call-row" key={text(recording.id)}>
               <Headphones size={14} />
@@ -2030,13 +2139,15 @@ function AudioUploadPanel({
                   {text(recording.duration) ? ` · ${text(recording.duration)}` : ""}
                 </small>
               </span>
-              <button
-                className="danger-icon"
-                onClick={() => remove(text(recording.id))}
-                aria-label={`Remove ${text(recording.title)}`}
-              >
-                <Trash2 size={13} />
-              </button>
+              {canRemove(recording) && (
+                <button
+                  className="danger-icon"
+                  onClick={() => remove(text(recording.id))}
+                  aria-label={`Remove ${text(recording.title)}`}
+                >
+                  <Trash2 size={13} />
+                </button>
+              )}
             </div>
           ))}
         </div>

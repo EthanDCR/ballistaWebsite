@@ -683,7 +683,7 @@
   padding: 24px 27.2px;
   border-radius: var(--r-xl);
   color: var(--white);
-  background: linear-gradient(135deg, var(--ink), #3a4b5f);
+  background: linear-gradient(135deg, var(--night), var(--teal-dark));
   box-shadow: var(--shadow);
 }
 .detail-number {
@@ -1965,6 +1965,19 @@
   display: grid;
   grid-template-columns: 1fr 112px;
   gap: 8px;
+}
+/* Grid items are min-width:auto by default, so the inputs refuse to shrink
+   below their intrinsic ~223px and push the fixed track off the page. This
+   panel is now used in the narrower rep lab as well as the admin studio, so
+   it has to fit whatever column it lands in. */
+.upload-fields > * {
+  min-width: 0;
+}
+.audio-upload-manager input,
+.audio-upload-manager textarea {
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 .audio-upload-manager label:not(.file-drop) {
   display: grid;
