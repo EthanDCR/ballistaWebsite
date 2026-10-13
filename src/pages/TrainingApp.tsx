@@ -87,7 +87,7 @@ function stringList(value: unknown) {
     : [];
 }
 function isAdmin() {
-  return (pb.authStore.record as ContentRecord | null)?.role === "admin";
+  return (pb.authStore.record as ContentRecord | null)?.staff_role === "admin";
 }
 function videoEmbedUrl(value: unknown) {
   const match = text(value)

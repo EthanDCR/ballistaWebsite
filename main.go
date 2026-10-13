@@ -27,7 +27,15 @@ func main() {
 			if err := e.Next(); err != nil {
 				return err
 			}
+			// Order matters: users gains a relation to orgs, and the backfill
+			// needs both to exist before it can place anyone.
+			if err := ensureOrgsCollection(e.App); err != nil {
+				return err
+			}
 			if err := lockDownUsersCollection(e.App); err != nil {
+				return err
+			}
+			if err := backfillOrgMembership(e.App); err != nil {
 				return err
 			}
 			return ensureContentCollections(e.App)
@@ -41,14 +49,37 @@ func main() {
 	app.OnRecordCreateRequest("users").Bind(&hook.Handler[*core.RecordRequestEvent]{
 		Func: func(e *core.RecordRequestEvent) error {
 			if !e.HasSuperuserAuth() {
-				e.Record.Set("role", "rep")
+				e.Record.Set("staff_role", "rep")
 				e.Record.SetVerified(false)
+				// Signing up never chooses your company. Without this the
+				// payload could name any org id and join it outright. An
+				// admin assigns org and org_role when approving the account.
+				e.Record.Set("org", "")
+				e.Record.Set("org_role", "rep")
 				// Stamped here rather than taken from the payload for the same
 				// reason as role: the signup request is attacker-controlled and
 				// could otherwise claim acceptance of any version it likes. The
 				// signup form refuses to submit without the box ticked.
 				e.Record.Set("terms_accepted_at", types.NowDateTime())
 				e.Record.Set("terms_version", termsVersion)
+			}
+			return e.Next()
+		},
+	})
+
+	// staff_role, org, org_role and verified are all privilege fields, and the
+	// users collection lets an account edit its own record. Without this a rep
+	// could PATCH their own org and read another company's recordings, or set
+	// staff_role=admin and rewrite the course content every company shares.
+	// Reset all four from what is stored.
+	app.OnRecordUpdateRequest("users").Bind(&hook.Handler[*core.RecordRequestEvent]{
+		Func: func(e *core.RecordRequestEvent) error {
+			if !e.HasSuperuserAuth() {
+				original := e.Record.Original()
+				e.Record.Set("staff_role", original.GetString("staff_role"))
+				e.Record.Set("org", original.GetString("org"))
+				e.Record.Set("org_role", original.GetString("org_role"))
+				e.Record.SetVerified(original.GetBool("verified"))
 			}
 			return e.Next()
 		},
@@ -83,7 +114,21 @@ func publicDir() string {
 
 const (
 	ruleAuthed = "@request.auth.id != ''"
-	ruleAdmin  = "@request.auth.role = 'admin'"
+
+	// Ballista staff. Governs the global course content every company shares,
+	// so it is deliberately NOT the same thing as running a customer's org —
+	// see orgRoleManager for that. Never set staff_role on a customer.
+	ruleStaffAdmin = "@request.auth.staff_role = 'admin'"
+
+	// Membership of the signed-in rep's own company. Every org-scoped
+	// collection carries an `org` relation so this is one comparison.
+	ruleOwnOrg = "org = @request.auth.org"
+
+	// A manager inside their own company.
+	ruleOrgManager = ruleOwnOrg + " && @request.auth.org_role = 'manager'"
+
+	// The org every pre-existing account is backfilled into.
+	defaultOrgName = "Ballista"
 
 	// previewModuleKey is the one module a signed-out visitor may read. The
 	// landing page sends people straight into the portal to look around, and
@@ -128,10 +173,39 @@ func lockDownUsersCollection(app core.App) error {
 	onlyApproved := "verified = true"
 	collection.AuthRule = &onlyApproved
 
-	if collection.Fields.GetByName("role") == nil {
+	// `role` was ambiguous once customers arrived: it gates the global course
+	// content, which is a Ballista-staff concern, not a customer-admin one.
+	// Renamed in place so SetName keeps the field id and PocketBase renames
+	// the column instead of dropping what is stored in it.
+	if field := collection.Fields.GetByName("role"); field != nil {
+		field.SetName("staff_role")
+	}
+	if collection.Fields.GetByName("staff_role") == nil {
 		collection.Fields.Add(&core.SelectField{
-			Name:      "role",
+			Name:      "staff_role",
 			Values:    []string{"rep", "admin"},
+			MaxSelect: 1,
+		})
+	}
+
+	// Which company this person belongs to, and what they are inside it.
+	// Neither is settable by the account holder — see the create and update
+	// hooks in main(). An admin assigns both when approving the account.
+	orgs, err := app.FindCollectionByNameOrId("orgs")
+	if err != nil {
+		return err
+	}
+	if collection.Fields.GetByName("org") == nil {
+		collection.Fields.Add(&core.RelationField{
+			Name:         "org",
+			CollectionId: orgs.Id,
+			MaxSelect:    1,
+		})
+	}
+	if collection.Fields.GetByName("org_role") == nil {
+		collection.Fields.Add(&core.SelectField{
+			Name:      "org_role",
+			Values:    []string{"rep", "manager"},
 			MaxSelect: 1,
 		})
 	}
@@ -150,6 +224,88 @@ func lockDownUsersCollection(app core.App) error {
 	return app.Save(collection)
 }
 
+// ensureOrgsCollection creates the tenant table and seeds one org, so the
+// accounts that predate multi-tenancy have somewhere to be placed.
+func ensureOrgsCollection(app core.App) error {
+	collection, err := app.FindCollectionByNameOrId("orgs")
+	if err != nil {
+		collection = core.NewBaseCollection("orgs")
+		collection.Fields.Add(
+			&core.TextField{Name: "name", Required: true, Max: 200},
+			&core.AutodateField{Name: "created", OnCreate: true},
+		)
+	}
+
+	// A rep may read their own company's row — the admin studio shows the name
+	// — but only Ballista staff may list every company or change one.
+	visible := types.Pointer("id = @request.auth.org || " + ruleStaffAdmin)
+	staffOnly := types.Pointer(ruleStaffAdmin)
+	collection.ListRule = visible
+	collection.ViewRule = visible
+	collection.CreateRule = staffOnly
+	collection.UpdateRule = staffOnly
+	collection.DeleteRule = staffOnly
+
+	if err := app.Save(collection); err != nil {
+		return err
+	}
+
+	existing, err := app.FindAllRecords("orgs")
+	if err != nil {
+		return err
+	}
+	if len(existing) > 0 {
+		return nil
+	}
+
+	record := core.NewRecord(collection)
+	record.Set("name", defaultOrgName)
+	return app.Save(record)
+}
+
+// backfillOrgMembership places any account without an org into the first one.
+// It has to run before the org-scoped rules take effect, or the rows that
+// predate them become invisible to everybody.
+func backfillOrgMembership(app core.App) error {
+	orgs, err := app.FindAllRecords("orgs")
+	if err != nil {
+		return err
+	}
+	if len(orgs) == 0 {
+		return nil
+	}
+	home := orgs[0].Id
+
+	users, err := app.FindAllRecords("users")
+	if err != nil {
+		return err
+	}
+	for _, user := range users {
+		changed := false
+		if user.GetString("org") == "" {
+			user.Set("org", home)
+			changed = true
+		}
+		if user.GetString("org_role") == "" {
+			// Whoever was already a Ballista admin runs the founding org; the
+			// rest start as reps and get promoted by hand.
+			if user.GetString("staff_role") == "admin" {
+				user.Set("org_role", "manager")
+			} else {
+				user.Set("org_role", "rep")
+			}
+			changed = true
+		}
+		if !changed {
+			continue
+		}
+		if err := app.Save(user); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 type collectionDef struct {
 	name   string
 	fields []core.Field
@@ -166,7 +322,7 @@ type collectionDef struct {
 func ensureContentCollections(app core.App) error {
 	authed := types.Pointer(ruleAuthed)
 	preview := types.Pointer(rulePreview)
-	adminOnly := types.Pointer(ruleAdmin)
+	adminOnly := types.Pointer(ruleStaffAdmin)
 
 	defs := []collectionDef{
 		{
@@ -384,7 +540,7 @@ func seedCollection(app core.App, collection *core.Collection, file string) erro
 // upload/remove recordings; any signed-in rep can list/listen.
 func ensureCallRecordingsCollection(app core.App) error {
 	authed := types.Pointer(ruleAuthed)
-	adminOnly := types.Pointer(ruleAdmin)
+	adminOnly := types.Pointer(ruleStaffAdmin)
 
 	return ensureCollection(app, collectionDef{
 		name: "call_recordings",
