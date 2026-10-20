@@ -1,7 +1,11 @@
-// Public marketing page, served at "/". It leads with Ballista, the storm
-// canvassing platform (target lists, dialer, callbacks, pipeline). Note it
-// does not do its own hail mapping — that data comes from elsewhere — so no
-// copy here should imply otherwise.
+// Public marketing page, served at "/". It leads with Ballista: property data
+// pulled from the providers a team already pays for, turned into assigned
+// targets, worked in a dialer, tracked through callbacks and pipeline.
+//
+// Two things it is NOT, and no copy here should imply otherwise. It does no
+// hail mapping of its own — that data comes from elsewhere. And it is not
+// "storm canvassing", which would claim the storm-targeting layer: without
+// swaths of its own, what it actually is is a data engine and a dialer.
 // The hero, the about statement, the feature panel and the closing CTA are all
 // about the platform, and the one ask is the waitlist.
 //
@@ -70,13 +74,13 @@ export default function Landing() {
         signup={{ label: "Join the waitlist", href: "#contact" }}
         // The mark badge always renders; omitting it falls back to the first
         // letter of `name`, which reads as a stray letter.
-        backer={{ prefix: "Storm canvassing for", name: "restoration teams", mark: "★" }}
+        backer={{ prefix: "Lead data and dialer for", name: "restoration teams", mark: "★" }}
         // A ballista is a siege weapon, and in storm restoration the company
         // that reaches the homeowner first usually gets the job — so "strike
         // first" is the brand metaphor and the actual promise at the same
         // time. The closing CTA picks it up again as a bookend.
-        title={"The storm hits.\n*You strike* first."}
-        subtitle="Targets, dialer, callbacks and pipeline in one system — built to get your reps on the phone before anyone else."
+        title={"Storm hits.\n*You strike* first."}
+        subtitle="Property data, dialer, callbacks and pipeline in one system — built to get your reps on the phone before anyone else."
         primaryAction={{ label: "Join the waitlist", href: "#contact" }}
         secondaryAction={{ label: "See Call-Stars", href: "#demo" }}
         // Deliberately does not enumerate what's in the portal — the counts
@@ -84,7 +88,7 @@ export default function Landing() {
         // is where specifics belong.
         info={{
           label: "/how/",
-          text: "Your storm data becomes a worked list — *every address assigned, every callback booked, nothing sitting in a spreadsheet overnight.*",
+          text: "Pull from the data providers you already use — *every address assigned, every callback booked, nothing left sitting in a spreadsheet overnight.*",
         }}
         // Illustrative product UI — the pipeline a manager sees once trained
         // reps are working the phones. Not a claim about Ballista's revenue.
@@ -155,7 +159,7 @@ export default function Landing() {
           kicker: "Inside Ballista",
           title: "Every *address,*\n*one* workflow",
           subtitle:
-            "Target lists, dialer, callbacks and pipeline — the same system from the first ring to the signed contract.",
+            "Data in, assigned targets out, then the dialer — the same system from the first ring to the signed contract.",
         }}
         // The Call-Stars sales video, dropped in through the `aside` prop on
         // the vendored component. It lands between "Inside Call-Stars" and the
@@ -207,7 +211,7 @@ export default function Landing() {
           badge: "Platform waitlist",
           title: "Get early access to Ballista.",
           subtitle:
-            "The storm canvassing platform, in private beta. Call-Stars has no waitlist — for that, just create an account.",
+            "Property data and a dialer in one system, in private beta. Call-Stars has no waitlist — for that, just create an account.",
           submit: "Join the waitlist",
           sending: "Adding you…",
           doneTitle: "You're on the list.",
