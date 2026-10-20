@@ -205,14 +205,17 @@ func lockDownUsersCollection(app core.App) error {
 	collection.CreateRule = &openSignup
 	collection.DeleteRule = nil
 
-	// Ballista staff only. The admin studio is itself gated on staff_role, so
-	// a customer's manager cannot reach the screen this feeds — and PocketBase
-	// hides `email` from anyone without manage access, so letting managers
-	// list their company would show them a roster of names with the useful
-	// column blank. Widen this when managers get something to do with it.
-	roster := types.Pointer(ruleStaffAdmin)
-	collection.ListRule = roster
-	collection.ViewRule = roster
+	// Listing accounts is Ballista staff only — the roster is the customer
+	// list, and the admin studio that consumes it is itself gated on
+	// staff_role. Reps have no reason to enumerate anyone.
+	collection.ListRule = types.Pointer(ruleStaffAdmin)
+
+	// Viewing a single account is wider: anyone may read a colleague in their
+	// own company. `expand` follows the view rule, and without this a rep
+	// could not resolve the name of whoever reviewed their call. It exposes
+	// little — PocketBase withholds `email` from anyone without manage access,
+	// so this is a name within a company that already knows it.
+	collection.ViewRule = types.Pointer(ruleStaffAdmin + " || " + ruleOwnOrg)
 
 	// Your own record, or anyone staff is administering.
 	ownOrStaff := types.Pointer("id = @request.auth.id || " + ruleStaffAdmin)

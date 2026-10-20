@@ -121,6 +121,21 @@ async function fetchUploadedRecordings(): Promise<ContentRecord[]> {
 }
 
 /**
+ * Reviews of this company's calls, newest first.
+ *
+ * `author` is expanded so a rep can see who reviewed them. That works because
+ * the users view rule allows reading a colleague in your own company — note
+ * it is the *view* rule, not list: a rep can resolve a name attached to a
+ * review without being able to enumerate the roster.
+ */
+async function fetchCallReviews(): Promise<ContentRecord[]> {
+  const items = await pb
+    .collection("call_reviews")
+    .getFullList({ sort: "-created", expand: "author", requestKey: null });
+  return items as unknown as ContentRecord[];
+}
+
+/**
  * A short-lived token for protected file downloads.
  *
  * `call_recordings.file` is protected, so its URL only works with a token on
@@ -195,6 +210,7 @@ export default function TrainingApp() {
   const [quizResults, setQuizResults] = useState<QuizResult[]>([]);
   const [summary, setSummary] = useState<Summary | null>(null);
   const [uploadedRecordings, setUploadedRecordings] = useState<ContentRecord[]>([]);
+  const [callReviews, setCallReviews] = useState<ContentRecord[]>([]);
   const progressRef = useRef(progress);
 
   const refreshContent = useCallback(async () => {
@@ -206,6 +222,11 @@ export default function TrainingApp() {
       setUploadedRecordings(await fetchUploadedRecordings());
     } catch {
       setUploadedRecordings([]);
+    }
+    try {
+      setCallReviews(await fetchCallReviews());
+    } catch {
+      setCallReviews([]);
     }
   }, []);
 
@@ -221,6 +242,11 @@ export default function TrainingApp() {
     void fetchUploadedRecordings()
       .then((items) => {
         if (active) setUploadedRecordings(items);
+      })
+      .catch(() => undefined);
+    void fetchCallReviews()
+      .then((items) => {
+        if (active) setCallReviews(items);
       })
       .catch(() => undefined);
     return () => {
@@ -371,6 +397,7 @@ export default function TrainingApp() {
               labId={activeLabId}
               content={content}
               uploadedRecordings={uploadedRecordings}
+              callReviews={callReviews}
               onRecordingsChanged={refreshUploadedRecordings}
               onBack={goHome}
               onAward={awardActivity}
@@ -1168,6 +1195,7 @@ function LabView({
   labId,
   content,
   uploadedRecordings,
+  callReviews,
   onRecordingsChanged,
   onBack,
   onAward,
@@ -1175,6 +1203,7 @@ function LabView({
   labId: string;
   content: ContentSnapshot;
   uploadedRecordings: ContentRecord[];
+  callReviews: ContentRecord[];
   onRecordingsChanged: () => Promise<void>;
   onBack: () => void;
   onAward: (id: string) => void;
@@ -1195,7 +1224,11 @@ function LabView({
       </section>
       {labId === "script" && <ScriptDocument content={content} />}
       {labId === "calls" && (
-        <CallLibrary items={uploadedRecordings} onChanged={onRecordingsChanged} />
+        <CallLibrary
+          items={uploadedRecordings}
+          reviews={callReviews}
+          onChanged={onRecordingsChanged}
+        />
       )}
       {labId === "tools" && <ToolsLab items={records(content, "trainingVideos")} />}
       {labId === "mastery" && (
@@ -1327,29 +1360,98 @@ function recordingUrl(item: ContentRecord, token: string) {
 
 function CallLibrary({
   items,
+  reviews,
   onChanged,
 }: {
   items: ContentRecord[];
+  reviews: ContentRecord[];
   onChanged: () => Promise<void>;
 }) {
   const fileToken = useFileToken();
+  const me = text((pb.authStore.record as ContentRecord | null)?.id);
+  // Your own calls first — the feedback on them is the reason to come here.
+  // The rest of the company's sit below, to learn from rather than act on.
+  const mine = items.filter((item) => text(item.owner) === me);
+  const theirs = items.filter((item) => text(item.owner) !== me);
+  const reviewsFor = (recordingId: string) =>
+    reviews.filter((review) => text(review.recording) === recordingId);
+
+  async function removeOwn(id: string) {
+    if (!window.confirm("Remove this call? Any review of it goes too.")) return;
+    try {
+      await pb.collection("call_recordings").delete(id);
+      await onChanged();
+    } catch {
+      // The delete rule is the real gate; if it refuses, leave the list alone.
+    }
+  }
+
   return (
     <>
       {/* Reps upload their own calls here. The server decides what they may
           remove; see the variant note on AudioUploadPanel. */}
       <AudioUploadPanel recordings={items} onChanged={onChanged} variant="rep" />
-      {items.length === 0 ? (
-        <p className="empty-media">
-          No calls yet. Upload one above and your manager will review it.
-        </p>
-      ) : (
-        <CallLibraryList items={items} fileToken={fileToken} />
+
+      <section className="call-section">
+        <span className="eyebrow">YOUR CALLS</span>
+        {mine.length === 0 ? (
+          <p className="empty-media">
+            Nothing yet. Upload a call above and it will come back with a review.
+          </p>
+        ) : (
+          <CallLibraryList
+            items={mine}
+            fileToken={fileToken}
+            reviewsFor={reviewsFor}
+            onRemove={removeOwn}
+          />
+        )}
+      </section>
+
+      {theirs.length > 0 && (
+        <section className="call-section">
+          <span className="eyebrow">YOUR TEAM&apos;S CALLS</span>
+          <CallLibraryList items={theirs} fileToken={fileToken} reviewsFor={reviewsFor} />
+        </section>
       )}
     </>
   );
 }
 
-function CallLibraryList({ items, fileToken }: { items: ContentRecord[]; fileToken: string }) {
+/** One manager's review of a call: written notes, a Loom link, or both. */
+function CallReview({ review }: { review: ContentRecord }) {
+  const expand = review.expand as { author?: ContentRecord } | undefined;
+  const author = text(expand?.author?.name);
+  const when = text(review.created).slice(0, 10);
+  const loom = text(review.loom_url);
+  return (
+    <div className="call-review">
+      <span className="eyebrow">
+        REVIEW{author ? ` · ${author}` : ""}
+        {when ? ` · ${when}` : ""}
+      </span>
+      {text(review.body) && <p>{text(review.body)}</p>}
+      {loom && (
+        <a className="call-review-link" href={loom} target="_blank" rel="noreferrer">
+          <ExternalLink size={13} /> Watch the review
+        </a>
+      )}
+    </div>
+  );
+}
+
+function CallLibraryList({
+  items,
+  fileToken,
+  reviewsFor,
+  onRemove,
+}: {
+  items: ContentRecord[];
+  fileToken: string;
+  reviewsFor: (recordingId: string) => ContentRecord[];
+  /** Only passed for a rep's own calls; the server allows nothing else. */
+  onRemove?: (id: string) => void;
+}) {
   return (
     <div className="content-stack">
       {items.map((item) => (
@@ -1361,7 +1463,18 @@ function CallLibraryList({ items, fileToken }: { items: ContentRecord[]; fileTok
             <span className="eyebrow">
               COACHED CALL{text(item.duration) ? ` · ${text(item.duration)}` : ""}
             </span>
-            <h2>{text(item.title)}</h2>
+            <h2>
+              {text(item.title)}
+              {onRemove && (
+                <button
+                  className="danger-icon"
+                  onClick={() => onRemove(text(item.id))}
+                  aria-label={`Remove ${text(item.title)}`}
+                >
+                  <Trash2 size={13} />
+                </button>
+              )}
+            </h2>
             <p>{text(item.coaching_notes)}</p>
             {recordingUrl(item, fileToken) && (
               <audio
@@ -1382,6 +1495,15 @@ function CallLibraryList({ items, fileToken }: { items: ContentRecord[]; fileTok
                   </span>
                 ))}
             </div>
+            {(() => {
+              const reviews = reviewsFor(text(item.id));
+              if (reviews.length === 0) {
+                return <p className="call-awaiting">Not reviewed yet.</p>;
+              }
+              return reviews.map((review) => (
+                <CallReview review={review} key={text(review.id)} />
+              ));
+            })()}
           </div>
         </article>
       ))}
@@ -2126,9 +2248,11 @@ function AudioUploadPanel({
           <Upload size={13} /> {busy ? "Uploading…" : "Upload call"}
         </button>
       </div>
-      {recordings.length > 0 && (
+      {/* Admin only: in the rep portal the Call Library below is already this
+          list, and showing both renders every call twice. */}
+      {!isRep && recordings.length > 0 && (
         <div className="uploaded-call-list">
-          <span className="eyebrow">{isRep ? "YOUR TEAM'S CALLS" : "UPLOADED CALLS"}</span>
+          <span className="eyebrow">UPLOADED CALLS</span>
           {recordings.map((recording) => (
             <div className="uploaded-call-row" key={text(recording.id)}>
               <Headphones size={14} />
