@@ -1,14 +1,17 @@
-// Public marketing page, served at "/". It sells one thing: Call-Stars, the
-// cold-call training portal in this repo. Everything above the footer is about
-// the training — who it's for, what's inside, how to get it.
+// Public marketing page, served at "/". It leads with Ballista, the storm
+// canvassing platform (hail map, target lists, dialer, callbacks, pipeline).
+// The hero, the about statement, the feature panel and the closing CTA are all
+// about the platform, and the one ask is the waitlist.
 //
-// The Ballista platform (hail map, target lists, dialer, callbacks, pipeline)
-// is secondary but not hidden. It isn't commercially available, so it never
-// competes with Call-Stars for the hero or the demo band — instead it gets the
-// announcement bar above the nav, a menu entry, its own footer column, and a
-// line in both the closing CTA and the request form. There is one dialog on
-// the page and it does double duty: requesting Call-Stars access also joins
-// the waitlist.
+// Call-Stars — the cold-call training portal in this repo — is second, and is
+// doing a particular job here: it is the evidence. The argument the page makes
+// is "we run a phone room, so we know what this platform has to do", and
+// Call-Stars is the proof of the first half. It also happens to be the only
+// thing a visitor can have today, which is why it holds the announcement bar,
+// the demo band and a footer column.
+//
+// Two products, one page, and the counts in `about.stats` belong to the
+// training rather than the platform on purpose — see the note there.
 //
 // Every string here is a prop on the vendored template. The prop table is in
 // src/components/maroon-fintech-landing.README.md; `demo` is a local addition
@@ -17,37 +20,23 @@
 // The numbers in `about.stats` are real and come from this repo — keep them
 // that way, or drop them. The figures inside `statCards` are different: those
 // illustrate the product's own UI, not a claim about the business.
-import type { MouseEvent } from "react";
 import MaroonFintechLanding from "../components/maroon-fintech-landing";
 import "./Landing.css";
-
-// The template scrolls its own in-page links by looking for `[data-sec]`, and
-// those sections carry no `id`, so a bare href="#contact" from outside the
-// component would find nothing. Do the scroll by hand.
-function scrollToContact(e: MouseEvent<HTMLAnchorElement>) {
-  const target = document.querySelector('[data-sec="contact"]');
-  if (!target) return;
-  e.preventDefault();
-  target.scrollIntoView({
-    behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-    block: "start",
-  });
-}
 
 export default function Landing() {
   return (
     <div className="landing-page">
       {/* Sits above the template's sticky nav, in the same frame colour, so it
-          reads as part of the chrome rather than a banner bolted on. This is
-          the platform's most visible placement on a page that otherwise
-          belongs to Call-Stars. */}
-      <a className="platform-bar" href="#contact" onClick={scrollToContact}>
-        <span className="platform-bar-tag">Private beta</span>
+          reads as part of the chrome rather than a banner bolted on. It used
+          to carry the platform; the hero does that now, so the bar is where
+          Call-Stars gets said before anyone scrolls. */}
+      <a className="platform-bar" href="/training">
+        <span className="platform-bar-tag">Available now</span>
         <span className="platform-bar-text">
-          <strong>Ballista</strong> — the storm canvassing platform our own reps call from — is
-          opening its first seats.
+          <strong>Call-Stars</strong> — the cold-call training our own floor runs on — is open to
+          your team today.
         </span>
-        <span className="platform-bar-cta">Join the waitlist →</span>
+        <span className="platform-bar-cta">Take module 1 free →</span>
       </a>
       <MaroonFintechLanding
         // The bar eats into the first screen, so trim the hero by its height
@@ -69,28 +58,29 @@ export default function Landing() {
         // treats anything else as a normal link. /login is a real route, so it
         // leaves the marketing page and hands off to the app.
         nav={[
-          { label: "Why Call-Stars", href: "#about" },
-          { label: "What's inside", href: "#features" },
-          { label: "Watch the demo", href: "#demo" },
-          { label: "Ballista platform", href: "#contact" },
+          { label: "Why Ballista", href: "#about" },
+          { label: "What it does", href: "#features" },
+          { label: "Call-Stars", href: "#demo" },
+          { label: "Join the waitlist", href: "#contact" },
           { label: "Log in", href: "/login" },
         ]}
         login={{ label: "Log in", href: "/login" }}
-        signup={{ label: "Create an account", href: "/login" }}
+        signup={{ label: "Join the waitlist", href: "#contact" }}
         // The mark badge always renders; omitting it falls back to the first
-        // letter of `name`, which reads as a stray "s". A star ties it to the
-        // Call-Stars name.
-        backer={{ prefix: "Cold-call training for", name: "storm-restoration teams", mark: "★" }}
-        title={"New rep Monday.\n*Booking* by Friday."}
-        subtitle="The cold-call training we built for our own floor. Now open to yours."
-        primaryAction={{ label: "Create an account", href: "/login" }}
-        secondaryAction={{ label: "Open Call-Stars", href: "/training" }}
+        // letter of `name`, which reads as a stray letter.
+        backer={{ prefix: "Storm canvassing for", name: "restoration teams", mark: "★" }}
+        // Same shape as the Call-Stars headline it replaces — two beats, a
+        // span of days — because the promise is the same one: speed.
+        title={"Hail Tuesday.\n*Dialing* Wednesday."}
+        subtitle="Ballista maps where the hail actually fell, turns it into a call list, and puts your reps on the phone."
+        primaryAction={{ label: "Join the waitlist", href: "#contact" }}
+        secondaryAction={{ label: "See Call-Stars", href: "#demo" }}
         // Deliberately does not enumerate what's in the portal — the counts
         // are already in `about.stats` below, and the "What's inside" section
         // is where specifics belong.
         info={{
-          label: "/why/",
-          text: "Built from the calls we actually made — *the openers that worked, and what to say when they don't.*",
+          label: "/how/",
+          text: "NOAA radar becomes hail polygons, polygons become property targets, *and targets land in a dialer your reps already know how to work.*",
         }}
         // Illustrative product UI — the pipeline a manager sees once trained
         // reps are working the phones. Not a claim about Ballista's revenue.
@@ -141,23 +131,27 @@ export default function Landing() {
           },
         ]}
         about={{
-          kicker: "Why Call-Stars",
+          kicker: "Why Ballista",
           statement:
-            "Call-Stars {mark} teaches the call the way it actually goes — opener, objection, close — so a new rep stops reading a script and starts running one.",
+            "Ballista {mark} is built inside a storm-restoration company, not a software office — every screen exists because a rep needed it on a Tuesday afternoon.",
           // All three are real counts from this repo and the training standard
           // — 7 modules in src/config/modules.ts, 62 cards across
           // src/data/coldCallTreeCards/, and the 5 DM/hour bar reps are held to.
+          // Still the real counts from this repo and the floor's standard.
+          // They are training numbers rather than platform ones on purpose:
+          // the argument is that the people building this run a phone room,
+          // and these are the evidence for it.
           stats: [
-            { value: 7, label: "Modules, start to standard" },
-            { value: 62, label: "Mapped call outcomes" },
             { value: 5, label: "Decision-makers per hour" },
+            { value: 62, label: "Mapped call outcomes" },
+            { value: 7, label: "Modules our reps run" },
           ],
         }}
         features={{
-          kicker: "Inside Call-Stars",
-          title: "Seven modules,\n*one* standard",
+          kicker: "Inside Ballista",
+          title: "Every *address,*\n*one* workflow",
           subtitle:
-            "The script, the call library, the objection tree and the operating standard — in one portal your reps will actually open.",
+            "Hail map, target list, dialer, callbacks and pipeline — the same system from the first ring to the signed contract.",
         }}
         // The Call-Stars sales video, dropped in through the `aside` prop on
         // the vendored component. It lands between "Inside Call-Stars" and the
@@ -165,10 +159,11 @@ export default function Landing() {
         // working, here is how to get it.
         aside={
           <div className="demo-band">
-            <p className="demo-badge">See it in action</p>
-            <h2 className="demo-title">Watch a call, start to close</h2>
+            <p className="demo-badge">Available today</p>
+            <h2 className="demo-title">The training behind it</h2>
             <p className="demo-sub">
-              The opener, the objection and the close — the way Call-Stars teaches it.
+              Call-Stars is the cold-call course our own floor runs on — the opener, the objection
+              and the close. You can have it before the platform ships.
             </p>
 
             {/* SWAP ME. Replace this whole figure with the embed, keeping the
@@ -184,7 +179,7 @@ export default function Landing() {
             </figure>
 
             <a className="demo-cta" href="/training">
-              Open Call-Stars →
+              Take module 1 free →
             </a>
           </div>
         }
@@ -195,10 +190,10 @@ export default function Landing() {
         wallet={null}
         spending={null}
         cta={{
-          title: "Your next hire, *ready to dial.*",
+          title: "Your next storm, *already mapped.*",
           subtitle:
-            "Module 1 is open to anyone — go and take it. Create an account for the rest; every account is approved by hand, so it takes us a moment.",
-          action: { label: "Create an account", href: "/login" },
+            "Ballista is in private beta and opening its first seats. Call-Stars is live today, and module 1 is open to anyone.",
+          action: { label: "Take module 1 free", href: "/training" },
         }}
         // One dialog, two jobs: the page's main ask is Call-Stars access, and
         // the platform waitlist rides along rather than competing for a second
@@ -219,22 +214,22 @@ export default function Landing() {
         footer={{
           columns: [
             {
+              // Still one link. Hail map / target lists / dialer are what the
+              // platform does, but none of them have anywhere to go yet — a
+              // link that only scrolls to the same form is navigation in
+              // appearance only. The heading says a platform exists; the
+              // waitlist is the one thing a visitor can act on.
+              title: "Ballista — beta",
+              links: [{ label: "Join the waitlist", href: "#contact" }],
+            },
+            {
               title: "Call-Stars",
               links: [
+                { label: "Take module 1 free", href: "/training" },
                 { label: "The script", href: "/login" },
                 { label: "Call library", href: "/login" },
                 { label: "Decision tree", href: "/login" },
-                { label: "Tools & systems", href: "/login" },
               ],
-            },
-            {
-              // One link, deliberately. Hail map / target lists / dialer used
-              // to sit here, but none of them have anywhere to go — they all
-              // pointed at #contact, which is navigation in appearance only.
-              // The column heading already says a platform exists and is in
-              // beta; the waitlist is the only thing a visitor can act on.
-              title: "Platform — beta",
-              links: [{ label: "Join the waitlist", href: "#contact" }],
             },
             {
               title: "Company",
