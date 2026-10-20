@@ -1,5 +1,7 @@
 // Public marketing page, served at "/". It leads with Ballista, the storm
-// canvassing platform (hail map, target lists, dialer, callbacks, pipeline).
+// canvassing platform (target lists, dialer, callbacks, pipeline). Note it
+// does not do its own hail mapping — that data comes from elsewhere — so no
+// copy here should imply otherwise.
 // The hero, the about statement, the feature panel and the closing CTA are all
 // about the platform, and the one ask is the waitlist.
 //
@@ -69,10 +71,12 @@ export default function Landing() {
         // The mark badge always renders; omitting it falls back to the first
         // letter of `name`, which reads as a stray letter.
         backer={{ prefix: "Storm canvassing for", name: "restoration teams", mark: "★" }}
-        // Same shape as the Call-Stars headline it replaces — two beats, a
-        // span of days — because the promise is the same one: speed.
-        title={"Hail Tuesday.\n*Dialing* Wednesday."}
-        subtitle="Ballista maps where the hail actually fell, turns it into a call list, and puts your reps on the phone."
+        // A ballista is a siege weapon, and in storm restoration the company
+        // that reaches the homeowner first usually gets the job — so "strike
+        // first" is the brand metaphor and the actual promise at the same
+        // time. The closing CTA picks it up again as a bookend.
+        title={"The storm hits.\n*You strike* first."}
+        subtitle="Targets, dialer, callbacks and pipeline in one system — built to get your reps on the phone before anyone else."
         primaryAction={{ label: "Join the waitlist", href: "#contact" }}
         secondaryAction={{ label: "See Call-Stars", href: "#demo" }}
         // Deliberately does not enumerate what's in the portal — the counts
@@ -80,7 +84,7 @@ export default function Landing() {
         // is where specifics belong.
         info={{
           label: "/how/",
-          text: "NOAA radar becomes hail polygons, polygons become property targets, *and targets land in a dialer your reps already know how to work.*",
+          text: "Your storm data becomes a worked list — *every address assigned, every callback booked, nothing sitting in a spreadsheet overnight.*",
         }}
         // Illustrative product UI — the pipeline a manager sees once trained
         // reps are working the phones. Not a claim about Ballista's revenue.
@@ -151,7 +155,7 @@ export default function Landing() {
           kicker: "Inside Ballista",
           title: "Every *address,*\n*one* workflow",
           subtitle:
-            "Hail map, target list, dialer, callbacks and pipeline — the same system from the first ring to the signed contract.",
+            "Target lists, dialer, callbacks and pipeline — the same system from the first ring to the signed contract.",
         }}
         // The Call-Stars sales video, dropped in through the `aside` prop on
         // the vendored component. It lands between "Inside Call-Stars" and the
@@ -190,7 +194,7 @@ export default function Landing() {
         wallet={null}
         spending={null}
         cta={{
-          title: "Your next storm, *already mapped.*",
+          title: "Next storm, *strike first.*",
           subtitle:
             "Ballista is in private beta and opening its first seats. Call-Stars is live today, and module 1 is open to anyone.",
           action: { label: "Take module 1 free", href: "/training" },
@@ -214,7 +218,7 @@ export default function Landing() {
         footer={{
           columns: [
             {
-              // Still one link. Hail map / target lists / dialer are what the
+              // Still one link. Target lists / dialer / pipeline are what the
               // platform does, but none of them have anywhere to go yet — a
               // link that only scrolls to the same form is navigation in
               // appearance only. The heading says a platform exists; the
