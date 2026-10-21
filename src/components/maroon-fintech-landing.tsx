@@ -501,6 +501,9 @@ const PETAL = "M12 12C9.2 9.6 9.3 4 12 2.6C14.7 4 14.8 9.6 12 12Z"
  */
 const BOW_MARK = ["M3.5 11 Q12 2.5 20.5 11", "M3.5 11 L12 16.5 L20.5 11", "M12 21 L12 4"]
 
+/** The bow's own tan, straight from public/bow-ai.svg. Brand, not palette. */
+const BOW_TAN = "#C49767"
+
 /**
  * LOCAL ADDITION (not upstream): the bolt the device shoots at the hero's
  * primary button. Drawn pointing right — the flight rotates it to face
@@ -864,18 +867,35 @@ function Device({ uid, pulse }: { uid: string; pulse: number }) {
         <rect x="46" y="44" width="228" height="228" rx="76" fill={"url(#" + p + "-face)"} />
         <rect x="46" y="44" width="228" height="228" rx="76" fill={"url(#" + p + "-sheen)"} />
         <rect x="47" y="45" width="226" height="226" rx="75" fill="none" stroke="#fff" strokeOpacity=".35" strokeWidth="1.4" />
-        {/* The debossed mark — the bow rather than the template's asterisk.
-            Two copies of the same strokes: a white one nudged down-right and
-            blurred for the lip of the engraving, a dark one on top for the
-            cut itself. */}
-        <g transform="translate(160 158) scale(2.8) translate(-12 -12)" filter={"url(#" + p + "-soft)"} opacity=".55">
+        {/* The inlaid mark — the bow rather than the template's asterisk, and
+            in the bow's own tan rather than a cut.
+            Three copies of the same strokes: a blurred dark one nudged
+            down-right for the shadow it casts into the lid, a blurred white
+            one nudged up-left for the lit edge, and the tan itself on top.
+            The shadow is what keeps it legible: tan on this lid is barely a
+            step of contrast on its own. */}
+        <g transform="translate(160 158) scale(2.8) translate(-12 -12)" filter={"url(#" + p + "-soft)"} opacity=".5">
+          <g
+            fill="none"
+            stroke="#2a1b0d"
+            strokeWidth="2.6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            transform="translate(.45 .6)"
+          >
+            {BOW_MARK.map((d) => (
+              <path key={d} d={d} />
+            ))}
+          </g>
+        </g>
+        <g transform="translate(160 158) scale(2.8) translate(-12 -12)" filter={"url(#" + p + "-soft)"} opacity=".45">
           <g
             fill="none"
             stroke="#fff"
             strokeWidth="2.2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            transform="translate(.5 .7)"
+            transform="translate(-.4 -.5)"
           >
             {BOW_MARK.map((d) => (
               <path key={d} d={d} />
@@ -885,8 +905,7 @@ function Device({ uid, pulse }: { uid: string; pulse: number }) {
         <g
           transform="translate(160 158) scale(2.8) translate(-12 -12)"
           fill="none"
-          stroke="#000"
-          strokeOpacity=".42"
+          stroke={BOW_TAN}
           strokeWidth="2.2"
           strokeLinecap="round"
           strokeLinejoin="round"
