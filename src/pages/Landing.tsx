@@ -106,10 +106,16 @@ export default function Landing() {
         // Not illustrative — if these are edited, they get edited from a newer
         // export of the same source, not by hand.
         //
-        // Only "All time" is here because that is all one snapshot can honestly
-        // say. `periods` takes as many entries as we have cuts of the data, so
-        // month and quarter drop straight in once the export carries them —
-        // keep "All time" first, it is what the card shows on arrival.
+        // Every period here is actuals. The source also carries a projection
+        // for the current month and quarter — 25 leads, $12.9m — built by
+        // averaging June, July and August and pushing it forward. It is not
+        // here: no lead has been set since 2026-08-14, so the real figure for
+        // this month is zero, and a projection printed next to "All time"
+        // would read as something that happened. The windows below are the
+        // same months the projection was averaged from, which is why they land
+        // at the same size.
+        //
+        // "All time" stays first — it is what the card shows on arrival.
         statCards={[
           {
             title: "Leads worked",
@@ -129,6 +135,28 @@ export default function Landing() {
                   { label: "Closed", value: 33 },
                 ],
               },
+              {
+                label: "Quarter",
+                // Ends on the last lead actually set, not on Aug 31 — August
+                // stops halfway through and saying otherwise would make the
+                // month look slow rather than short.
+                range: "Jun 01 - Aug 14, 2026",
+                amount: 75,
+                note: "Last three months of leads set",
+                categories: [
+                  { label: "June", value: 41 },
+                  { label: "July", value: 25 },
+                  { label: "August", value: 9 },
+                ],
+              },
+              {
+                label: "Month",
+                range: "Jul 01 - Jul 31, 2026",
+                amount: 25,
+                // No stage split for a single month in this export, so this
+                // period runs without a donut.
+                note: "Last full month",
+              },
             ],
           },
           {
@@ -145,6 +173,23 @@ export default function Landing() {
                   { label: "Closed", value: 22026045 },
                   { label: "Still open", value: 140387451 },
                 ],
+              },
+              {
+                label: "Quarter",
+                range: "Jun 01 - Aug 14, 2026",
+                amount: 38602680,
+                note: "Last three months of leads set",
+                categories: [
+                  { label: "June", value: 21489820 },
+                  { label: "July", value: 13354860 },
+                  { label: "August", value: 3758000 },
+                ],
+              },
+              {
+                label: "Month",
+                range: "Jul 01 - Jul 31, 2026",
+                amount: 13354860,
+                note: "Last full month",
               },
             ],
           },
