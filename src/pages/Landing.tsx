@@ -22,9 +22,8 @@
 // src/components/maroon-fintech-landing.README.md; `demo` is a local addition
 // documented in src/components/README.md.
 //
-// Any number that goes on this page has to be real, with one exception: the
-// figures inside `statCards` illustrate the product's own UI and are not a
-// claim about the business.
+// Every number on this page is real, `statCards` included — those come from a
+// snapshot of the floor's own lead tracking, dated in the comment above them.
 import MaroonFintechLanding from "../components/maroon-fintech-landing";
 import { BOOKING_URL } from "../config/booking";
 import "./Landing.css";
@@ -103,49 +102,48 @@ export default function Landing() {
           label: "/how/",
           text: "Pull data on any address you want — *assigned to a rep, worked in the dialer, nothing left sitting in a spreadsheet overnight.*",
         }}
-        // Illustrative product UI — the pipeline a manager sees once trained
-        // reps are working the phones. Not a claim about Ballista's revenue.
+        // Real figures from the floor's lead tracking, snapshot 2026-10-21.
+        // Not illustrative — if these are edited, they get edited from a newer
+        // export of the same source, not by hand.
+        //
+        // Only "All time" is here because that is all one snapshot can honestly
+        // say. `periods` takes as many entries as we have cuts of the data, so
+        // month and quarter drop straight in once the export carries them —
+        // keep "All time" first, it is what the card shows on arrival.
         statCards={[
           {
-            title: "Cold-call pipeline",
+            title: "Leads worked",
+            unit: "count",
             periods: [
               {
-                label: "Month",
-                range: "Sep 01, 2026 - Sep 30, 2026",
-                amount: 412800,
-                change: 9.4,
+                label: "All time",
+                range: "All time · through Oct 21, 2026",
+                amount: 385,
+                // The four live stages. The remainder is in the note rather
+                // than the donut, so the slices stay the pipeline itself.
+                note: "24 lost · 13 in overwatch",
                 categories: [
-                  { label: "Inspection set", value: 96400 },
-                  { label: "Estimate out", value: 138200 },
-                  { label: "Contract sent", value: 121000 },
-                  { label: "Supplement", value: 57200 },
-                ],
-              },
-              {
-                label: "Week",
-                range: "Sep 24, 2026 - Sep 30, 2026",
-                amount: 86300,
-                change: 4.1,
-                categories: [
-                  { label: "Inspection set", value: 31200 },
-                  { label: "Estimate out", value: 28100 },
-                  { label: "Contract sent", value: 27000 },
+                  { label: "Lead set", value: 81 },
+                  { label: "Inspected", value: 150 },
+                  { label: "Presented", value: 84 },
+                  { label: "Closed", value: 33 },
                 ],
               },
             ],
           },
           {
-            title: "Signed from calls",
+            title: "Job value worked",
+            decimals: 0,
             periods: [
               {
-                label: "Month",
-                range: "Sep 01, 2026 - Sep 30, 2026",
-                amount: 268500,
-                change: 12.6,
+                label: "All time",
+                range: "All time · through Oct 21, 2026",
+                amount: 162413496,
+                note: "33 of 385 leads closed",
+                // The two add up to the total exactly.
                 categories: [
-                  { label: "Insurance", value: 192300 },
-                  { label: "Retail", value: 51400 },
-                  { label: "Referral", value: 24800 },
+                  { label: "Closed", value: 22026045 },
+                  { label: "Still open", value: 140387451 },
                 ],
               },
             ],
