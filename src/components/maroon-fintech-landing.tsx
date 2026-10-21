@@ -36,12 +36,31 @@ export type MflPeriod = {
   /** The date range under the title. */
   range: string
   amount: number
-  /** Percent versus the previous period. Negative shows a falling arrow. */
-  change: number
+  /**
+   * Percent versus the previous period. Negative shows a falling arrow.
+   * LOCAL CHANGE (not upstream): optional. A period with nothing to compare
+   * itself against — an all-time total — leaves it off and uses `note`.
+   */
+  change?: number
+  /** LOCAL ADDITION (not upstream): shown in place of the "from last month"
+   * line when there is no `change`. */
+  note?: string
   categories: MflCategory[]
 }
 
-export type MflStatCard = { title: string; periods: MflPeriod[] }
+export type MflStatCard = {
+  title: string
+  periods: MflPeriod[]
+  /**
+   * LOCAL ADDITION (not upstream): what the numbers are. "money" is the
+   * upstream behaviour, "count" prints them plain — a lead count is not
+   * dollars and should not be dressed as them.
+   */
+  unit?: "money" | "count"
+  /** LOCAL ADDITION (not upstream): decimal places. Defaults to 2 for money
+   * and 0 for counts; big money reads better at 0. */
+  decimals?: number
+}
 
 export type MflStat = { value: number; prefix?: string; suffix?: string; decimals?: number; label: string }
 
@@ -1042,7 +1061,12 @@ function StatCard({ card }: { card: MflStatCard }) {
   const [hover, setHover] = React.useState(-1)
   const p = card.periods[pi] || card.periods[0]
   if (!p) return null
-  const up = p.change >= 0
+  // LOCAL ADDITION: counts are printed plain, money keeps the upstream "$ ".
+  const unit = card.unit ?? "money"
+  const dp = card.decimals ?? (unit === "count" ? 0 : 2)
+  const amount = formatMoney(p.amount, unit === "count" ? "" : "$ ", dp)
+  const value = (n: number) => formatMoney(n, unit === "count" ? "" : "$", dp)
+  const up = (p.change ?? 0) >= 0
   return (
     <article className="mfl-stat">
       <header className="mfl-stat-top">
@@ -1061,15 +1085,23 @@ function StatCard({ card }: { card: MflStatCard }) {
         </div>
       </header>
       <div className="mfl-stat-amt" key={pi}>
-        {formatMoney(p.amount, "$ ", 2)}
+        {amount}
       </div>
-      <div className="mfl-stat-chg">
-        <span className={"mfl-chg" + (up ? "" : " is-down")}>
-          <Arrow up={up} />
-          {Math.abs(p.change).toFixed(1)}%
-        </span>
-        <span>from last {pi === 2 ? "day" : pi === 1 ? "week" : "month"}</span>
-      </div>
+      {(p.change !== undefined || p.note) && (
+        <div className="mfl-stat-chg">
+          {p.change !== undefined ? (
+            <>
+              <span className={"mfl-chg" + (up ? "" : " is-down")}>
+                <Arrow up={up} />
+                {Math.abs(p.change).toFixed(1)}%
+              </span>
+              <span>from last {pi === 2 ? "day" : pi === 1 ? "week" : "month"}</span>
+            </>
+          ) : (
+            <span>{p.note}</span>
+          )}
+        </div>
+      )}
       <div className="mfl-stat-split">
         <Donut cats={p.categories} hover={hover} setHover={setHover} colors={CAT_COLORS} />
         <div className="mfl-legend">
@@ -1084,7 +1116,7 @@ function StatCard({ card }: { card: MflStatCard }) {
               >
                 <i style={{ background: c.color || CAT_COLORS[i % CAT_COLORS.length] }} />
                 <span>{c.label}</span>
-                <b>{formatMoney(c.value, "$", 2)}</b>
+                <b>{value(c.value)}</b>
               </li>
             ))}
           </ul>
