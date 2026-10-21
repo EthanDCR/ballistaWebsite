@@ -492,6 +492,15 @@ function useDismiss(open: boolean, close: () => void, boxRef: { current: HTMLEle
 
 const PETAL = "M12 12C9.2 9.6 9.3 4 12 2.6C14.7 4 14.8 9.6 12 12Z"
 
+/**
+ * LOCAL ADDITION (not upstream): the Ballista bow, on the same 24-unit grid as
+ * the template's own marks. Same geometry as public/bow-ai-mark.svg — the file
+ * the nav pill and footer load as an <img> — so the logo on the device lid and
+ * the logo in the chrome stay the same drawing. Strokes, not fills: whatever
+ * draws it sets `stroke` and `fill="none"` itself.
+ */
+const BOW_MARK = ["M3.5 11 Q12 2.5 20.5 11", "M3.5 11 L12 16.5 L20.5 11", "M12 21 L12 4"]
+
 function Asterisk({ size = 16, color = "currentColor", className = "" }: { size?: number; color?: string; className?: string }) {
   return (
     <svg className={"mfl-svg " + className} viewBox="0 0 24 24" width={size} height={size} aria-hidden="true">
@@ -830,17 +839,35 @@ function Device({ uid, pulse }: { uid: string; pulse: number }) {
         <rect x="46" y="44" width="228" height="228" rx="76" fill={"url(#" + p + "-face)"} />
         <rect x="46" y="44" width="228" height="228" rx="76" fill={"url(#" + p + "-sheen)"} />
         <rect x="47" y="45" width="226" height="226" rx="75" fill="none" stroke="#fff" strokeOpacity=".35" strokeWidth="1.4" />
-        {/* the debossed mark */}
-        <g transform="translate(160 158) scale(2.1) translate(-12 -12)" filter={"url(#" + p + "-soft)"} opacity=".55">
-          <g fill="#fff" transform="translate(.5 .7)">
-            {[0, 60, 120, 180, 240, 300].map((a) => (
-              <path key={a} d={PETAL} transform={"rotate(" + a + " 12 12)"} />
+        {/* The debossed mark — the bow rather than the template's asterisk.
+            Two copies of the same strokes: a white one nudged down-right and
+            blurred for the lip of the engraving, a dark one on top for the
+            cut itself. */}
+        <g transform="translate(160 158) scale(2.8) translate(-12 -12)" filter={"url(#" + p + "-soft)"} opacity=".55">
+          <g
+            fill="none"
+            stroke="#fff"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            transform="translate(.5 .7)"
+          >
+            {BOW_MARK.map((d) => (
+              <path key={d} d={d} />
             ))}
           </g>
         </g>
-        <g transform="translate(160 158) scale(2.1) translate(-12 -12)" fill="#000" fillOpacity=".42" stroke="#000" strokeOpacity=".42" strokeWidth="1.4" strokeLinejoin="round">
-          {[0, 60, 120, 180, 240, 300].map((a) => (
-            <path key={a} d={PETAL} transform={"rotate(" + a + " 12 12)"} />
+        <g
+          transform="translate(160 158) scale(2.8) translate(-12 -12)"
+          fill="none"
+          stroke="#000"
+          strokeOpacity=".42"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          {BOW_MARK.map((d) => (
+            <path key={d} d={d} />
           ))}
         </g>
       </g>
