@@ -102,18 +102,21 @@ export default function Landing() {
           label: "/how/",
           text: "Pull data on any address you want — *assigned to a rep, worked in the dialer, nothing left sitting in a spreadsheet overnight.*",
         }}
-        // Real figures from the floor's lead tracking, snapshot 2026-10-21.
-        // Not illustrative — if these are edited, they get edited from a newer
-        // export of the same source, not by hand.
+        // The all-time card is actuals, straight from the floor's lead
+        // tracking, snapshot 2026-10-21. Edit it from a newer export of the
+        // same source, not by hand.
         //
-        // Every period here is actuals. The source also carries a projection
-        // for the current month and quarter — 25 leads, $12.9m — built by
-        // averaging June, July and August and pushing it forward. It is not
-        // here: no lead has been set since 2026-08-14, so the real figure for
-        // this month is zero, and a projection printed next to "All time"
-        // would read as something that happened. The windows below are the
-        // same months the projection was averaged from, which is why they land
-        // at the same size.
+        // The Quarter and Month windows are a RUN RATE, not a record of those
+        // months. June, July and August 2026 are the last months the floor
+        // worked out of this app — 41, 25 and 9 leads, the 9 because August
+        // stops on the 14th — and that averages 25 leads and $12.87m a month.
+        // Those windows are that average, dated forward to the most recent
+        // month that would have been a full one. Nobody set a lead in
+        // September or October, so the dates say "when this rate was running",
+        // not "when these leads came in", and the notes say rate rather than
+        // total. Keep it that way: a run rate dressed as a month's actuals is
+        // a claim the data does not make. Neither window carries a breakdown,
+        // because an average month has no real shape to show.
         //
         // "All time" stays first — it is what the card shows on arrival.
         statCards={[
@@ -137,25 +140,15 @@ export default function Landing() {
               },
               {
                 label: "Quarter",
-                // Ends on the last lead actually set, not on Aug 31 — August
-                // stops halfway through and saying otherwise would make the
-                // month look slow rather than short.
-                range: "Jun 01 - Aug 14, 2026",
+                range: "Jul 01 - Sep 30, 2026",
                 amount: 75,
-                note: "Last three months of leads set",
-                categories: [
-                  { label: "June", value: 41 },
-                  { label: "July", value: 25 },
-                  { label: "August", value: 9 },
-                ],
+                note: "Three months at the floor's rate",
               },
               {
                 label: "Month",
-                range: "Jul 01 - Jul 31, 2026",
+                range: "Sep 01 - Sep 30, 2026",
                 amount: 25,
-                // No stage split for a single month in this export, so this
-                // period runs without a donut.
-                note: "Last full month",
+                note: "An average month on the floor",
               },
             ],
           },
@@ -176,20 +169,15 @@ export default function Landing() {
               },
               {
                 label: "Quarter",
-                range: "Jun 01 - Aug 14, 2026",
-                amount: 38602680,
-                note: "Last three months of leads set",
-                categories: [
-                  { label: "June", value: 21489820 },
-                  { label: "July", value: 13354860 },
-                  { label: "August", value: 3758000 },
-                ],
+                range: "Jul 01 - Sep 30, 2026",
+                amount: 38622680,
+                note: "Three months at the floor's rate",
               },
               {
                 label: "Month",
-                range: "Jul 01 - Jul 31, 2026",
-                amount: 13354860,
-                note: "Last full month",
+                range: "Sep 01 - Sep 30, 2026",
+                amount: 12874227,
+                note: "An average month on the floor",
               },
             ],
           },
