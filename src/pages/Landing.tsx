@@ -36,7 +36,7 @@ export default function Landing() {
           reads as part of the chrome rather than a banner bolted on. It used
           to carry the platform; the hero does that now, so the bar is where
           Call-Stars gets said before anyone scrolls. */}
-      <a className="platform-bar" href="/training">
+      <a className="platform-bar" href="/training?module=intro">
         <span className="platform-bar-tag">Available now</span>
         <span className="platform-bar-text">
           <strong>Call-Stars</strong> — the cold-call training our own floor runs on — is open to
@@ -189,7 +189,7 @@ export default function Landing() {
               <figcaption>Call-Stars demo video goes here</figcaption>
             </figure>
 
-            <a className="demo-cta" href="/training">
+            <a className="demo-cta" href="/training?module=intro">
               Take module 1 free →
             </a>
           </div>
@@ -236,7 +236,7 @@ export default function Landing() {
             {
               title: "Call-Stars",
               links: [
-                { label: "Take module 1 free", href: "/training" },
+                { label: "Take module 1 free", href: "/training?module=intro" },
                 { label: "The script", href: "/login" },
                 { label: "Call library", href: "/login" },
                 { label: "Decision tree", href: "/login" },
