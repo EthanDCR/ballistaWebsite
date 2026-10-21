@@ -27,6 +27,7 @@
 // that way, or drop them. The figures inside `statCards` are different: those
 // illustrate the product's own UI, not a claim about the business.
 import MaroonFintechLanding from "../components/maroon-fintech-landing";
+import { BOOKING_URL } from "../config/booking";
 import "./Landing.css";
 
 export default function Landing() {
@@ -201,7 +202,7 @@ export default function Landing() {
           title: "Next storm, *strike first.*",
           subtitle:
             "Ballista is in private beta and opening its first seats. Call-Stars is live today, and module 1 is open to anyone.",
-          action: { label: "Take module 1 free", href: "/training" },
+          action: { label: "Book a call", href: BOOKING_URL },
         }}
         // One dialog, two jobs: the page's main ask is Call-Stars access, and
         // the platform waitlist rides along rather than competing for a second

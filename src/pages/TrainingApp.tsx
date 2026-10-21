@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { BOOKING_URL_OFFSITE } from "../config/booking";
 import { modules, trainingLabs } from "../config/modules";
 import {
   contentMeta,
@@ -379,6 +380,7 @@ export default function TrainingApp() {
               moduleId={activeModuleId}
               content={content}
               progress={progress}
+              previewing={previewing}
               questionsConfigured={questionsForModule(activeModuleId).length > 0}
               onBack={goHome}
               onStartQuiz={() => {
@@ -627,6 +629,7 @@ function ModuleView({
   moduleId,
   content,
   progress,
+  previewing,
   questionsConfigured,
   onBack,
   onStartQuiz,
@@ -635,6 +638,7 @@ function ModuleView({
   moduleId: string;
   content: ContentSnapshot;
   progress: LearnerProgress;
+  previewing: boolean;
   questionsConfigured: boolean;
   onBack: () => void;
   onStartQuiz: () => void;
@@ -689,21 +693,42 @@ function ModuleView({
       {moduleId === "signoff" && (
         <SignOffModule content={content} progress={progress} onAward={onAward} />
       )}
-      {moduleId !== "signoff" && (
+      {/* Previewing, the only module that opens is module 1 and the quiz is
+          not on offer — so the end of the lesson asks for a conversation
+          instead of a checkpoint. Signed in, this is the course's own gate:
+          pass the quiz, unlock the next module. */}
+      {previewing ? (
         <section className="checkpoint-card">
           <div>
-            <span className="eyebrow">CHECKPOINT</span>
-            <h2>{questionsConfigured ? "Ready to prove it?" : "Quiz setup pending"}</h2>
+            <span className="eyebrow">NEXT STEP</span>
+            <h2>Want this on your floor?</h2>
             <p>
-              {questionsConfigured
-                ? "Finish the bite-sized quiz to earn XP and unlock the next module."
-                : `Add Module ${courseModule.number} quiz questions in Admin → Quiz questions to activate this checkpoint.`}
+              That is module 1. The rest of the course — plus the script, the call library and the
+              decision tree — comes with the platform. Book a call and we will walk your team
+              through it.
             </p>
           </div>
-          <button className="primary-button" disabled={!questionsConfigured} onClick={onStartQuiz}>
-            <CirclePlay size={15} /> {questionsConfigured ? "Start checkpoint" : "Quiz not set up"}
-          </button>
+          <a className="primary-button" href={BOOKING_URL_OFFSITE}>
+            <PhoneCall size={15} /> Book a call
+          </a>
         </section>
+      ) : (
+        moduleId !== "signoff" && (
+          <section className="checkpoint-card">
+            <div>
+              <span className="eyebrow">CHECKPOINT</span>
+              <h2>{questionsConfigured ? "Ready to prove it?" : "Quiz setup pending"}</h2>
+              <p>
+                {questionsConfigured
+                  ? "Finish the bite-sized quiz to earn XP and unlock the next module."
+                  : `Add Module ${courseModule.number} quiz questions in Admin → Quiz questions to activate this checkpoint.`}
+              </p>
+            </div>
+            <button className="primary-button" disabled={!questionsConfigured} onClick={onStartQuiz}>
+              <CirclePlay size={15} /> {questionsConfigured ? "Start checkpoint" : "Quiz not set up"}
+            </button>
+          </section>
+        )
       )}
     </div>
   );
