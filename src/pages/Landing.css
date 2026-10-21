@@ -86,12 +86,19 @@
   box-shadow: inset 0 0 0 1px var(--mfl-cream);
 }
 
+/* The template frames the page in 14px of its frame colour. Under the
+   announcement bar that frame reads as more bar rather than as a frame, so the
+   top edge is trimmed here — the other three sides keep the full 14px. */
+.landing-page .mfl-root {
+  padding-top: 6px;
+}
+
 /* ---- platform announcement bar ----------------------------------------- */
 /* Above the template's sticky nav and painted in the same frame colour, so it
    reads as part of the page chrome. The palette variables live on `.mfl-root`
    and this sits outside it, so the two forest values are repeated here. */
 .platform-bar {
-  /* This project sets no global border-box, so without this the 30px
+  /* This project sets no global border-box, so without this the 22px
      min-height is the content box and the padding lands on top of it — the bar
      comes out taller and no longer matches the hero's `height` compensation in
      Landing.tsx. Keep the two in step. */
@@ -101,13 +108,13 @@
   justify-content: center;
   flex-wrap: wrap;
   gap: 6px 10px;
-  min-height: 30px;
-  padding: 4px 16px;
+  min-height: 22px;
+  padding: 2px 16px;
   background: #2f4436; /* forest `frame` */
   color: #ecebe1; /* forest `cream` */
   font-family:
     "Inter Tight", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.3;
   text-align: center;
   text-decoration: none;
