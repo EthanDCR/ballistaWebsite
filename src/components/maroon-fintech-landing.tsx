@@ -45,7 +45,12 @@ export type MflPeriod = {
   /** LOCAL ADDITION (not upstream): shown in place of the "from last month"
    * line when there is no `change`. */
   note?: string
-  categories: MflCategory[]
+  /**
+   * LOCAL CHANGE (not upstream): optional. Not every window of the data has a
+   * breakdown behind it — a period without one drops the donut and its legend
+   * rather than showing a split nobody measured.
+   */
+  categories?: MflCategory[]
 }
 
 export type MflStatCard = {
@@ -1102,6 +1107,7 @@ function StatCard({ card }: { card: MflStatCard }) {
           )}
         </div>
       )}
+      {!!p.categories?.length && (
       <div className="mfl-stat-split">
         <Donut cats={p.categories} hover={hover} setHover={setHover} colors={CAT_COLORS} />
         <div className="mfl-legend">
@@ -1122,6 +1128,7 @@ function StatCard({ card }: { card: MflStatCard }) {
           </ul>
         </div>
       </div>
+      )}
     </article>
   )
 }
