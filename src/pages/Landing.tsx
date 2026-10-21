@@ -141,7 +141,7 @@ export default function Landing() {
         about={{
           kicker: "Why Ballista",
           statement:
-            "Ballista {mark} is built inside a storm-restoration company, not a software office — every screen exists because a rep needed it on a Tuesday afternoon.",
+            "Ballista {mark} was built inside a storm-restoration company, not a software office — every screen exists because a rep needed it after a storm hit at midnight.",
           // All three are real counts from this repo and the training standard
           // — 7 modules in src/config/modules.ts, 62 cards across
           // src/data/coldCallTreeCards/, and the 5 DM/hour bar reps are held to.
