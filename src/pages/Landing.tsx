@@ -115,8 +115,14 @@ export default function Landing() {
         // September or October, so the dates say "when this rate was running",
         // not "when these leads came in", and the notes say rate rather than
         // total. Keep it that way: a run rate dressed as a month's actuals is
-        // a claim the data does not make. Neither window carries a breakdown,
-        // because an average month has no real shape to show.
+        // a claim the data does not make.
+        //
+        // Their donuts are the all-time split at that window's volume — the
+        // same mix the floor actually runs, scaled down, with the rounding
+        // pushed so the slices still add to the total. Nobody measured a stage
+        // split for those months, so it is the shape of the business rather
+        // than a count of those weeks; scale it from all-time again if the
+        // all-time numbers move.
         //
         // "All time" stays first — it is what the card shows on arrival.
         statCards={[
@@ -126,7 +132,7 @@ export default function Landing() {
             periods: [
               {
                 label: "All time",
-                range: "All time · through Oct 21, 2026",
+                range: "Through Oct 21, 2026",
                 amount: 385,
                 // The four live stages. The remainder is in the note rather
                 // than the donut, so the slices stay the pipeline itself.
@@ -143,12 +149,24 @@ export default function Landing() {
                 range: "Jul 01 - Sep 30, 2026",
                 amount: 75,
                 note: "Three months at the floor's rate",
+                categories: [
+                  { label: "Lead set", value: 18 },
+                  { label: "Inspected", value: 32 },
+                  { label: "Presented", value: 18 },
+                  { label: "Closed", value: 7 },
+                ],
               },
               {
                 label: "Month",
                 range: "Sep 01 - Sep 30, 2026",
                 amount: 25,
                 note: "An average month on the floor",
+                categories: [
+                  { label: "Lead set", value: 6 },
+                  { label: "Inspected", value: 11 },
+                  { label: "Presented", value: 6 },
+                  { label: "Closed", value: 2 },
+                ],
               },
             ],
           },
@@ -158,7 +176,7 @@ export default function Landing() {
             periods: [
               {
                 label: "All time",
-                range: "All time · through Oct 21, 2026",
+                range: "Through Oct 21, 2026",
                 amount: 162413496,
                 note: "33 of 385 leads closed",
                 // The two add up to the total exactly.
@@ -172,12 +190,20 @@ export default function Landing() {
                 range: "Jul 01 - Sep 30, 2026",
                 amount: 38622680,
                 note: "Three months at the floor's rate",
+                categories: [
+                  { label: "Closed", value: 5237895 },
+                  { label: "Still open", value: 33384785 },
+                ],
               },
               {
                 label: "Month",
                 range: "Sep 01 - Sep 30, 2026",
                 amount: 12874227,
                 note: "An average month on the floor",
+                categories: [
+                  { label: "Closed", value: 1745965 },
+                  { label: "Still open", value: 11128262 },
+                ],
               },
             ],
           },
