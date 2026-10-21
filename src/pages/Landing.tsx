@@ -102,6 +102,9 @@ export default function Landing() {
           label: "/how/",
           text: "Pull data on any address you want — *assigned to a rep, worked in the dialer, nothing left sitting in a spreadsheet overnight.*",
         }}
+        // Whose numbers these are. Without it the cards read as a product
+        // screenshot; the point is that our own floor put them up.
+        statCardsNote="Our own team did these numbers in eight months, on these tools."
         // The all-time card is actuals, straight from the floor's lead
         // tracking, snapshot 2026-10-21. Edit it from a newer export of the
         // same source, not by hand.
