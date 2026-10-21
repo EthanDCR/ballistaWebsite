@@ -30,7 +30,7 @@ import {
   X,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { BOOKING_URL_OFFSITE } from "../config/booking";
 import { modules, trainingLabs } from "../config/modules";
 import {
@@ -193,15 +193,37 @@ const EMPTY_SNAPSHOT: ContentSnapshot = contentMeta.reduce((snapshot, meta) => {
  */
 const PREVIEW_MODULES = new Set(["intro"]);
 
+/**
+ * Which module a "/training?module=intro" link asks for, if any.
+ *
+ * The landing page's "See Call-Stars" uses it to drop a visitor inside module
+ * 1 rather than on the course path with the lesson still a click away. The
+ * same gate as everywhere else applies: an id nobody has, or one a signed-out
+ * visitor may not open, falls back to the course home rather than failing.
+ */
+function requestedModule(search: string, signedIn: boolean) {
+  const id = new URLSearchParams(search).get("module");
+  if (!id || !modules.some((item) => item.id === id)) return null;
+  if (!signedIn && !PREVIEW_MODULES.has(id)) return null;
+  return id;
+}
+
 export default function TrainingApp() {
   const signedIn = useAuth();
   const previewing = !signedIn;
   const navigate = useNavigate();
+  const location = useLocation();
   const [mode, setMode] = useState<AppMode>("rep");
-  const [screen, setScreen] = useState<RepScreen>("home");
+  // Read once, on mount: after that the screen is the app's own state, and a
+  // stale `?module=` in the address bar should not drag anyone back.
+  const [screen, setScreen] = useState<RepScreen>(() =>
+    requestedModule(location.search, signedIn) ? "module" : "home",
+  );
   const [content, setContent] = useState<ContentSnapshot>(EMPTY_SNAPSHOT);
   const [progress, setProgress] = useState<LearnerProgress>(createDefaultProgress);
-  const [activeModuleId, setActiveModuleId] = useState("intro");
+  const [activeModuleId, setActiveModuleId] = useState(
+    () => requestedModule(location.search, signedIn) ?? "intro",
+  );
   const [activeLabId, setActiveLabId] = useState("script");
   const [quizTitle, setQuizTitle] = useState("");
   const [quizActivityId, setQuizActivityId] = useState("");

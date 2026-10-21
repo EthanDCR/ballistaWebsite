@@ -86,7 +86,12 @@ export default function Landing() {
         title={"Storm hits.\n*You strike* first."}
         subtitle="Property data, dialer, callbacks and pipeline in one system — built to get your reps on the phone before anyone else."
         primaryAction={{ label: "Join the waitlist", href: "#contact" }}
-        secondaryAction={{ label: "See Call-Stars", href: "#demo" }}
+        // Leaves the page rather than scrolling to the demo band below. The
+        // band is still there for anyone scrolling past, and the nav's
+        // "Call-Stars" link still goes to it — but a button that says "See
+        // Call-Stars" should hand over the actual thing, so this one opens
+        // module 1 inside the portal.
+        secondaryAction={{ label: "See Call-Stars", href: "/training?module=intro" }}
         // Deliberately does not enumerate what's in the portal — the counts
         // are already in `about.stats` below, and the "What's inside" section
         // is where specifics belong.
