@@ -67,7 +67,7 @@ export default function Landing() {
           { label: "Why Ballista", href: "#about" },
           { label: "What it does", href: "#features" },
           { label: "Call-Stars", href: "#demo" },
-          { label: "Join the waitlist", href: "#contact" },
+          { label: "Software waitlist", href: "#contact" },
           { label: "Log in", href: "/login" },
         ]}
         login={{ label: "Log in", href: "/login" }}
@@ -85,16 +85,20 @@ export default function Landing() {
         // time. The closing CTA picks it up again as a bookend.
         title={"Storm hits.\n*You strike* first."}
         subtitle="Property data, dialer, callbacks and pipeline in one system — built to get your reps on the phone before anyone else."
-        primaryAction={{ label: "Join the waitlist", href: "#contact" }}
+        // No href on purpose: the template opens the waitlist dialog instead
+        // of scrolling to the band at the bottom, so the page's one ask is a
+        // click rather than a scroll and a second click. "Software" is doing
+        // real work in the label — the other thing on this page is Call-Stars,
+        // which has no waitlist at all.
+        primaryAction={{ label: "Join the software waitlist" }}
         // Leaves the page rather than scrolling to the demo band below. The
         // band is still there for anyone scrolling past, and the nav's
         // "Call-Stars" link still goes to it — but a button that says "See
         // Call-Stars" should hand over the actual thing, so this one opens
         // module 1 inside the portal.
         secondaryAction={{ label: "See Call-Stars", href: "/training?module=intro" }}
-        // Deliberately does not enumerate what's in the portal — the counts
-        // are already in `about.stats` below, and the "What's inside" section
-        // is where specifics belong.
+        // Deliberately does not enumerate what's in the portal — the
+        // "What's inside" section is where specifics belong.
         info={{
           label: "/how/",
           text: "Pull from the data providers you already use — *every address assigned, every callback booked, nothing left sitting in a spreadsheet overnight.*",
@@ -220,7 +224,7 @@ export default function Landing() {
           doneTitle: "You're on the list.",
           doneText:
             "We'll email {email} as soon as a seat opens on the platform. No newsletter, no drip — just the invite.",
-          openLabel: "Join the waitlist",
+          openLabel: "Join the software waitlist",
         }}
         footer={{
           columns: [
@@ -231,7 +235,7 @@ export default function Landing() {
               // appearance only. The heading says a platform exists; the
               // waitlist is the one thing a visitor can act on.
               title: "Ballista — beta",
-              links: [{ label: "Join the waitlist", href: "#contact" }],
+              links: [{ label: "Join the software waitlist", href: "#contact" }],
             },
             {
               title: "Call-Stars",

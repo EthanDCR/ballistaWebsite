@@ -118,6 +118,8 @@ export interface MaroonFintechLandingProps {
   /** Wrap words in *asterisks* to mute them. "\n" breaks the line. */
   title?: string
   subtitle?: string
+  /** LOCAL ADDITION (not upstream): without an href this opens the
+   * request-demo dialog, the same way `secondaryAction` always has. */
   primaryAction?: MflLink
   /** Without an href this opens the request-demo dialog. */
   secondaryAction?: MflLink
@@ -1706,9 +1708,15 @@ export default function MaroonFintechLanding({
             </p>
           )}
           <div className="mfl-cta-row mfl-in" style={{ animationDelay: "340ms" }}>
-            <a className="mfl-btn mfl-btn--brand" href={primaryAction.href || "#"} onClick={(e) => go(primaryAction.href, e)}>
-              {primaryAction.label}
-            </a>
+            {primaryAction.href ? (
+              <a className="mfl-btn mfl-btn--brand" href={primaryAction.href} onClick={(e) => go(primaryAction.href, e)}>
+                {primaryAction.label}
+              </a>
+            ) : (
+              <button type="button" className="mfl-btn mfl-btn--brand" onClick={() => setDemoOpen(true)}>
+                {primaryAction.label}
+              </button>
+            )}
             {secondaryAction.href ? (
               <a className="mfl-btn mfl-btn--white" href={secondaryAction.href} onClick={(e) => go(secondaryAction.href, e)}>
                 {secondaryAction.label}

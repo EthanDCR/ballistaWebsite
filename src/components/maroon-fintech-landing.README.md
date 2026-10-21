@@ -52,7 +52,7 @@ the satin drifts and follows the pointer.
 | `backer` | `Backed by Orbit Ventures` | `{ prefix?, name, mark? }` badge above the headline. `null` hides it. |
 | `title` | `Smarter *Financial*\nManagement` | `*asterisks*` mute words; `\n` breaks the line. Pass it in braces (`title={"…\n…"}`) so the `\n` is a real newline. |
 | `subtitle` | — | Muted line under the headline. |
-| `primaryAction` | `Get started → #contact` | Brand button. |
+| `primaryAction` | `Get started → #contact` | Brand button. Without an `href` it opens the request-demo dialog, like `secondaryAction`. |
 | `secondaryAction` | `Request demo` | Without an `href` it opens the request-demo dialog. |
 | `info` | `/info/` paragraph | `{ label?, text }`, bottom-left of the hero. `*` mutes the tail. `null` hides it. |
 | `statCards` | Total Expenses, Total Income | `{ title, periods: { label, range, amount, change, categories: { label, value, color? }[] }[] }[]`. The first two show. |
