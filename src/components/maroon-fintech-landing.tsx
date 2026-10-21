@@ -151,6 +151,9 @@ export interface MaroonFintechLandingProps {
   info?: { label?: string; text: string } | null
   /** The two dark cards at the hero's feet. Each has periods you can switch between. */
   statCards?: MflStatCard[]
+  /** LOCAL ADDITION (not upstream): one line above those cards, saying whose
+   * numbers they are. */
+  statCardsNote?: string
   /** `{mark}` in the statement places the three-tile mark inline. *Asterisks* are ignored here. */
   about?: { kicker?: string; statement: string; stats?: MflStat[] } | null
   features?: { kicker?: string; title: string; subtitle?: string } | null
@@ -1464,6 +1467,7 @@ export default function MaroonFintechLanding({
     text: "Synais helps finance managers automate manual work, gain real-time visibility into financial *performance, and make faster, data-driven decisions with intelligent AI-powered automation.",
   },
   statCards = DEFAULT_CARDS,
+  statCardsNote,
   about = {
     kicker: "About us",
     statement:
@@ -1942,10 +1946,15 @@ export default function MaroonFintechLanding({
               </div>
             )}
             {statCards.length > 0 && (
-              <div className="mfl-cards mfl-in" style={{ animationDelay: "560ms" }}>
-                {statCards.slice(0, 2).map((c, i) => (
-                  <StatCard key={c.title + i} card={c} />
-                ))}
+              <div className="mfl-cards-wrap mfl-in" style={{ animationDelay: "560ms" }}>
+                {/* LOCAL ADDITION: the cards are numbers with no owner until
+                    something says whose they are. */}
+                {statCardsNote && <p className="mfl-cards-note">{statCardsNote}</p>}
+                <div className="mfl-cards">
+                  {statCards.slice(0, 2).map((c, i) => (
+                    <StatCard key={c.title + i} card={c} />
+                  ))}
+                </div>
               </div>
             )}
           </div>
@@ -2250,6 +2259,8 @@ const MFL_CSS = `
 .mfl-info-t{font-size:clamp(17px,1.55vw,22px);line-height:1.18;letter-spacing:-.025em;color:var(--mfl-ink)}
 .mfl-info-t .mfl-line{display:inline}
 .mfl-cards{display:flex;gap:8px}
+/* LOCAL ADDITION: the line above the cards. */
+.mfl-cards-note{margin:0 0 7px;font-size:11px;letter-spacing:-.01em;color:var(--mfl-muted);text-align:right}
 
 /* ---- hero stat cards ---- */
 /* LOCAL CHANGE: 272px upstream. The device below them carries the Ballista
@@ -2457,6 +2468,7 @@ const MFL_CSS = `
 @media (max-width:980px){
 .mfl-hero-foot{flex-direction:column;align-items:stretch}
 .mfl-cards{overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px;margin:0 -20px;padding-left:20px;padding-right:20px}
+.mfl-cards-note{text-align:left}
 .mfl-stat{flex:none;scroll-snap-align:start}
 .mfl-stage{min-height:0;padding-top:clamp(250px,40vw,360px)}
 .mfl-device{top:20px;bottom:auto}
