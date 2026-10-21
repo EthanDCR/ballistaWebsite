@@ -16,16 +16,15 @@
 // thing a visitor can have today, which is why it holds the announcement bar,
 // the demo band and a footer column.
 //
-// Two products, one page, and the counts in `about.stats` belong to the
-// training rather than the platform on purpose — see the note there.
+// Two products, one page.
 //
 // Every string here is a prop on the vendored template. The prop table is in
 // src/components/maroon-fintech-landing.README.md; `demo` is a local addition
 // documented in src/components/README.md.
 //
-// The numbers in `about.stats` are real and come from this repo — keep them
-// that way, or drop them. The figures inside `statCards` are different: those
-// illustrate the product's own UI, not a claim about the business.
+// Any number that goes on this page has to be real, with one exception: the
+// figures inside `statCards` illustrate the product's own UI and are not a
+// claim about the business.
 import MaroonFintechLanding from "../components/maroon-fintech-landing";
 import { BOOKING_URL } from "../config/booking";
 import "./Landing.css";
@@ -143,18 +142,12 @@ export default function Landing() {
           kicker: "Why Ballista",
           statement:
             "Ballista {mark} was built inside a storm-restoration company, not a software office — every screen exists because a rep needed it after a storm hit at midnight.",
-          // All three are real counts from this repo and the training standard
-          // — 7 modules in src/config/modules.ts, 62 cards across
-          // src/data/coldCallTreeCards/, and the 5 DM/hour bar reps are held to.
-          // Still the real counts from this repo and the floor's standard.
-          // They are training numbers rather than platform ones on purpose:
-          // the argument is that the people building this run a phone room,
-          // and these are the evidence for it.
-          stats: [
-            { value: 5, label: "Decision-makers per hour" },
-            { value: 62, label: "Mapped call outcomes" },
-            { value: 7, label: "Modules our reps run" },
-          ],
+          // No `stats` on purpose. The counting trio used to sit under this
+          // statement with the floor's training numbers (5 DMs/hour, 62 mapped
+          // outcomes, 7 modules); they argued for the training rather than the
+          // platform, so the statement now stands on its own. Omitting the key
+          // is what hides the band — the template falls back to its own three
+          // numbers if `stats` comes back.
         }}
         features={{
           kicker: "Inside Ballista",
