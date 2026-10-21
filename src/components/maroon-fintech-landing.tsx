@@ -2259,6 +2259,12 @@ const MFL_CSS = `
 .mfl-stat{width:224px;padding:12px;border-radius:6px;background:var(--mfl-card);color:var(--mfl-cream);box-shadow:0 30px 50px -28px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
 .mfl-stat:hover{transform:translateY(-4px)}
 .mfl-stat-top{display:flex;justify-content:space-between;gap:8px}
+/* LOCAL CHANGE: the title block would not shrink, so a long title or date
+   pushed the period menu past the card's padding and out through its right
+   edge. It gives way first; the menu keeps its width. */
+.mfl-stat-top>div:first-child{min-width:0}
+.mfl-stat-tools{flex:none}
+.mfl-stat-t,.mfl-stat-d{overflow:hidden;text-overflow:ellipsis}
 .mfl-stat-t{font-size:12px;font-weight:500;letter-spacing:-.01em}
 .mfl-stat-d{font-size:9.5px;opacity:.55;margin-top:2px;white-space:nowrap}
 .mfl-stat-tools{display:flex;align-items:flex-start;gap:4px}
