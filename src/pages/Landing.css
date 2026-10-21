@@ -91,9 +91,9 @@
    reads as part of the page chrome. The palette variables live on `.mfl-root`
    and this sits outside it, so the two forest values are repeated here. */
 .platform-bar {
-  /* This project sets no global border-box, so without this the 42px
+  /* This project sets no global border-box, so without this the 30px
      min-height is the content box and the padding lands on top of it — the bar
-     comes out 56px and no longer matches the hero's `height` compensation in
+     comes out taller and no longer matches the hero's `height` compensation in
      Landing.tsx. Keep the two in step. */
   box-sizing: border-box;
   display: flex;
@@ -101,8 +101,8 @@
   justify-content: center;
   flex-wrap: wrap;
   gap: 6px 10px;
-  min-height: 42px;
-  padding: 7px 16px;
+  min-height: 30px;
+  padding: 4px 16px;
   background: #2f4436; /* forest `frame` */
   color: #ecebe1; /* forest `cream` */
   font-family:

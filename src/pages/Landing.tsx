@@ -47,7 +47,7 @@ export default function Landing() {
       <MaroonFintechLanding
         // The bar eats into the first screen, so trim the hero by its height
         // and the two together still land on one viewport.
-        height="calc(100svh - 42px)"
+        height="calc(100svh - 30px)"
         brand="ballista."
         palette="forest"
         // Replaces the template's drawn asterisk in the nav pill and the
