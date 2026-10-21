@@ -52,7 +52,11 @@ export default function Login() {
   const isValid = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [mode, setMode] = useState<Mode>("signin");
+  // Signing in is what most people arrive here to do, so it stays the default.
+  // The landing page's "Sign up" button says otherwise, and sends ?signup.
+  const [mode, setMode] = useState<Mode>(() =>
+    new URLSearchParams(location.search).has("signup") ? "signup" : "signin",
+  );
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

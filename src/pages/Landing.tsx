@@ -71,7 +71,11 @@ export default function Landing() {
           { label: "Log in", href: "/login" },
         ]}
         login={{ label: "Log in", href: "/login" }}
-        signup={{ label: "Join the waitlist", href: "#contact" }}
+        // The pair of buttons top right are both account actions now. This one
+        // used to open the waitlist, which put the page's one ask in two places
+        // at once; `?signup` lands on the create-account tab rather than making
+        // people find it.
+        signup={{ label: "Sign up", href: "/login?signup=1" }}
         // The mark badge always renders; omitting it falls back to the first
         // letter of `name`, which reads as a stray letter.
         backer={{ prefix: "Lead data and dialer for", name: "restoration teams", mark: "★" }}
