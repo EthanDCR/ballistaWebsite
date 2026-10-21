@@ -101,7 +101,7 @@ export default function Landing() {
         // "What's inside" section is where specifics belong.
         info={{
           label: "/how/",
-          text: "Pull from the data providers you already use — *every address assigned, every callback booked, nothing left sitting in a spreadsheet overnight.*",
+          text: "Pull data on any address you want — *assigned to a rep, worked in the dialer, nothing left sitting in a spreadsheet overnight.*",
         }}
         // Illustrative product UI — the pipeline a manager sees once trained
         // reps are working the phones. Not a claim about Ballista's revenue.
