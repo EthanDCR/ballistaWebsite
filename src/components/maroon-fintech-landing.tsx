@@ -2194,14 +2194,18 @@ const MFL_CSS = `
 .mfl-cards{display:flex;gap:8px}
 
 /* ---- hero stat cards ---- */
-.mfl-stat{width:272px;padding:12px;border-radius:6px;background:var(--mfl-card);color:var(--mfl-cream);box-shadow:0 30px 50px -28px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+/* LOCAL CHANGE: 272px upstream. The device below them carries the Ballista
+   bow on its lid now, and at that width the left card sat right over it —
+   narrower cards let the mark clear while the device still tucks behind
+   their edge. */
+.mfl-stat{width:224px;padding:12px;border-radius:6px;background:var(--mfl-card);color:var(--mfl-cream);box-shadow:0 30px 50px -28px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
 .mfl-stat:hover{transform:translateY(-4px)}
 .mfl-stat-top{display:flex;justify-content:space-between;gap:8px}
 .mfl-stat-t{font-size:12px;font-weight:500;letter-spacing:-.01em}
-.mfl-stat-d{font-size:9.5px;opacity:.55;margin-top:2px}
+.mfl-stat-d{font-size:9.5px;opacity:.55;margin-top:2px;white-space:nowrap}
 .mfl-stat-tools{display:flex;align-items:flex-start;gap:4px}
 .mfl-ico{display:grid;place-items:center;width:22px;height:22px;border-radius:4px;background:rgba(255,255,255,.08)}
-.mfl-stat-amt{font-size:22px;letter-spacing:-.03em;margin-top:12px;animation:mfl-swap .45s cubic-bezier(.2,.8,.2,1)}
+.mfl-stat-amt{font-size:20px;letter-spacing:-.03em;margin-top:12px;animation:mfl-swap .45s cubic-bezier(.2,.8,.2,1)}
 .mfl-stat-chg{display:flex;align-items:center;gap:6px;font-size:10px;margin-top:6px;color:color-mix(in srgb,var(--mfl-cream) 60%,transparent)}
 .mfl-chg{display:inline-flex;align-items:center;gap:4px;padding:3px 6px;border-radius:3px;background:color-mix(in srgb,var(--mfl-brand) 70%,#fff 6%);color:#fff;font-weight:500}
 .mfl-chg.is-down{background:rgba(255,255,255,.1)}
