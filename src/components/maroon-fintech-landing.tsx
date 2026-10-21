@@ -501,6 +501,31 @@ const PETAL = "M12 12C9.2 9.6 9.3 4 12 2.6C14.7 4 14.8 9.6 12 12Z"
  */
 const BOW_MARK = ["M3.5 11 Q12 2.5 20.5 11", "M3.5 11 L12 16.5 L20.5 11", "M12 21 L12 4"]
 
+/**
+ * LOCAL ADDITION (not upstream): the bolt the device shoots at the hero's
+ * primary button. Drawn pointing right — the flight rotates it to face
+ * wherever that button has ended up.
+ */
+function Bolt() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="100%"
+      height="100%"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M3 12h16" />
+      <path d="M14 7l5 5-5 5" />
+      <path d="M3 9l3 3-3 3" />
+    </svg>
+  )
+}
+
 function Asterisk({ size = 16, color = "currentColor", className = "" }: { size?: number; color?: string; className?: string }) {
   return (
     <svg className={"mfl-svg " + className} viewBox="0 0 24 24" width={size} height={size} aria-hidden="true">
@@ -1423,6 +1448,10 @@ export default function MaroonFintechLanding({
   const heroRef = React.useRef(null as HTMLElement | null)
   const svgWrapRef = React.useRef(null as HTMLDivElement | null)
   const deviceRef = React.useRef(null as HTMLDivElement | null)
+  // LOCAL ADDITION: the bolt and the button it is aimed at.
+  const boltRef = React.useRef(null as HTMLSpanElement | null)
+  const ctaRef = React.useRef(null as HTMLElement | null)
+  const struckRef = React.useRef(0)
   const statementRef = React.useRef(null as HTMLParagraphElement | null)
   const statsRef = React.useRef(null as HTMLDivElement | null)
   const satinRef = React.useRef(null as HTMLElement | null)
@@ -1596,9 +1625,63 @@ export default function MaroonFintechLanding({
     el.style.setProperty("--mfl-sy", ((e.clientY - r.top) / r.height) * 100 + "%")
   }
 
+  /**
+   * LOCAL ADDITION (not upstream): shoot a bolt from the device to the hero's
+   * primary button.
+   *
+   * Measured at fire time rather than laid out in CSS, because both ends move
+   * — the device is bottom-centre at one width and top-centre at another, and
+   * the button wraps onto its own line on a narrow screen. Everything is
+   * relative to the hero, which is the bolt's positioned ancestor.
+   */
+  const fireBolt = React.useCallback(() => {
+    const bolt = boltRef.current
+    const hero = heroRef.current
+    const dev = deviceRef.current
+    const cta = ctaRef.current
+    if (!bolt || !hero || !dev || !cta || reduced) return
+    const h = hero.getBoundingClientRect()
+    const d = dev.getBoundingClientRect()
+    const c = cta.getBoundingClientRect()
+    const x0 = d.left + d.width / 2 - h.left
+    const y0 = d.top + d.height / 2 - h.top
+    const x1 = c.left + c.width / 2 - h.left
+    const y1 = c.top + c.height / 2 - h.top
+    bolt.style.setProperty("--mfl-bx0", x0.toFixed(1) + "px")
+    bolt.style.setProperty("--mfl-by0", y0.toFixed(1) + "px")
+    bolt.style.setProperty("--mfl-bx1", x1.toFixed(1) + "px")
+    bolt.style.setProperty("--mfl-by1", y1.toFixed(1) + "px")
+    bolt.style.setProperty("--mfl-ba", ((Math.atan2(y1 - y0, x1 - x0) * 180) / Math.PI).toFixed(1) + "deg")
+    // Drop the class and force a reflow, or a second shot never restarts.
+    bolt.classList.remove("is-flying")
+    void bolt.offsetWidth
+    bolt.classList.add("is-flying")
+  }, [reduced])
+
+  /** The bolt lands: stop drawing it, and ring the button it hit. */
+  const onBoltLanded = () => {
+    boltRef.current?.classList.remove("is-flying")
+    const cta = ctaRef.current
+    if (!cta) return
+    cta.classList.add("is-struck")
+    window.clearTimeout(struckRef.current)
+    struckRef.current = window.setTimeout(() => cta.classList.remove("is-struck"), 900)
+  }
+
+  // One shot on arrival, once the hero's own entrance has finished landing.
+  React.useEffect(() => {
+    if (reduced) return
+    const t = window.setTimeout(fireBolt, 1800)
+    return () => {
+      window.clearTimeout(t)
+      window.clearTimeout(struckRef.current)
+    }
+  }, [fireBolt, reduced])
+
   const press = () => {
     setPulse((p) => p + 1)
     setSpin((s) => s + 1)
+    fireBolt()
   }
 
   const rootStyle = {
@@ -1736,11 +1819,25 @@ export default function MaroonFintechLanding({
           )}
           <div className="mfl-cta-row mfl-in" style={{ animationDelay: "340ms" }}>
             {primaryAction.href ? (
-              <a className="mfl-btn mfl-btn--brand" href={primaryAction.href} onClick={(e) => go(primaryAction.href, e)}>
+              <a
+                ref={(el) => {
+                  ctaRef.current = el
+                }}
+                className="mfl-btn mfl-btn--brand"
+                href={primaryAction.href}
+                onClick={(e) => go(primaryAction.href, e)}
+              >
                 {primaryAction.label}
               </a>
             ) : (
-              <button type="button" className="mfl-btn mfl-btn--brand" onClick={() => setDemoOpen(true)}>
+              <button
+                ref={(el) => {
+                  ctaRef.current = el
+                }}
+                type="button"
+                className="mfl-btn mfl-btn--brand"
+                onClick={() => setDemoOpen(true)}
+              >
                 {primaryAction.label}
               </button>
             )}
@@ -1795,6 +1892,14 @@ export default function MaroonFintechLanding({
             )}
           </div>
         </div>
+
+        {/* LOCAL ADDITION (not upstream): the bolt. Last child of the hero so
+            it flies over the stat cards and the copy rather than behind them,
+            and a sibling of the stage because the device sets up its own
+            stacking context. */}
+        <span className="mfl-bolt" ref={boltRef} onAnimationEnd={onBoltLanded} aria-hidden="true">
+          <Bolt />
+        </span>
       </header>
 
       {/* -------------------------------------------------------- night */}
@@ -2062,6 +2167,23 @@ const MFL_CSS = `
 .mfl-rings i{position:absolute;left:-160px;top:-160px;width:320px;height:320px;border-radius:50%;border:1px solid color-mix(in srgb,var(--mfl-brand) 45%,transparent);opacity:0;animation:mfl-ring 1.8s cubic-bezier(.2,.8,.2,1)}
 .mfl-rings i:nth-child(2){animation-delay:.18s}
 .mfl-rings i:nth-child(3){animation-delay:.36s}
+/* LOCAL ADDITION (not upstream): the bolt the device shoots at the hero's
+   primary button, and the ring the button gives off when it lands. Both ends
+   of the flight are measured in JS and arrive as custom properties. */
+.mfl-bolt{position:absolute;left:0;top:0;z-index:6;width:34px;height:34px;margin:-17px 0 0 -17px;color:var(--mfl-brand);opacity:0;pointer-events:none}
+.mfl-bolt.is-flying{animation:mfl-shoot .62s cubic-bezier(.45,0,.25,1) forwards}
+@keyframes mfl-shoot{
+0%{opacity:0;transform:translate(var(--mfl-bx0),var(--mfl-by0)) rotate(var(--mfl-ba)) scale(.55)}
+14%{opacity:1}
+86%{opacity:1}
+100%{opacity:0;transform:translate(var(--mfl-bx1),var(--mfl-by1)) rotate(var(--mfl-ba)) scale(1.05)}
+}
+.mfl-btn.is-struck{animation:mfl-struck .9s cubic-bezier(.2,.8,.2,1)}
+@keyframes mfl-struck{
+0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--mfl-brand) 50%,transparent)}
+22%{transform:scale(1.05)}
+100%{box-shadow:0 0 0 20px rgba(0,0,0,0);transform:scale(1)}
+}
 .mfl-hero-foot{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;padding:0 20px 20px}
 .mfl-hero-foot{pointer-events:none}
 .mfl-hero-foot>*{pointer-events:auto}
