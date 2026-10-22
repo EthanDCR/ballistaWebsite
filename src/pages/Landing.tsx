@@ -26,6 +26,7 @@
 // snapshot of the floor's own lead tracking, dated in the comment above them.
 import MaroonFintechLanding from "../components/maroon-fintech-landing";
 import { BOOKING_URL } from "../config/booking";
+import { pb } from "../lib/pb";
 import "./Landing.css";
 
 export default function Landing() {
@@ -337,13 +338,16 @@ export default function Landing() {
           note: "Built for storm-restoration teams, by one.",
           socials: [],
         }}
-        // TODO: wire to PocketBase. Create an `access_requests` collection with
-        // create-only access for guests, then replace this with
-        // `pb.collection("access_requests").create(data)` — throwing or
-        // returning false makes the dialog show its error state.
+        // Straight into `access_requests` (see main.go, where the collection
+        // is created with a create rule open to guests and everything else
+        // admin-only). The payload is the dialog's own object, so its keys and
+        // the collection's fields have to keep matching.
+        //
+        // No catch: a throw is how the dialog knows to show its error state
+        // instead of "You're on the list", and promising an email we never
+        // recorded is worse than asking someone to try again.
         onRequestDemo={async (data) => {
-          console.log("access request", data);
-          await new Promise((r) => setTimeout(r, 700));
+          await pb.collection("access_requests").create(data);
         }}
       />
     </div>
