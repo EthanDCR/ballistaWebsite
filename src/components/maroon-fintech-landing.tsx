@@ -51,6 +51,14 @@ export type MflPeriod = {
    * rather than showing a split nobody measured.
    */
   categories?: MflCategory[]
+  /**
+   * LOCAL ADDITION (not upstream): a funnel instead of the donut. Each step is
+   * a count of everything that reached it, so the steps overlap and shrink
+   * rather than partitioning a total — which is exactly what a donut cannot
+   * draw. First step is the baseline the rest are measured against. Takes
+   * precedence over `categories`.
+   */
+  funnel?: MflCategory[]
 }
 
 export type MflStatCard = {
@@ -1115,7 +1123,33 @@ function StatCard({ card }: { card: MflStatCard }) {
           )}
         </div>
       )}
-      {!!p.categories?.length && (
+      {!!p.funnel?.length && (
+        <div className="mfl-funnel">
+          <p className="mfl-legend-h">{card.legend ?? "Funnel"}</p>
+          <ul>
+            {p.funnel.map((f, i) => {
+              const top = p.funnel?.[0]?.value || 1
+              const share = f.value / top
+              return (
+                <li key={f.label}>
+                  <span>{f.label}</span>
+                  <b>{value(f.value)}</b>
+                  <em>{Math.round(share * 100)}%</em>
+                  <i aria-hidden="true">
+                    <u
+                      style={{
+                        width: (share * 100).toFixed(1) + "%",
+                        background: CAT_COLORS[i % CAT_COLORS.length],
+                      }}
+                    />
+                  </i>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+      )}
+      {!p.funnel?.length && !!p.categories?.length && (
       <div className="mfl-stat-split">
         <Donut cats={p.categories} hover={hover} setHover={setHover} colors={CAT_COLORS} />
         <div className="mfl-legend">
@@ -2264,6 +2298,17 @@ const MFL_CSS = `
 .mfl-info-t{font-size:clamp(17px,1.55vw,22px);line-height:1.18;letter-spacing:-.025em;color:var(--mfl-ink)}
 .mfl-info-t .mfl-line{display:inline}
 .mfl-cards{display:flex;gap:8px}
+/* LOCAL ADDITION: the funnel a period can carry instead of a donut. Steps
+   overlap, so they get bars against the first step rather than slices. */
+.mfl-funnel{margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.07)}
+.mfl-funnel ul{display:grid;gap:8px;margin-top:7px}
+.mfl-funnel li{display:grid;grid-template-columns:1fr auto auto;align-items:baseline;column-gap:7px;row-gap:4px;font-size:9px;line-height:1.2}
+.mfl-funnel li span{opacity:.6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mfl-funnel li b{font-size:10px;font-weight:500;font-variant-numeric:tabular-nums}
+.mfl-funnel li em{font-style:normal;opacity:.4;font-variant-numeric:tabular-nums}
+.mfl-funnel li i{grid-column:1/-1;display:block;height:4px;border-radius:999px;background:rgba(255,255,255,.07)}
+.mfl-funnel li u{display:block;height:100%;border-radius:999px;text-decoration:none;transition:width .45s cubic-bezier(.2,.8,.2,1)}
+
 /* LOCAL ADDITION: the line above the cards. */
 .mfl-cards-note{margin:0 0 7px;font-size:11px;letter-spacing:-.01em;color:var(--mfl-muted);text-align:right}
 
