@@ -26,17 +26,23 @@
 // snapshot of the floor's own lead tracking, dated in the comment above them.
 import MaroonFintechLanding from "../components/maroon-fintech-landing";
 import { BOOKING_URL } from "../config/booking";
+import { callStarsUrl } from "../config/hosts";
 import { pb } from "../lib/pb";
 import "./Landing.css";
 
 export default function Landing() {
+  // Call-Stars lives on its own domain in production, so every link to it
+  // goes there directly rather than through the /training hop. In
+  // development there is no second domain and this stays a local path.
+  const callStars = callStarsUrl("?module=intro");
+
   return (
     <div className="landing-page">
       {/* Sits above the template's sticky nav, in the same frame colour, so it
           reads as part of the chrome rather than a banner bolted on. It used
           to carry the platform; the hero does that now, so the bar is where
           Call-Stars gets said before anyone scrolls. */}
-      <a className="platform-bar" href="/training?module=intro">
+      <a className="platform-bar" href={callStars}>
         <span className="platform-bar-tag">Available now</span>
         <span className="platform-bar-text">
           <strong>Call-Stars</strong> — the cold-call training our own floor runs on — is open to
@@ -96,7 +102,7 @@ export default function Landing() {
         // "Call-Stars" link still goes to it — but a button that says "See
         // Call-Stars" should hand over the actual thing, so this one opens
         // module 1 inside the portal.
-        secondaryAction={{ label: "See Call-Stars", href: "/training?module=intro" }}
+        secondaryAction={{ label: "See Call-Stars", href: callStars }}
         // Deliberately does not enumerate what's in the portal — the
         // "What's inside" section is where specifics belong.
         info={{
@@ -273,7 +279,7 @@ export default function Landing() {
               <figcaption>Call-Stars demo video goes here</figcaption>
             </figure>
 
-            <a className="demo-cta" href="/training?module=intro">
+            <a className="demo-cta" href={callStars}>
               Take module 1 free →
             </a>
           </div>
@@ -320,7 +326,7 @@ export default function Landing() {
             {
               title: "Call-Stars",
               links: [
-                { label: "Take module 1 free", href: "/training?module=intro" },
+                { label: "Take module 1 free", href: callStars },
                 { label: "The script", href: "/login" },
                 { label: "Call library", href: "/login" },
                 { label: "Decision tree", href: "/login" },
