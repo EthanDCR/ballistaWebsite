@@ -127,24 +127,33 @@ export default function Landing() {
         // than a count of those weeks; scale it from all-time again if the
         // all-time numbers move.
         //
+        // The stage numbers are WHERE EACH LEAD SITS TODAY, not a funnel. 81
+        // leads are parked in Lead set; the 150 in Inspected have already been
+        // through it. That is why every stage is drawn — all seven add to the
+        // 385, and four of them shown alone read as a funnel that loses count.
+        // The cumulative figure, 267 inspected at some point, is in the note.
+        //
         // "All time" stays first — it is what the card shows on arrival.
         statCards={[
           {
             title: "Leads worked",
             unit: "count",
+            legend: "Where they sit now",
             periods: [
               {
                 label: "All time",
                 range: "Through Oct 21, 2026",
                 amount: 385,
-                // The four live stages. The remainder is in the note rather
-                // than the donut, so the slices stay the pipeline itself.
-                note: "24 lost · 13 in overwatch",
+                note: "267 inspected along the way",
+                // Adds to 385 exactly. Bad lead is a real stage too, with
+                // nothing in it — a zero slice is just noise.
                 categories: [
                   { label: "Lead set", value: 81 },
                   { label: "Inspected", value: 150 },
                   { label: "Presented", value: 84 },
                   { label: "Closed", value: 33 },
+                  { label: "Lost", value: 24 },
+                  { label: "Overwatch", value: 13 },
                 ],
               },
               {
@@ -153,10 +162,12 @@ export default function Landing() {
                 amount: 75,
                 note: "Three months at the floor's rate",
                 categories: [
-                  { label: "Lead set", value: 18 },
-                  { label: "Inspected", value: 32 },
-                  { label: "Presented", value: 18 },
-                  { label: "Closed", value: 7 },
+                  { label: "Lead set", value: 16 },
+                  { label: "Inspected", value: 29 },
+                  { label: "Presented", value: 16 },
+                  { label: "Closed", value: 6 },
+                  { label: "Lost", value: 5 },
+                  { label: "Overwatch", value: 3 },
                 ],
               },
               {
@@ -165,10 +176,12 @@ export default function Landing() {
                 amount: 25,
                 note: "An average month on the floor",
                 categories: [
-                  { label: "Lead set", value: 6 },
-                  { label: "Inspected", value: 11 },
-                  { label: "Presented", value: 6 },
+                  { label: "Lead set", value: 5 },
+                  { label: "Inspected", value: 10 },
+                  { label: "Presented", value: 5 },
                   { label: "Closed", value: 2 },
+                  { label: "Lost", value: 2 },
+                  { label: "Overwatch", value: 1 },
                 ],
               },
             ],
@@ -176,6 +189,7 @@ export default function Landing() {
           {
             title: "Job value worked",
             decimals: 0,
+            legend: "Where the value sits",
             periods: [
               {
                 label: "All time",
