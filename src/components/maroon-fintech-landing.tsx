@@ -106,6 +106,12 @@ export type MflDemoRequest = {
   phone: string
   company: string
   size: string
+  /**
+   * LOCAL ADDITION (not upstream): annual revenue band. Optional — an empty
+   * string is "they did not answer", which is worth keeping distinct from a
+   * band they never chose.
+   */
+  revenue: string
 }
 
 /**
@@ -1296,7 +1302,16 @@ function DemoDialog({
   onRequestDemo?: MaroonFintechLandingProps["onRequestDemo"]
   copy?: MflDemoCopy
 }) {
-  const [form, setForm] = React.useState({ name: "", email: "", phone: "", company: "", size: "6–10" } as MflDemoRequest)
+  const [form, setForm] = React.useState({
+    name: "",
+    email: "",
+    phone: "",
+    company: "",
+    size: "6–10",
+    // No default band on purpose: a preselected one would file an answer
+    // nobody gave.
+    revenue: "",
+  } as MflDemoRequest)
   const [state, setState] = React.useState("idle" as "idle" | "sending" | "done" | "error")
   const [err, setErr] = React.useState("")
   const boxRef = React.useRef(null as HTMLDivElement | null)
@@ -1439,6 +1454,18 @@ function DemoDialog({
                 </select>
               </label>
             </div>
+            {/* LOCAL ADDITION (not upstream): annual revenue. Left optional —
+                it is the one question on this form someone might balk at, and
+                the email is what the waitlist actually needs. */}
+            <label>
+              <span>Annual revenue</span>
+              <select value={form.revenue} onChange={set("revenue")}>
+                <option value="">Prefer not to say</option>
+                {["Under $1M", "$1M–$5M", "$5M–$10M", "$10M–$25M", "$25M–$50M", "$50M+"].map((r) => (
+                  <option key={r}>{r}</option>
+                ))}
+              </select>
+            </label>
             <p className="mfl-err" role="alert">
               {err}
             </p>
