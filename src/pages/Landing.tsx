@@ -127,39 +127,38 @@ export default function Landing() {
         // than a count of those weeks; scale it from all-time again if the
         // all-time numbers move.
         //
-        // The leads card is a FUNNEL, which is the shape people read into a
-        // pipeline whether it is one or not: 385 worked, 267 of them inspected
-        // at some point, 33 closed. Each step counts everything that reached
-        // it, so the steps overlap and only ever shrink.
-        //
-        // `stageCounts` in the source cannot do this job. Those are where each
-        // lead sits TODAY — they add to 385 rather than nesting, and their
-        // first bucket, "Lead Set" (81), is leads set and NOT YET inspected,
-        // not leads ever set. Read as a funnel it says 81 set and 150
-        // inspected, which is impossible. The cumulative numbers here are
-        // `kpis.inspectedCount` and `kpis.closed`; keep taking them from
-        // there, never from `stageCounts`.
-        //
-        // Month and quarter carry the same two rates at their own volume.
+        // The stage numbers are WHERE EACH LEAD SITS TODAY, not a funnel. The
+        // proof is that they add to 385, the total — a funnel's counts nest
+        // and shrink instead. The source calls the first one "Lead Set", which
+        // reads as "leads we have set" and makes 81 look like a ceiling the
+        // 150 inspections broke through; it is really the leads set and not
+        // yet inspected, so it is labelled for what it is — short enough to
+        // survive the legend's column, which clipped "Awaiting inspection".
+        // The cumulative figure — 267 inspected at some point, against the 150
+        // standing there now — is in the note, which is the number a funnel
+        // reading goes looking for.
         //
         // "All time" stays first — it is what the card shows on arrival.
         statCards={[
           {
             title: "Leads worked",
             unit: "count",
-            legend: "How far they get",
+            legend: "Where they sit now",
             periods: [
               {
                 label: "All time",
                 range: "Through Oct 21, 2026",
                 amount: 385,
-                note: "7.9 days to inspect, 17.4 to close",
-                // Cumulative, not current stage: everything that reached each
-                // step, including what has since moved past it.
-                funnel: [
-                  { label: "Worked", value: 385 },
-                  { label: "Inspected", value: 267 },
+                note: "267 inspected along the way",
+                // Adds to 385 exactly. Bad lead is a real stage too, with
+                // nothing in it — a zero slice is just noise.
+                categories: [
+                  { label: "Not inspected", value: 81 },
+                  { label: "Inspected", value: 150 },
+                  { label: "Presented", value: 84 },
                   { label: "Closed", value: 33 },
+                  { label: "Lost", value: 24 },
+                  { label: "Overwatch", value: 13 },
                 ],
               },
               {
@@ -167,10 +166,13 @@ export default function Landing() {
                 range: "Jul 01 - Sep 30, 2026",
                 amount: 75,
                 note: "Three months at the floor's rate",
-                funnel: [
-                  { label: "Worked", value: 75 },
-                  { label: "Inspected", value: 52 },
+                categories: [
+                  { label: "Not inspected", value: 16 },
+                  { label: "Inspected", value: 29 },
+                  { label: "Presented", value: 16 },
                   { label: "Closed", value: 6 },
+                  { label: "Lost", value: 5 },
+                  { label: "Overwatch", value: 3 },
                 ],
               },
               {
@@ -178,10 +180,13 @@ export default function Landing() {
                 range: "Sep 01 - Sep 30, 2026",
                 amount: 25,
                 note: "An average month on the floor",
-                funnel: [
-                  { label: "Worked", value: 25 },
-                  { label: "Inspected", value: 17 },
+                categories: [
+                  { label: "Not inspected", value: 5 },
+                  { label: "Inspected", value: 10 },
+                  { label: "Presented", value: 5 },
                   { label: "Closed", value: 2 },
+                  { label: "Lost", value: 2 },
+                  { label: "Overwatch", value: 1 },
                 ],
               },
             ],
