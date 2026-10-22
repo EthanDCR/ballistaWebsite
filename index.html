@@ -2,13 +2,20 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- ?v=2 is a cache-buster, not a different file. theballista.com used to
+         serve a Vite starter whose default lightning-bolt favicon browsers
+         cached against the domain; a favicon is only re-fetched when its URL
+         changes. Bump it again if the mark itself ever changes. -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
       content="Ballista pulls property data from the providers restoration teams already use and turns it into assigned targets, a dialer, callbacks and pipeline — one system built to get your reps on the phone first. In private beta. Call-Stars, the cold-call training our own floor runs on, is available today."
     />
-    <title>Ballista — Lead data and dialer for restoration teams</title>
+    <!-- The tab shows about fifteen characters, so everything after the dash
+         was only ever read by search engines. They still get it: the meta
+         description above says the same thing at length. -->
+    <title>Ballista</title>
   </head>
   <body>
     <div id="root"></div>
