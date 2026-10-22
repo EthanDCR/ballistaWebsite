@@ -2299,7 +2299,11 @@ const MFL_CSS = `
 .mfl-legend li b{grid-column:2;font-weight:500}
 
 /* ---- menu select ---- */
-.mfl-menu{position:relative}
+/* LOCAL CHANGE: was position:relative alone. The button inside is
+   inline-flex, so the block wrapper gave it a line box and half a line of
+   leading above — 4px that pushed the period menu below the calendar tile
+   beside it. Flex drops the line box and the two line up. */
+.mfl-menu{position:relative;display:flex}
 .mfl-menu-btn{display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 7px;border-radius:4px;font-size:10px;white-space:nowrap;transition:background-color .2s}
 .mfl-menu--dark .mfl-menu-btn{background:rgba(255,255,255,.1);color:var(--mfl-cream)}
 .mfl-menu--dark .mfl-menu-btn:hover{background:rgba(255,255,255,.18)}
