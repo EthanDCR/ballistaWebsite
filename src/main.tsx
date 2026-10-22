@@ -8,7 +8,8 @@ import Login from "./pages/Login.tsx";
 import Terms from "./pages/Terms.tsx";
 import Landing from "./pages/Landing.tsx";
 import RequireAuth from "./lib/RequireAuth.tsx";
-import { CALLSTARS_HOST, onCallStarsHost, onMainHost } from "./config/hosts.ts";
+import { onCallStarsHost, onMainHost } from "./config/hosts.ts";
+import RedirectToCallStars from "./lib/RedirectToCallStars.tsx";
 
 // On callstars.theballista.com the portal IS the site, so it answers at "/"
 // rather than making people find /training. On theballista.com the landing
@@ -17,17 +18,6 @@ import { CALLSTARS_HOST, onCallStarsHost, onMainHost } from "./config/hosts.ts";
 // preview URL — both paths work exactly as written.
 const callStars = onCallStarsHost();
 const mainSite = onMainHost();
-
-/**
- * Leaves for the portal's own domain, carrying the query with it — the
- * landing page links to "/training?module=intro" and that module has to
- * survive the hop. A full assignment, not a router navigation: this is a
- * different origin.
- */
-function RedirectToCallStars() {
-  window.location.replace(`https://${CALLSTARS_HOST}/${window.location.search}`);
-  return null;
-}
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
