@@ -65,6 +65,9 @@ export type MflStatCard = {
   /** LOCAL ADDITION (not upstream): decimal places. Defaults to 2 for money
    * and 0 for counts; big money reads better at 0. */
   decimals?: number
+  /** LOCAL ADDITION (not upstream): heading over the legend. "All categories"
+   * upstream, which says nothing about what the split actually is. */
+  legend?: string
 }
 
 export type MflStat = { value: number; prefix?: string; suffix?: string; decimals?: number; label: string }
@@ -244,7 +247,9 @@ const DEFAULT_NAV: MflLink[] = [
   { label: "Contact", href: "#contact" },
 ]
 
-const CAT_COLORS = ["#efe9df", "#b8a99a", "#c4673f", "#7b6a5f", "#d9b48a"]
+// LOCAL CHANGE: a sixth colour. Five wrapped at the sixth slice and drew two
+// stages in the same tone.
+const CAT_COLORS = ["#efe9df", "#b8a99a", "#c4673f", "#7b6a5f", "#d9b48a", "#5f7a68"]
 
 const DEFAULT_CARDS: MflStatCard[] = [
   {
@@ -1114,9 +1119,9 @@ function StatCard({ card }: { card: MflStatCard }) {
       <div className="mfl-stat-split">
         <Donut cats={p.categories} hover={hover} setHover={setHover} colors={CAT_COLORS} />
         <div className="mfl-legend">
-          <p className="mfl-legend-h">All categories</p>
+          <p className="mfl-legend-h">{card.legend ?? "All categories"}</p>
           <ul>
-            {p.categories.slice(0, 4).map((c, i) => (
+            {p.categories.slice(0, 6).map((c, i) => (
               <li
                 key={c.label}
                 className={hover >= 0 && hover !== i ? "is-dim" : ""}
