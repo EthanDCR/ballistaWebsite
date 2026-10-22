@@ -382,6 +382,13 @@ func ensureContentCollections(app core.App) error {
 	authed := types.Pointer(ruleAuthed)
 	preview := types.Pointer(rulePreview)
 	adminOnly := types.Pointer(ruleStaffAdmin)
+	// The waitlist form on the public landing page is filled in by people who
+	// have no account, so this one create rule has to be open. An empty string
+	// is "anyone, signed in or not"; nil would be superuser-only and the form
+	// would fail for every real visitor. Everything else about the collection
+	// stays admin-only — a readable waitlist is a mailing list anyone can
+	// scrape.
+	anyone := types.Pointer("")
 
 	defs := []collectionDef{
 		{
@@ -508,6 +515,26 @@ func ensureContentCollections(app core.App) error {
 				&core.AutodateField{Name: "created", OnCreate: true},
 			},
 			list: adminOnly, view: adminOnly, create: authed, update: adminOnly, delete: adminOnly,
+		},
+		{
+			// Signups from the landing page's "Join the software waitlist"
+			// dialog. Field names match MflDemoRequest in
+			// src/components/maroon-fintech-landing.tsx — the client posts
+			// that object as-is, so renaming a field there means renaming it
+			// here. Nothing is required at this layer: the dialog validates
+			// name, email and phone before it ever posts, and a half-filled
+			// row is still a lead worth keeping over a rejected request.
+			name: "access_requests",
+			fields: []core.Field{
+				&core.TextField{Name: "name", Max: 200},
+				&core.TextField{Name: "email", Max: 200},
+				&core.TextField{Name: "phone", Max: 50},
+				&core.TextField{Name: "company", Max: 200},
+				&core.TextField{Name: "size", Max: 50},
+				&core.TextField{Name: "revenue", Max: 50},
+				&core.AutodateField{Name: "created", OnCreate: true},
+			},
+			list: adminOnly, view: adminOnly, create: anyone, update: adminOnly, delete: adminOnly,
 		},
 		{
 			name: "app_settings",
