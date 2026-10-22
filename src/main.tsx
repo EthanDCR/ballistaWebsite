@@ -19,6 +19,12 @@ import RedirectToCallStars from "./lib/RedirectToCallStars.tsx";
 const callStars = onCallStarsHost();
 const mainSite = onMainHost();
 
+// index.html titles the tab "Ballista", which is right for the marketing
+// domain and wrong for the portal — same HTML, two products. Set once at
+// startup rather than per route: every screen under this hostname is
+// Call-Stars.
+if (callStars) document.title = "Call-Stars";
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
