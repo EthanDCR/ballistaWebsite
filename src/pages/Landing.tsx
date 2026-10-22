@@ -127,11 +127,16 @@ export default function Landing() {
         // than a count of those weeks; scale it from all-time again if the
         // all-time numbers move.
         //
-        // The stage numbers are WHERE EACH LEAD SITS TODAY, not a funnel. 81
-        // leads are parked in Lead set; the 150 in Inspected have already been
-        // through it. That is why every stage is drawn — all seven add to the
-        // 385, and four of them shown alone read as a funnel that loses count.
-        // The cumulative figure, 267 inspected at some point, is in the note.
+        // The stage numbers are WHERE EACH LEAD SITS TODAY, not a funnel. The
+        // proof is that they add to 385, the total — a funnel's counts nest
+        // and shrink instead. The source calls the first one "Lead Set", which
+        // reads as "leads we have set" and makes 81 look like a ceiling the
+        // 150 inspections broke through; it is really the leads set and not
+        // yet inspected, so it is labelled for what it is — short enough to
+        // survive the legend's column, which clipped "Awaiting inspection".
+        // The cumulative
+        // figure — 267 inspected at some point, against 150 standing there
+        // now — is in the note, which is the number a funnel reading wants.
         //
         // "All time" stays first — it is what the card shows on arrival.
         statCards={[
@@ -148,7 +153,7 @@ export default function Landing() {
                 // Adds to 385 exactly. Bad lead is a real stage too, with
                 // nothing in it — a zero slice is just noise.
                 categories: [
-                  { label: "Lead set", value: 81 },
+                  { label: "Not inspected", value: 81 },
                   { label: "Inspected", value: 150 },
                   { label: "Presented", value: 84 },
                   { label: "Closed", value: 33 },
@@ -162,7 +167,7 @@ export default function Landing() {
                 amount: 75,
                 note: "Three months at the floor's rate",
                 categories: [
-                  { label: "Lead set", value: 16 },
+                  { label: "Not inspected", value: 16 },
                   { label: "Inspected", value: 29 },
                   { label: "Presented", value: 16 },
                   { label: "Closed", value: 6 },
@@ -176,7 +181,7 @@ export default function Landing() {
                 amount: 25,
                 note: "An average month on the floor",
                 categories: [
-                  { label: "Lead set", value: 5 },
+                  { label: "Not inspected", value: 5 },
                   { label: "Inspected", value: 10 },
                   { label: "Presented", value: 5 },
                   { label: "Closed", value: 2 },
